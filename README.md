@@ -1,2 +1,2 @@
-# sgg-frontend
-Social Gaming Guild Frontend
+# sgg-site
+Social Gaming Guild Site
