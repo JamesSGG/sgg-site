@@ -23,6 +23,13 @@ module.exports = {
       named: 'never',
       asyncArrow: 'always',
     }],
+    'comma-dangle': ['error', {
+      arrays: 'always-multiline',
+      objects: 'always-multiline',
+      imports: 'always-multiline',
+      exports: 'always-multiline',
+      functions: 'ignore',
+    }],
     'react/prefer-stateless-function': 'off',
     'import/no-extraneous-dependencies': ['error', {
       devDependencies: [

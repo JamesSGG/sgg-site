@@ -1,7 +1,17 @@
 
-
 const fs = require('fs')
 const path = require('path')
+const {
+  compose,
+  partial,
+  complement,
+  allPass,
+  startsWith,
+  toUpper,
+  isString,
+  isEmpty,
+} = require('lodash/fp')
+
 const paths = require('./paths')
 
 // Make sure that including paths.js after env.js will read .env variables.
@@ -10,7 +20,7 @@ delete require.cache[require.resolve('./paths')]
 const NODE_ENV = process.env.NODE_ENV
 if (!NODE_ENV) {
   throw new Error(
-    'The NODE_ENV environment variable is required but was not specified.',
+    'The NODE_ENV environment variable is required but was not specified.'
   )
 }
 
@@ -48,40 +58,50 @@ dotenvFiles.forEach((dotenvFile) => {
 // https://github.com/facebookincubator/create-react-app/issues/1023#issuecomment-265344421
 // We also resolve them to make sure all tools using them work consistently.
 const appDirectory = fs.realpathSync(process.cwd())
+const resolveRelativePath = partial(path.resolve, [appDirectory])
+const isRelativePath = allPass([
+  isString,
+  complement(isEmpty),
+  complement(path.isAbsolute),
+])
+
 process.env.NODE_PATH = (process.env.NODE_PATH || '')
   .split(path.delimiter)
-  .filter((folder) => folder && !path.isAbsolute(folder))
-  .map((folder) => path.resolve(appDirectory, folder))
+  .filter(isRelativePath)
+  .map(resolveRelativePath)
   .join(path.delimiter)
 
 // Grab NODE_ENV and REACT_APP_* environment variables and prepare them to be
 // injected into the application via DefinePlugin in Webpack configuration.
-const REACT_APP = /^REACT_APP_/i
+const isCustomEnvVar = compose(startsWith('REACT_APP_'), toUpper)
 
 function getClientEnvironment(publicUrl) {
+  const envDefault = {
+    // Useful for determining whether we’re running in production mode.
+    // Most importantly, it switches React into the correct mode.
+    NODE_ENV: process.env.NODE_ENV || 'development',
+    // Useful for resolving the correct path to static assets in `public`.
+    // For example, <img src={process.env.PUBLIC_URL + '/img/logo.png'} />.
+    // This should only be used as an escape hatch. Normally you would put
+    // images into the `src` and `import` them in code to get their paths.
+    PUBLIC_URL: publicUrl,
+  }
+
+  const reducerRaw = (env, key) => Object.assign(env, {
+    [key]: process.env[key],
+  })
+
   const raw = Object.keys(process.env)
-    .filter((key) => REACT_APP.test(key))
-    .reduce((env, key) => {
-      // eslint-disable-next-line no-param-reassign
-      env[key] = process.env[key]
-      return env
-    }, {
-      // Useful for determining whether we’re running in production mode.
-      // Most importantly, it switches React into the correct mode.
-      NODE_ENV: process.env.NODE_ENV || 'development',
-      // Useful for resolving the correct path to static assets in `public`.
-      // For example, <img src={process.env.PUBLIC_URL + '/img/logo.png'} />.
-      // This should only be used as an escape hatch. Normally you would put
-      // images into the `src` and `import` them in code to get their paths.
-      PUBLIC_URL: publicUrl,
-    })
+    .filter(isCustomEnvVar)
+    .reduce(reducerRaw, envDefault)
+
+  const reducer = (env, key) => Object.assign(env, {
+    [key]: JSON.stringify(raw[key]),
+  })
+
   // Stringify all values so we can feed into Webpack DefinePlugin
   const stringified = {
-    'process.env': Object.keys(raw).reduce((env, key) => {
-      // eslint-disable-next-line no-param-reassign
-      env[key] = JSON.stringify(raw[key])
-      return env
-    }, {}),
+    'process.env': Object.keys(raw).reduce(reducer, {}),
   }
 
   return { raw, stringified }

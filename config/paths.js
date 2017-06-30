@@ -1,18 +1,19 @@
 
-
 const path = require('path')
 const fs = require('fs')
 const url = require('url')
+const { partial } = require('lodash/fp')
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebookincubator/create-react-app/issues/637
 const appDirectory = fs.realpathSync(process.cwd())
-const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath)
+const resolveApp = partial(path.resolve, [appDirectory])
 
 const envPublicUrl = process.env.PUBLIC_URL
 
 function ensureSlash(_path, needsSlash) {
   const hasSlash = _path.endsWith('/')
+
   if (hasSlash && !needsSlash) {
     return path.substr(_path, _path.length - 1)
   }
@@ -48,7 +49,7 @@ module.exports = {
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
   appHtml: resolveApp('public/index.html'),
-  appIndexJs: resolveApp('src/index.js'),
+  appIndexJs: resolveApp('src/index.jsx'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   yarnLockFile: resolveApp('yarn.lock'),

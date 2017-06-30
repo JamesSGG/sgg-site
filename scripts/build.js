@@ -25,9 +25,11 @@ const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages')
 const printHostingInstructions = require('react-dev-utils/printHostingInstructions')
 const FileSizeReporter = require('react-dev-utils/FileSizeReporter')
 
-const measureFileSizesBeforeBuild =
-  FileSizeReporter.measureFileSizesBeforeBuild
-const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild
+const {
+  measureFileSizesBeforeBuild,
+  printFileSizesAfterBuild,
+} = FileSizeReporter
+
 const useYarn = fs.existsSync(paths.yarnLockFile)
 
 // These sizes are pretty large. We'll warn for bundles exceeding them.
@@ -59,12 +61,13 @@ function build(previousFileSizes) {
           process.env.CI.toLowerCase() !== 'false') &&
         messages.warnings.length
       ) {
-        console.log(
-          chalk.yellow(
-            '\nTreating warnings as errors because process.env.CI = true.\n' +
-              'Most CI servers set it automatically.\n',
-          ),
-        )
+        const logText = [
+          '',
+          'Treating warnings as errors because process.env.CI = true.',
+          'Most CI servers set it automatically.',
+        ].join('\n')
+
+        console.log(chalk.yellow(logText))
         return reject(new Error(messages.warnings.join('\n\n')))
       }
       return resolve({
@@ -100,16 +103,17 @@ measureFileSizesBeforeBuild(paths.appBuild)
       if (warnings.length) {
         console.log(chalk.yellow('Compiled with warnings.\n'))
         console.log(warnings.join('\n\n'))
-        console.log(
-          `\nSearch for the ${
-            chalk.underline(chalk.yellow('keywords'))
-            } to learn more about each warning.`,
-        )
-        console.log(
-          `To ignore, add ${
-            chalk.cyan('// eslint-disable-next-line')
-            } to the line before.\n`,
-        )
+
+        const keywordsText = chalk.underline(chalk.yellow('keywords'))
+        const eslintDisableText = chalk.cyan('// eslint-disable-next-line')
+        const logText = [
+          '',
+          `Search for the ${keywordsText} to learn more about each warning.`,
+          `To ignore, add ${eslintDisableText} to the line before.`,
+          '',
+        ].join('\n')
+
+        console.log(logText)
       }
       else {
         console.log(chalk.green('Compiled successfully.\n'))
@@ -121,7 +125,7 @@ measureFileSizesBeforeBuild(paths.appBuild)
         previousFileSizes,
         paths.appBuild,
         WARN_AFTER_BUNDLE_GZIP_SIZE,
-        WARN_AFTER_CHUNK_GZIP_SIZE,
+        WARN_AFTER_CHUNK_GZIP_SIZE
       )
       console.log()
 
@@ -134,12 +138,12 @@ measureFileSizesBeforeBuild(paths.appBuild)
         publicUrl,
         publicPath,
         buildFolder,
-        useYarn,
+        useYarn
       )
     },
     (err) => {
       console.log(chalk.red('Failed to compile.\n'))
       console.log(`${err.message || err}\n`)
       process.exit(1)
-    },
+    }
   )
