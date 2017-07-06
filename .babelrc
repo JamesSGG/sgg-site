@@ -2,4 +2,13 @@
   "presets": [
     "react-app",
   ],
+  "plugins": [
+    ["lodash", {
+      "id": [
+        "lodash",
+        "recompose",
+        "semantic-ui-react",
+      ],
+    }],
+  ]
 }
