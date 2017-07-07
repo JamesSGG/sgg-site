@@ -60,7 +60,7 @@ module.exports = merge(baseConfig, {
     new WorkboxPlugin({
       globDirectory: buildDir,
       globPatterns: ['**/*.{html,js,css}'],
-      globIgnores: [/\.map$/, /asset-manifest\.json$/],
+      globIgnores: ['/.map$/', '/asset-manifest.json$/'],
       swDest: path.join(buildDir, 'service-worker.js'),
     }),
   ],
