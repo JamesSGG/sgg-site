@@ -59,7 +59,6 @@ module.exports = merge(baseConfig, {
     // the HTML & assets that are part of the Webpack build.
     new WorkboxPlugin({
       globDirectory: buildDir,
-      staticFileGlobs: ['**/*.{html,js,css}'],
       globPatterns: ['**/*.{html,js,css}'],
       globIgnores: [/\.map$/, /asset-manifest\.json$/],
       swDest: path.join(buildDir, 'service-worker.js'),

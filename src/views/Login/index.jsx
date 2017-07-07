@@ -12,7 +12,7 @@ export default class LoginView extends PureComponent {
         </Header>
         <p>
           <Button color="facebook">
-            <Icon name="facebook" /> Sign Up with Facebook
+            <Icon name="facebook" /> Register with Facebook
           </Button>
         </p>
         <p>
