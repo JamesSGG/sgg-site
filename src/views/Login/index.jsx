@@ -1,19 +1,24 @@
 
 import React, { PureComponent } from 'react'
-import { Message } from 'semantic-ui-react'
+import { Container, Header, Button, Icon } from 'semantic-ui-react'
 
 export default class LoginView extends PureComponent {
 
   render() {
     return (
-      <Message info>
-        <Message.Header>
-          You must be logged in to view this page.
-        </Message.Header>
+      <Container text>
+        <Header>
+          Life is too short to play with idiots and assholes.
+        </Header>
         <p>
-          Please log in and try again.
+          <Button color="facebook">
+            <Icon name="facebook" /> Sign Up with Facebook
+          </Button>
         </p>
-      </Message>
+        <p>
+          <Button primary>Sign In</Button>
+        </p>
+      </Container>
     )
   }
 }

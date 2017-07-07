@@ -124,7 +124,7 @@ export default class App extends PureComponent {
             </Switch>
           </main>
           <footer className="App-footer">
-            Footer content
+            {/* Add content here */}
           </footer>
         </div>
       </BrowserRouter>
