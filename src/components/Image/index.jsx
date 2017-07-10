@@ -23,7 +23,7 @@ type OptionalProps = {
 
 type OwnProps = RequiredProps & OptionalProps
 
-type Props = BaseProps & OwnProps
+type Props = BaseProps & OwnProps;
 
 @transformProps({ width: toNumber, height: toNumber })
 @autobind

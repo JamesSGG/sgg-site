@@ -1,18 +1,34 @@
 
 import { mapProps } from 'recompose'
+import {
+  compose,
+  has,
+  map,
+  filter,
+  toPairs,
+  fromPairs,
+} from 'lodash/fp'
 
 export default function transformProps(transformMap) {
   return mapProps((props) => {
-    const newProps = { ...props }
-    const propKeys = Object.keys(transformMap)
+    const applyTransform = ([key, transform]) => {
+      if (has(key, props)) {
+        return [key, transform(props[key])]
+      }
 
-    for (const key of propKeys) {
-      const prop = newProps[key]
-      const transform = transformMap[key]
-
-      newProps[key] = transform(prop)
+      return false
     }
 
-    return newProps
+    const applyTransforms = compose(
+      fromPairs,
+      filter(Boolean),
+      map(applyTransform),
+      toPairs,
+    )
+
+    return {
+      ...props,
+      ...applyTransforms(transformMap),
+    }
   })
 }

@@ -5,17 +5,18 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 const ManifestPlugin = require('webpack-manifest-plugin')
 const WorkboxPlugin = require('workbox-webpack-plugin')
-const { any } = require('lodash/fp')
 
 const baseConfig = require('./webpack.config.base')
 const paths = require('./paths')
 
 const buildDir = path.relative(paths.appRoot, paths.appBuild)
 
+const { NODE_ENV } = process.env
+
 
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
-if (process.env.NODE_ENV !== 'production') {
+if (NODE_ENV !== 'production') {
   throw new Error('Production builds must have NODE_ENV=production.')
 }
 

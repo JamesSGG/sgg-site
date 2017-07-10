@@ -43,8 +43,8 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 }
 
 // Tools like Cloud9 rely on this.
-const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3100
-const HOST = process.env.HOST || '0.0.0.0'
+const { PORT, HTTPS, HOST = '0.0.0.0' } = process.env
+const DEFAULT_PORT = parseInt(PORT, 10) || 3100
 
 // We attempt to use the default port but if it is busy, we offer the user to
 // run on a different port. `detect()` Promise resolves to the next free port.
@@ -55,7 +55,7 @@ choosePort(HOST, DEFAULT_PORT)
       return
     }
 
-    const protocol = process.env.HTTPS === 'true' ? 'https' : 'http'
+    const protocol = HTTPS === 'true' ? 'https' : 'http'
     const appName = require(paths.appPackageJson).name
     const urls = prepareUrls(protocol, HOST, port)
 

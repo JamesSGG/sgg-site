@@ -5,8 +5,13 @@ const noopServiceWorkerMiddleware = require('react-dev-utils/noopServiceWorkerMi
 const config = require('./webpack.config.dev')
 const paths = require('./paths')
 
-const protocol = process.env.HTTPS === 'true' ? 'https' : 'http'
-const host = process.env.HOST || '0.0.0.0'
+const {
+  HTTPS,
+  HOST = '0.0.0.0',
+  DANGEROUSLY_DISABLE_HOST_CHECK,
+} = process.env
+
+const protocol = HTTPS === 'true' ? 'https' : 'http'
 
 module.exports = function devServerConfig(proxy, allowedHost) {
   return {
@@ -26,8 +31,7 @@ module.exports = function devServerConfig(proxy, allowedHost) {
     // So we will disable the host check normally, but enable it if you have
     // specified the `proxy` setting. Finally, we let you override it if you
     // really know what you're doing with a special environment variable.
-    disableHostCheck:
-      !proxy || process.env.DANGEROUSLY_DISABLE_HOST_CHECK === 'true',
+    disableHostCheck: !proxy || DANGEROUSLY_DISABLE_HOST_CHECK === 'true',
     // Enable gzip compression of generated files.
     compress: true,
     // Silence WebpackDevServer's own logs since they're generally not useful.
@@ -69,7 +73,7 @@ module.exports = function devServerConfig(proxy, allowedHost) {
     },
     // Enable HTTPS if the HTTPS environment variable is set to 'true'
     https: protocol === 'https',
-    host,
+    host: HOST,
     overlay: false,
     historyApiFallback: {
       // Paths with dots should still use the history fallback.

@@ -14,10 +14,11 @@ const {
 
 const paths = require('./paths')
 
+const { NODE_ENV, NODE_PATH = '' } = process.env
+
 // Make sure that including paths.js after env.js will read .env variables.
 delete require.cache[require.resolve('./paths')]
 
-const NODE_ENV = process.env.NODE_ENV
 if (!NODE_ENV) {
   throw new Error(
     'The NODE_ENV environment variable is required but was not specified.'
@@ -65,7 +66,7 @@ const isRelativePath = allPass([
   complement(path.isAbsolute),
 ])
 
-process.env.NODE_PATH = (process.env.NODE_PATH || '')
+process.env.NODE_PATH = (NODE_PATH || '')
   .split(path.delimiter)
   .filter(isRelativePath)
   .map(resolveRelativePath)

@@ -1,4 +1,6 @@
 
+import { parse as parseQuery } from 'querystring'
+
 import React, { PureComponent } from 'react'
 import Loadable from 'react-loadable'
 import {
@@ -9,38 +11,40 @@ import {
   NavLink,
 } from 'react-router-dom'
 import { Menu, Image } from 'semantic-ui-react'
+import Cookies from 'universal-cookie'
+import { trimCharsStart } from 'lodash/fp'
 
 // import logo1x from 'assets/logo-secondary.png'
 import logo2x from 'assets/logo-secondary@2x.png'
 
+import AppPerformance from 'components/AppPerformance'
 import LoadingStatus from 'components/LoadingStatus'
 
 import './styles.css'
 
-const fakeAuth = {
-  isAuthenticated: false,
-  authenticate(cb) {
-    this.isAuthenticated = true
-    setTimeout(cb, 100) // fake async
-  },
-  signout(cb) {
-    this.isAuthenticated = false
-    setTimeout(cb, 100)
-  },
-}
-
+const cookies = new Cookies()
 
 function PrivateRoute(props: *) {
   const { component: Component, ...rest } = props
 
   const render = (_props: *) => {
-    if (fakeAuth.isAuthenticated) {
+    const { location } = _props
+    const queryString = trimCharsStart('?', location.search)
+    const queryParams = parseQuery(queryString)
+    const sessionId = queryParams.sessionID
+
+    if (sessionId) {
+      cookies.set('session-id', sessionId, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7,
+      })
+    }
+
+    if (sessionId || cookies.get('session-id')) {
       return (
         <Component {..._props} />
       )
     }
-
-    const { location } = _props
 
     return (
       <Redirect
@@ -126,6 +130,8 @@ export default class App extends PureComponent {
           <footer className="App-footer">
             {/* Add content here */}
           </footer>
+
+          <AppPerformance />
         </div>
       </BrowserRouter>
     )

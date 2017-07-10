@@ -42,6 +42,7 @@ module.exports = {
       exports: 'always-multiline',
       functions: 'ignore',
     }],
+    'class-methods-use-this': 'off',
     'react/prefer-stateless-function': 'off',
     'react/sort-comp': ['warn', {
       order: [

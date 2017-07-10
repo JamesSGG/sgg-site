@@ -11,7 +11,9 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const getClientEnvironment = require('./env')
 const paths = require('./paths')
 
-const isDev = process.env.NODE_ENV !== 'production'
+const { NODE_ENV } = process.env
+
+const isDev = NODE_ENV !== 'production'
 const isProd = !isDev
 
 // Webpack uses `publicPath` to determine where the app is being served from.
