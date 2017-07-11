@@ -2,6 +2,7 @@
 
 import React, { PureComponent } from 'react'
 import { List, Image, Label } from 'semantic-ui-react'
+import { kebabCase } from 'lodash/fp'
 
 type Props = {}
 
@@ -60,7 +61,7 @@ export default class FriendsList extends PureComponent {
         online: false,
       },
       {
-        name: '',
+        name: 'Hillary Clinton',
         online: false,
       },
     ]
@@ -73,7 +74,10 @@ export default class FriendsList extends PureComponent {
           horizontal
           color={user.online ? 'green' : 'grey'}
         />
-        <Image avatar src="http://ravatar.photos/40/40/" />
+        <Image
+          avatar
+          src={`https://api.adorable.io/avatars/40/${kebabCase(user.name)}@adorable.png`}
+        />
         <List.Content>{user.name}</List.Content>
       </List.Item>
     ))
