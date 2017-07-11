@@ -21,7 +21,7 @@ export default class LoginView extends PureComponent {
     const loginUrl = this.loginUrl
 
     return (
-      <Container text>
+      <Container text textAlign="center">
         <Header>
           Life is too short to play with idiots and assholes.
         </Header>

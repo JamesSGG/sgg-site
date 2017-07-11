@@ -22,7 +22,6 @@ import logo2x from 'assets/logo-secondary@2x.png'
 
 import AppPerformance from 'components/AppPerformance'
 import LoadingStatus from 'components/LoadingStatus'
-import FriendsList from 'components/FriendsList'
 
 import './styles.css'
 
@@ -149,8 +148,6 @@ export default class App extends PureComponent {
           <footer className="App-footer">
             {/* Add content here */}
           </footer>
-
-          <FriendsList />
 
           <AppPerformance />
         </div>
