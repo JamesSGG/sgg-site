@@ -4,8 +4,8 @@
     "/**": "index.html"
   },
   "proxies": {
-    "/api/": {
-      "origin": "https://social-gaming-guild-api.herokuapp.com"
+    "/api": {
+      "origin": "https://${API_APP_NAME}.herokuapp.com"
     }
   }
 }
