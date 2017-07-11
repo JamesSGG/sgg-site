@@ -3,6 +3,8 @@
 import React, { PureComponent } from 'react'
 import { Container, Header, Button, Icon } from 'semantic-ui-react'
 
+import { getApiUrl } from 'utils/api'
+
 type Props = {}
 
 export default class LoginView extends PureComponent {
@@ -10,12 +12,9 @@ export default class LoginView extends PureComponent {
   props: Props
 
   get loginUrl(): string {
-    const { SGG_API_APP_NAME } = process.env
-
-    const apiUrl = `https://${SGG_API_APP_NAME}.herokuapp.com`
     const returnUrl = window.encodeURIComponent(window.location.origin)
 
-    return `${apiUrl}/login/facebook?return=${returnUrl}`
+    return `${getApiUrl()}/login/facebook?return=${returnUrl}`
   }
 
   render() {

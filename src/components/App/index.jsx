@@ -12,7 +12,10 @@ import {
 } from 'react-router-dom'
 import { Menu, Image } from 'semantic-ui-react'
 import Cookies from 'universal-cookie'
+import { autobind } from 'core-decorators'
 import { trimCharsStart } from 'lodash/fp'
+
+import { getApiUrl } from 'utils/api'
 
 // import logo1x from 'assets/logo-secondary.png'
 import logo2x from 'assets/logo-secondary@2x.png'
@@ -84,7 +87,19 @@ const UserProfileView = Loadable({
   loading: LoadingStatus,
 })
 
+@autobind
 export default class App extends PureComponent {
+
+  async handleLogout() {
+    const logoutUrl = `${getApiUrl()}/login/clear`
+
+    await window.fetch(logoutUrl, {
+      method: 'POST',
+    })
+
+    cookies.remove('session-id')
+  }
+
   render() {
     return (
       <BrowserRouter>
@@ -112,10 +127,8 @@ export default class App extends PureComponent {
                   Rewards
                 </NavLink>
               </Menu.Item>
-              <Menu.Item>
-                <NavLink to="/logout">
-                  Sign Out
-                </NavLink>
+              <Menu.Item onClick={this.handleLogout}>
+                Sign Out
               </Menu.Item>
             </Menu>
           </header>
