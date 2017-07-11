@@ -5,6 +5,7 @@ const {
   compose,
   partial,
   complement,
+  anyPass,
   allPass,
   startsWith,
   toUpper,
@@ -72,9 +73,15 @@ process.env.NODE_PATH = (NODE_PATH || '')
   .map(resolveRelativePath)
   .join(path.delimiter)
 
-// Grab NODE_ENV and REACT_APP_* environment variables and prepare them to be
+// Grab SGG_* and REACT_APP_* environment variables and prepare them to be
 // injected into the application via DefinePlugin in Webpack configuration.
-const isCustomEnvVar = compose(startsWith('REACT_APP_'), toUpper)
+const isCustomEnvVar = compose(
+  anyPass([
+    startsWith('SGG_'),
+    startsWith('REACT_APP_'),
+  ]),
+  toUpper
+)
 
 function getClientEnvironment(publicUrl) {
   const envDefault = {
