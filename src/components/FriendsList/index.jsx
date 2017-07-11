@@ -1,7 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react'
-import { List, Label } from 'semantic-ui-react'
+import { List, Image, Label } from 'semantic-ui-react'
 
 type Props = {}
 
@@ -73,7 +73,7 @@ export default class FriendsList extends PureComponent {
           horizontal
           color={user.online ? 'green' : 'grey'}
         />
-        <List.Icon name="user circle" />
+        <Image avatar src="http://ravatar.photos/40/40/" />
         <List.Content>{user.name}</List.Content>
       </List.Item>
     ))
@@ -82,7 +82,6 @@ export default class FriendsList extends PureComponent {
       position: 'fixed',
       bottom: 0,
       right: 0,
-      height: '250px',
     }
 
     return (
