@@ -95,9 +95,12 @@ export default class App extends PureComponent {
 
     await window.fetch(logoutUrl, {
       method: 'POST',
+      credentials: 'include',
     })
 
     cookies.remove('session-id')
+
+    window.location.replace('/login')
   }
 
   render() {
@@ -127,8 +130,10 @@ export default class App extends PureComponent {
                   Rewards
                 </NavLink>
               </Menu.Item>
-              <Menu.Item onClick={this.handleLogout}>
-                Sign Out
+              <Menu.Item>
+                <a href="/logout" onClick={this.handleLogout}>
+                  Sign Out
+                </a>
               </Menu.Item>
             </Menu>
           </header>
