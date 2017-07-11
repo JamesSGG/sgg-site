@@ -10,9 +10,12 @@ export default class LoginView extends PureComponent {
   props: Props
 
   get loginUrl(): string {
+    const { SGG_API_APP_NAME } = process.env
+
+    const apiUrl = `https://${SGG_API_APP_NAME}.herokuapp.com`
     const returnUrl = window.encodeURIComponent(window.location.origin)
 
-    return `/api/login/facebook?return=${returnUrl}`
+    return `${apiUrl}/login/facebook?return=${returnUrl}`
   }
 
   render() {
