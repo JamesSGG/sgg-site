@@ -4,7 +4,6 @@ import { parse as parseQuery } from 'querystring'
 import React, { PureComponent } from 'react'
 import Loadable from 'react-loadable'
 import {
-  BrowserRouter,
   Switch,
   Route,
   Redirect,
@@ -22,6 +21,8 @@ import logo2x from 'assets/logo-secondary@2x.png'
 
 import AppPerformance from 'components/AppPerformance'
 import LoadingStatus from 'components/LoadingStatus'
+
+import AppWrapper from './AppWrapper'
 
 import './styles.css'
 
@@ -105,7 +106,7 @@ export default class App extends PureComponent {
 
   render() {
     return (
-      <BrowserRouter>
+      <AppWrapper>
         <div className="App">
           <header className="App-header">
             <Image src={logo2x} floated="left" />
@@ -151,7 +152,7 @@ export default class App extends PureComponent {
 
           <AppPerformance />
         </div>
-      </BrowserRouter>
+      </AppWrapper>
     )
   }
 }
