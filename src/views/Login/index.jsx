@@ -1,24 +1,24 @@
 // @flow
 
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import { Container, Header, Button, Icon } from 'semantic-ui-react'
 
 import { getApiUrl } from 'utils/api'
 
 type Props = {}
 
-export default class LoginView extends PureComponent {
+export default class LoginView extends Component {
 
   props: Props
 
-  get loginUrl(): string {
+  getLoginUrl(): string {
     const returnUrl = window.encodeURIComponent(window.location.origin)
 
     return `${getApiUrl()}/login/facebook?return=${returnUrl}`
   }
 
   render() {
-    const loginUrl = this.loginUrl
+    const loginUrl = this.getLoginUrl()
 
     return (
       <Container text textAlign="center">

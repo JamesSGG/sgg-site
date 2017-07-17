@@ -1,0 +1,7 @@
+
+subscription onUserOnlineStatusChanged {
+  userOnlineStatusChanged {
+    id
+    status
+  }
+}

@@ -84,7 +84,7 @@ module.exports = {
         'test-*.js', // Repos with multiple top-level test files
         '**/*.test.js', // Tests where the extension denotes that it is a test
         '**/webpack.config.js', // Webpack config
-        '**/webpack.config.*.js', // Webpack config
+        '**/webpack.*.js', // Other Webpack-specific files
         'tools/**', // Development tools
         'scripts/**', // Development scripts
       ],

@@ -1,15 +1,9 @@
 // @flow
 
-type ReduxState = {
-  app: {},
-  apollo: {},
-}
+type AppState = {}
 
-export const initialState: ReduxState = {
-  app: {},
-  apollo: {},
-}
+export const initialState: AppState = {}
 
-export default function(state: ReduxState): ReduxState {
+export default function reducer(state: ReduxState = initialState): ReduxState {
   return state
 }

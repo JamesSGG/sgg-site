@@ -1,12 +1,12 @@
 /* eslint-disable global-require */
 
 const webpack = require('webpack')
-const merge = require('webpack-merge')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
 
 const paths = require('./paths')
 const baseConfig = require('./webpack.config.base')
+const { merge } = require('./webpack.utils')
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.

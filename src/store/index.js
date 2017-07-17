@@ -3,32 +3,48 @@
 import { compose, createStore, combineReducers, applyMiddleware } from 'redux'
 import { routerReducer, routerMiddleware } from 'react-router-redux'
 import { ApolloClient, createNetworkInterface } from 'react-apollo'
+import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws'
 import createHistory from 'history/createBrowserHistory'
 import { identity } from 'lodash/fp'
 
 import type { Store } from 'redux'
 
+import { getApiUrl, getApiWebSocketsUrl } from 'utils/api'
+
 import appReducer, { initialState } from './modules'
+
+const apiUrl = getApiUrl()
+const apiWebSocketsUrl = getApiWebSocketsUrl()
+
+const wsClient = new SubscriptionClient(apiWebSocketsUrl, {
+  reconnect: true,
+  connectionParams: {},
+})
+
+export const networkInterface = createNetworkInterface({
+  uri: `${apiUrl}/graphql`,
+  opts: {
+    credentials: 'include',
+  },
+})
+
+const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
+  networkInterface,
+  wsClient,
+)
+
+export const apolloClient = new ApolloClient({
+  networkInterface: networkInterfaceWithSubscriptions,
+})
 
 export const history = createHistory()
 
-export const networkInterface = createNetworkInterface({
-  uri: 'https://social-gaming-guild-api.herokuapp.com/graphql',
-})
-
-export const apolloClient = new ApolloClient({
-  networkInterface,
-})
-
 export const createReducer = (nextAppReducer) => combineReducers({
   app: nextAppReducer,
+  apollo: apolloClient.reducer(),
   routing: routerReducer,
 })
 
-/**
- * This is an initial reducer to use when creating the initial store,
- * or when creating a store for server side rendering.
- */
 export const reducer = createReducer(appReducer)
 
 export const getStore = (state?: * = initialState): Store<*, *> => {
@@ -39,7 +55,7 @@ export const getStore = (state?: * = initialState): Store<*, *> => {
 
   const devToolsMiddleware = (
     typeof window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined'
-    ? window.__REDUX_DEVTOOLS_EXTENSION__
+    ? window.__REDUX_DEVTOOLS_EXTENSION__()
     : identity
   )
 

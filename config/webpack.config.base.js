@@ -133,6 +133,7 @@ module.exports = {
           /\.gif$/,
           /\.jpe?g$/,
           /\.png$/,
+          /\.(graphql|gql)$/,
         ],
         loader: require.resolve('file-loader'),
         options: {
@@ -144,7 +145,12 @@ module.exports = {
       // smaller than specified limit in bytes as data URLs to avoid requests.
       // A missing `test` is equivalent to a match.
       {
-        test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+        test: [
+          /\.bmp$/,
+          /\.gif$/,
+          /\.jpe?g$/,
+          /\.png$/,
+        ],
         loader: require.resolve('url-loader'),
         options: {
           limit: 10000,
@@ -205,6 +211,11 @@ module.exports = {
             },
           ],
         }),
+      },
+      {
+        test: /\.(graphql|gql)$/,
+        exclude: /node_modules/,
+        loader: 'graphql-tag/loader',
       },
       // ** STOP ** Are you adding a new loader?
       // Remember to add the new extension(s) to the "file" loader exclusion list.

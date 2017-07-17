@@ -1,0 +1,12 @@
+
+query CurrentUser {
+  me {
+    id
+    displayName
+    imageUrl
+    emails {
+      email
+      verified
+    }
+  }
+}

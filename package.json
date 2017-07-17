@@ -36,8 +36,9 @@
     "testURL": "http://localhost",
     "transform": {
       "^.+\\.(js|jsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+      "^.+\\.(css|scss)$": "<rootDir>/config/jest/cssTransform.js",
+      "\\.(gql|graphql)$": "jest-transform-graphql",
+      "^(?!.*\\.(js|jsx|css|scss|json|gql|graphql)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
@@ -66,6 +67,7 @@
     "react-apollo": "^1.4.3",
     "react-dom": "^15.6.1",
     "react-error-overlay": "^1.0.8",
+    "react-flip-move": "^2.9.14",
     "react-helmet": "^5.1.3",
     "react-loadable": "^4.0.3",
     "react-perf-tool": "^0.2.1",
@@ -77,6 +79,7 @@
     "redux": "^3.7.2",
     "semantic-ui-css": "^2.2.10",
     "semantic-ui-react": "^0.70.0",
+    "subscriptions-transport-ws": "^0.8.1",
     "universal-cookie": "^2.0.8",
     "whatwg-fetch": "^2.0.3"
   },

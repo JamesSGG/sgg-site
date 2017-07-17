@@ -4,6 +4,13 @@ import ReactDOM from 'react-dom'
 
 import 'semantic-ui-css/semantic.css'
 
+import AppWrapper from 'components/AppWrapper'
 import App from 'components/App'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+const renderApp = () => (
+  <AppWrapper>
+    <App />
+  </AppWrapper>
+)
+
+ReactDOM.render(renderApp(), document.getElementById('root'))

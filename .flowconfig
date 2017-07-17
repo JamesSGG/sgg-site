@@ -1,0 +1,27 @@
+[ignore]
+<PROJECT_ROOT>/build/.*
+<PROJECT_ROOT>/config/.*
+<PROJECT_ROOT>/coverage/.*
+<PROJECT_ROOT>/public/.*
+<PROJECT_ROOT>/scripts/.*
+
+[include]
+src/
+
+[libs]
+flow-typed/
+./node_modules/react-apollo/lib/index.js.flow
+
+[options]
+emoji=true
+
+module.system.node.resolve_dirname=src
+module.system.node.resolve_dirname=node_modules
+
+suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
+suppress_comment= \\(.\\|\n\\)*\\$FlowIgnore
+
+esproposal.export_star_as=enable
+esproposal.decorators=ignore
+
+experimental.const_params=true

@@ -5,11 +5,13 @@ import Loadable from 'react-loadable'
 
 import { isProd } from 'utils/env'
 
+const { PERF_CHECK } = process.env
+
 
 type Props = {}
 
 export default function AppPerformance(props: Props) {
-  if (isProd()) {
+  if (isProd() || !PERF_CHECK) {
     return null
   }
 

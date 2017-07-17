@@ -2,12 +2,12 @@
 
 const path = require('path')
 const webpack = require('webpack')
-const merge = require('webpack-merge')
 const ManifestPlugin = require('webpack-manifest-plugin')
 const WorkboxPlugin = require('workbox-webpack-plugin')
 
-const baseConfig = require('./webpack.config.base')
 const paths = require('./paths')
+const baseConfig = require('./webpack.config.base')
+const { merge } = require('./webpack.utils')
 
 const buildDir = path.relative(paths.appRoot, paths.appBuild)
 

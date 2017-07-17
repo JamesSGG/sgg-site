@@ -1,18 +1,12 @@
 
-import { parse as parseQuery } from 'querystring'
-
 import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
 import Loadable from 'react-loadable'
-import {
-  Switch,
-  Route,
-  Redirect,
-  NavLink,
-} from 'react-router-dom'
+import { push } from 'react-router-redux'
+import { withRouter, Switch, Route, NavLink } from 'react-router-dom'
 import { Menu, Image } from 'semantic-ui-react'
-import Cookies from 'universal-cookie'
 import { autobind } from 'core-decorators'
-import { trimCharsStart } from 'lodash/fp'
+import { compose, partial } from 'lodash/fp'
 
 import { getApiUrl } from 'utils/api'
 
@@ -21,52 +15,15 @@ import logo2x from 'assets/logo-secondary@2x.png'
 
 import AppPerformance from 'components/AppPerformance'
 import LoadingStatus from 'components/LoadingStatus'
-
-import AppWrapper from './AppWrapper'
+import PrivateRoute from 'components/PrivateRoute'
 
 import './styles.css'
 
-const cookies = new Cookies()
 
-function PrivateRoute(props: *) {
-  const { component: Component, ...rest } = props
-
-  const render = (_props: *) => {
-    const { location } = _props
-    const queryString = trimCharsStart('?', location.search)
-    const queryParams = parseQuery(queryString)
-    const sessionId = queryParams.sessionID
-
-    if (sessionId) {
-      cookies.set('session-id', sessionId, {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7,
-      })
-    }
-
-    if (sessionId || cookies.get('session-id')) {
-      return (
-        <Component {..._props} />
-      )
-    }
-
-    return (
-      <Redirect
-        to={{
-          pathname: '/login',
-          state: { from: location },
-        }}
-      />
-    )
-  }
-
-  return (
-    <Route
-      {...rest}
-      render={render}
-    />
-  )
+type Props = {
+  goToLoginPage: () => Promise<*>,
 }
+
 
 const NotFoundView = Loadable({
   loader: () => import('views/NotFound'),
@@ -88,10 +45,24 @@ const UserProfileView = Loadable({
   loading: LoadingStatus,
 })
 
+const mapDispatchToProps = (dispatch) => ({
+  goToLoginPage: compose(dispatch, partial(push, ['/login'])),
+})
+
+// @withRouter is needed to prevent render blocking in child components
+// e.g. without it the login redirect renders `null` instead of the login page.
+@withRouter
+@connect(null, mapDispatchToProps)
 @autobind
 export default class App extends PureComponent {
 
-  async handleLogout() {
+  props: Props
+
+  async handleLogout(event: MouseEvent) {
+    event.preventDefault()
+
+    const { goToLoginPage } = this.props
+
     const logoutUrl = `${getApiUrl()}/login/clear`
 
     await window.fetch(logoutUrl, {
@@ -99,60 +70,67 @@ export default class App extends PureComponent {
       credentials: 'include',
     })
 
-    cookies.remove('session-id')
+    if (goToLoginPage) {
+      goToLoginPage()
+    }
+    else {
+      window.location.replace('/login')
+    }
+  }
 
-    window.location.replace('/login')
+  shouldComponentUpdate() {
+    return true
   }
 
   render() {
     return (
-      <AppWrapper>
-        <div className="App">
-          <header className="App-header">
-            <Image src={logo2x} floated="left" />
-            <Menu floated="right">
-              <Menu.Item>
-                <NavLink to="/profile">
-                  Profile
-                </NavLink>
-              </Menu.Item>
-              <Menu.Item>
-                <NavLink to="/friends">
-                  Friends
-                </NavLink>
-              </Menu.Item>
-              <Menu.Item>
-                <NavLink to="/team">
-                  Team
-                </NavLink>
-              </Menu.Item>
-              <Menu.Item>
-                <NavLink to="/rewards">
-                  Rewards
-                </NavLink>
-              </Menu.Item>
-              <Menu.Item>
-                <a href="/logout" onClick={this.handleLogout}>
-                  Sign Out
-                </a>
-              </Menu.Item>
-            </Menu>
-          </header>
-          <main className="App-main">
-            <Switch>
-              <Route path="/login" component={LoginView} />
-              <PrivateRoute exact path="/" component={HomeView} />
-              <PrivateRoute path="/profile" component={UserProfileView} />
-              <Route component={NotFoundView} />
-            </Switch>
-          </main>
-          <footer className="App-footer">
-            {/* Add content here */}
-          </footer>
+      <div className="App">
+        <header className="App-header">
+          <Image src={logo2x} floated="left" />
+          <Menu floated="right">
+            <Menu.Item>
+              <NavLink to="/profile">
+                Profile
+              </NavLink>
+            </Menu.Item>
+            <Menu.Item>
+              <NavLink to="/friends">
+                Friends
+              </NavLink>
+            </Menu.Item>
+            <Menu.Item>
+              <NavLink to="/team">
+                Team
+              </NavLink>
+            </Menu.Item>
+            <Menu.Item>
+              <NavLink to="/rewards">
+                Rewards
+              </NavLink>
+            </Menu.Item>
+            <Menu.Item>
+              <a href="/logout" onClick={this.handleLogout}>
+                Sign Out
+              </a>
+            </Menu.Item>
+          </Menu>
+        </header>
 
-          <AppPerformance />
-        </div>
-      </AppWrapper>
+        <main className="App-main">
+          <Switch>
+            <Route path="/login" component={LoginView} />
+            <PrivateRoute exact path="/" component={HomeView} />
+            <PrivateRoute path="/profile" component={UserProfileView} />
+            <Route component={NotFoundView} />
+          </Switch>
+        </main>
+
+        <footer className="App-footer">
+          {/* Add content here */}
+        </footer>
+
+        <AppPerformance />
+      </div>
     )
   }
 }
