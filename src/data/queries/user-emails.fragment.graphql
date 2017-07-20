@@ -1,0 +1,7 @@
+
+fragment userEmails on User {
+  emails {
+    email
+    verified
+  }
+}

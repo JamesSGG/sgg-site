@@ -1,12 +1,10 @@
 
+# import ./user-info.fragment.graphql
+# import ./user-emails.fragment.graphql
+
 query CurrentUser {
   me {
-    id
-    displayName
-    imageUrl
-    emails {
-      email
-      verified
-    }
+    ...userInfo
+    ...userEmails
   }
 }
