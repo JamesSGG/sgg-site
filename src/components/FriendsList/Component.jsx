@@ -4,16 +4,14 @@ import React, { PureComponent } from 'react'
 import { List, Image, Label } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
 
-type UserEmail = {
-  email: string,
-  verified: boolean,
-}
+
+type UserOnlineStatus = 'online' | 'offline'
 
 type User = {
   id: string,
   displayName: string,
   imageUrl: string,
-  emails?: Array<UserEmail>,
+  onlineStatus: UserOnlineStatus,
 }
 
 type Error = {

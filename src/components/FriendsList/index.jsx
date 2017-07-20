@@ -18,7 +18,11 @@ import type { Props as FriendsListProps } from './Component'
 export type Props = DefaultChildProps<FriendsListProps, *>;
 
 
-@graphql(CURRENT_USER_QUERY)
+@graphql(CURRENT_USER_QUERY, {
+  options: {
+    pollInterval: 5000,
+  },
+})
 export default class FriendsListWithData extends PureComponent {
 
   props: Props
