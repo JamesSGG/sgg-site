@@ -1,14 +1,16 @@
 
-import { isDev } from './env'
+import { getIsDev } from './env'
 
 const { SGG_API_URL, SGG_API_WEB_SOCKETS_URL } = process.env
+
+const isDev = getIsDev()
 
 export function getApiUrl() {
   if (SGG_API_URL) {
     return SGG_API_URL
   }
 
-  if (isDev()) {
+  if (isDev) {
     return 'http://localhost:8880'
   }
 
@@ -20,7 +22,7 @@ export function getApiWebSocketsUrl() {
     return SGG_API_WEB_SOCKETS_URL
   }
 
-  if (isDev()) {
+  if (isDev) {
     return 'ws://localhost:5000'
   }
 

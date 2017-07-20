@@ -1,0 +1,33 @@
+
+enum UserStatus {
+  online
+  offline
+}
+
+input UserStatusInput {
+  userId: ID!
+  status: UserStatus
+}
+
+input UserInput {
+  userId: ID
+}
+
+input UserListInput {
+  userIds: [ID]
+}
+
+input AddFriendInput {
+  userId: ID!
+  friendId: ID!
+}
+
+type UserStatusInfo {
+  userId: ID!
+  status: UserStatus
+}
+
+type AddFriendResult {
+  userId: ID
+  friendId: ID
+}

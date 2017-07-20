@@ -1,0 +1,14 @@
+
+#import "./f-user-info.graphql"
+#import "./f-user-emails.graphql"
+
+query CurrentUser {
+  currentUser {
+    ...userInfo
+    ...userEmails
+    friends {
+      ...userInfo
+      onlineStatus
+    }
+  }
+}

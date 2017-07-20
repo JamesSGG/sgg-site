@@ -10,9 +10,11 @@ import { identity } from 'lodash/fp'
 import type { Store } from 'redux'
 
 import { getApiUrl, getApiWebSocketsUrl } from 'utils/api'
+import { getIsDev } from 'utils/env'
 
 import appReducer, { initialState } from './modules'
 
+const isDev = getIsDev()
 const apiUrl = getApiUrl()
 const apiWebSocketsUrl = getApiWebSocketsUrl()
 
@@ -28,12 +30,23 @@ export const networkInterface = createNetworkInterface({
   },
 })
 
+if (isDev) {
+  networkInterface.use([
+    {
+      applyMiddleware(req, next) {
+        setTimeout(next, 750)
+      },
+    },
+  ])
+}
+
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
   networkInterface,
   wsClient,
 )
 
 export const apolloClient = new ApolloClient({
+  shouldBatch: true,
   networkInterface: networkInterfaceWithSubscriptions,
 })
 

@@ -1,0 +1,8 @@
+
+#import "./f-user-info.graphql"
+
+query AllUsers {
+  users {
+    ...userInfo
+  }
+}

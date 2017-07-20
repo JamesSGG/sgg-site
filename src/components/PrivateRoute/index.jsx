@@ -9,7 +9,10 @@ import { partial, isEmpty } from 'lodash/fp'
 import type { Children } from 'react'
 import type { DefaultChildProps } from 'react-apollo'
 
-import currentUserQuery from 'data/queries/current-user.graphql'
+// import currentUserQuery from 'data/q-current-user.graphql'
+
+// $FlowIgnore
+import CURRENT_USER_QUERY from 'data/q-current-user.graphql'
 
 
 type OptionalProps = {
@@ -25,7 +28,7 @@ type OwnProps = OptionalProps & RequiredProps
 type Props = DefaultChildProps<OwnProps, *>;
 
 
-@graphql(currentUserQuery)
+@graphql(CURRENT_USER_QUERY)
 @autobind
 export default class PrivateRoute extends Component {
 
@@ -35,10 +38,6 @@ export default class PrivateRoute extends Component {
 
   props: Props
 
-  shouldComponentUpdate() {
-    return true
-  }
-
   isLoading(): boolean {
     const { async, data: { loading } } = this.props
 
@@ -46,9 +45,12 @@ export default class PrivateRoute extends Component {
   }
 
   isAuthenticated(): boolean {
-    const { data: { error, me } } = this.props
+    const { data: { error, currentUser } } = this.props
 
-    return isEmpty(error) && !isEmpty(me)
+    const hasUser = !isEmpty(currentUser)
+    const hasError = !isEmpty(error)
+
+    return hasUser && !hasError
   }
 
   renderRoute(RouteComponent: *, props: *): Children {

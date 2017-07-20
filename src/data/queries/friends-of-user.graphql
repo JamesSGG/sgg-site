@@ -1,8 +1,0 @@
-
-# import ./user-info.fragment.graphql
-
-query FriendsOfUser($id: ID!) {
-  friendsOfUser(id: $id) {
-    ...userInfo
-  }
-}

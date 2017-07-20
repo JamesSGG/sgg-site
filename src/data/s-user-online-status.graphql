@@ -1,0 +1,9 @@
+
+#import "./types.graphql"
+
+subscription onUserOnlineStatusChanged($input: UserListInput) {
+  userOnlineStatusChanged(input: $input) {
+    id
+    status
+  }
+}
