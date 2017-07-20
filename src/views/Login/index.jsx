@@ -1,7 +1,10 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Container, Header, Button, Icon } from 'semantic-ui-react'
+import { Container, Header, Image, Button, Icon } from 'semantic-ui-react'
+
+// import logo1x from 'assets/logo-secondary.png'
+import logo2x from 'assets/logo-secondary@2x.png'
 
 import { getApiUrl } from 'utils/api'
 
@@ -22,8 +25,10 @@ export default class LoginView extends Component {
 
     return (
       <Container text textAlign="center">
+        <Image src={logo2x} centered />
+
         <Header>
-          Life is too short to play with idiots and assholes.
+          A Better Gaming Community
         </Header>
         <p>
           <Button color="facebook" as="a" href={loginUrl}>

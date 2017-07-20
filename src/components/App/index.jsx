@@ -4,14 +4,11 @@ import { connect } from 'react-redux'
 import Loadable from 'react-loadable'
 import { push } from 'react-router-redux'
 import { withRouter, Switch, Route, NavLink } from 'react-router-dom'
-import { Menu, Image } from 'semantic-ui-react'
+import { Menu } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
 import { compose, partial } from 'lodash/fp'
 
 import { getApiUrl } from 'utils/api'
-
-// import logo1x from 'assets/logo-secondary.png'
-import logo2x from 'assets/logo-secondary@2x.png'
 
 import AppPerformance from 'components/AppPerformance'
 import LoadingStatus from 'components/LoadingStatus'
@@ -86,7 +83,6 @@ export default class App extends PureComponent {
     return (
       <div className="App">
         <header className="App-header">
-          <Image src={logo2x} floated="left" />
           <Menu floated="right">
             <Menu.Item>
               <NavLink to="/profile">

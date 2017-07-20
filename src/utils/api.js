@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 
 import { isDev } from './env'
 
