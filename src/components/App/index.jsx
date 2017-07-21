@@ -1,12 +1,15 @@
+// @flow
 
+import qs from 'querystring'
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import Loadable from 'react-loadable'
 import { push } from 'react-router-redux'
 import { withRouter, Switch, Route, NavLink } from 'react-router-dom'
+import Cookies from 'universal-cookie'
 import { Menu } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
-import { compose, partial } from 'lodash/fp'
+import { compose, partial, trimCharsStart } from 'lodash/fp'
 
 import { getApiUrl } from 'utils/api'
 
@@ -18,9 +21,12 @@ import './styles.css'
 
 
 type Props = {
+  location: { search: string }, // eslint-disable-line react/no-unused-prop-types
   goToLoginPage: () => Promise<*>,
 }
 
+
+const cookies = new Cookies()
 
 const NotFoundView = Loadable({
   loader: () => import('views/NotFound'),
@@ -67,19 +73,25 @@ export default class App extends PureComponent {
       credentials: 'include',
     })
 
+    cookies.remove('sid')
+
     if (goToLoginPage) {
       goToLoginPage()
     }
-    else {
-      window.location.replace('/login')
-    }
-  }
-
-  shouldComponentUpdate() {
-    return true
   }
 
   render() {
+    const { location } = this.props
+    const queryString = trimCharsStart('?', location.search)
+    const queryParams = qs.parse(queryString)
+    const sessionId = queryParams.sessionID
+
+    if (sessionId) {
+      cookies.set('sid', sessionId, {
+        path: '/',
+      })
+    }
+
     return (
       <div className="App">
         <header className="App-header">
