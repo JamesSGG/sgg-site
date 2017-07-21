@@ -26,6 +26,7 @@ const wsClient = new SubscriptionClient(apiWebSocketsUrl, {
 export const networkInterface = createNetworkInterface({
   uri: `${apiUrl}/graphql`,
   opts: {
+    mode: 'cors',
     credentials: 'include',
   },
 })
