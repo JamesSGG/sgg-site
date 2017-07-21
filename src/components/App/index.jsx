@@ -6,10 +6,11 @@ import { connect } from 'react-redux'
 import Loadable from 'react-loadable'
 import { push } from 'react-router-redux'
 import { withRouter, Switch, Route, NavLink } from 'react-router-dom'
-import Cookies from 'universal-cookie'
 import { Menu } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
 import { compose, partial, trimCharsStart } from 'lodash/fp'
+
+import { cookies } from 'store'
 
 import { getApiUrl } from 'utils/api'
 
@@ -25,8 +26,6 @@ type Props = {
   goToLoginPage: () => Promise<*>,
 }
 
-
-const cookies = new Cookies()
 
 const NotFoundView = Loadable({
   loader: () => import('views/NotFound'),
@@ -73,7 +72,8 @@ export default class App extends PureComponent {
       credentials: 'include',
     })
 
-    cookies.remove('sid')
+    cookies.remove('client.sid')
+    cookies.remove('userId')
 
     if (goToLoginPage) {
       goToLoginPage()
@@ -84,10 +84,16 @@ export default class App extends PureComponent {
     const { location } = this.props
     const queryString = trimCharsStart('?', location.search)
     const queryParams = qs.parse(queryString)
-    const sessionId = queryParams.sessionID
+    const { sessionId, userId } = queryParams
 
     if (sessionId) {
-      cookies.set('sid', sessionId, {
+      cookies.set('client.sid', sessionId, {
+        path: '/',
+      })
+    }
+
+    if (userId) {
+      cookies.set('userId', userId, {
         path: '/',
       })
     }

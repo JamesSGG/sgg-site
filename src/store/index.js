@@ -5,6 +5,7 @@ import { routerReducer, routerMiddleware } from 'react-router-redux'
 import { ApolloClient, createNetworkInterface } from 'react-apollo'
 import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws'
 import createHistory from 'history/createBrowserHistory'
+import Cookies from 'universal-cookie'
 import { identity } from 'lodash/fp'
 
 import type { Store } from 'redux'
@@ -13,6 +14,8 @@ import { getApiUrl, getApiWebSocketsUrl } from 'utils/api'
 import { getIsDev } from 'utils/env'
 
 import appReducer, { initialState } from './modules'
+
+export const cookies = new Cookies()
 
 const isDev = getIsDev()
 const apiUrl = getApiUrl()

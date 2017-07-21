@@ -9,10 +9,12 @@ import { partial, isEmpty } from 'lodash/fp'
 import type { Children } from 'react'
 import type { DefaultChildProps } from 'react-apollo'
 
+import { cookies } from 'store'
+
 // import currentUserQuery from 'data/q-current-user.graphql'
 
 // $FlowIgnore
-import CURRENT_USER_QUERY from 'data/q-current-user.graphql'
+import USER_QUERY from 'data/q-user.graphql'
 
 
 type OptionalProps = {
@@ -28,7 +30,14 @@ type OwnProps = OptionalProps & RequiredProps
 type Props = DefaultChildProps<OwnProps, *>;
 
 
-@graphql(CURRENT_USER_QUERY)
+const userId = cookies.get('userId')
+
+@graphql(USER_QUERY, {
+  skip: !userId,
+  variables: {
+    id: userId,
+  },
+})
 @autobind
 export default class PrivateRoute extends Component {
 
