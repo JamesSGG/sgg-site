@@ -26,5 +26,5 @@ export function getApiWebSocketsUrl() {
     return 'ws://localhost:5000'
   }
 
-  return 'ws://social-gaming-guild-api.herokuapp.com:5000'
+  return 'wss://social-gaming-guild-api.herokuapp.com:5000'
 }
