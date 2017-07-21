@@ -1,6 +1,4 @@
 
-#import "./types.graphql"
-
 mutation AddFriendToUser($input: AddFriendInput!) {
   addFriendToUser(input: $input) {
     userId

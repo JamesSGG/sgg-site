@@ -22,6 +22,7 @@ export type Props = {
   loading?: boolean,
   error?: ?Error,
   friends: Array<User>,
+  setOnlineStatus: (userId: string, status: 'online' | 'offline') => *,
 };
 
 
@@ -59,11 +60,18 @@ export default class FriendsList extends PureComponent {
     }
 
     return friends.map((user) => {
+      const { setOnlineStatus } = this.props
       const { id, displayName, imageUrl, onlineStatus } = user
-      const indicatorColor = onlineStatus === 'online' ? 'green' : 'grey'
+      const isOnline = onlineStatus === 'online'
+      const indicatorColor = isOnline ? 'green' : 'grey'
+      const handleClick = () => {
+        const newStatus = isOnline ? 'offline' : 'online'
+
+        setOnlineStatus(id, newStatus)
+      }
 
       return (
-        <List.Item key={id}>
+        <List.Item key={id} onClick={handleClick} style={{ cursor: 'pointer' }}>
           <Label
             empty
             circular

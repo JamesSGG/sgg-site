@@ -1,6 +1,4 @@
 
-#import "./types.graphql"
-
 mutation SetUserOnlineStatus($input: UserStatusInput!) {
   setUserOnlineStatus(input: $input) {
     userId
