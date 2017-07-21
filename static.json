@@ -5,7 +5,7 @@
   },
   "proxies": {
     "/api": {
-      "origin": "https://${SGG_API_APP_NAME}.herokuapp.com"
+      "origin": "${SGG_API_APP_URL}"
     }
   }
 }
