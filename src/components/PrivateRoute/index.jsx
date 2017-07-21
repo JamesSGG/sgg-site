@@ -34,8 +34,10 @@ const userId = cookies.get('userId')
 
 @graphql(USER_QUERY, {
   skip: !userId,
-  variables: {
-    id: userId,
+  options: {
+    variables: {
+      id: userId,
+    },
   },
 })
 @autobind
@@ -48,15 +50,17 @@ export default class PrivateRoute extends Component {
   props: Props
 
   isLoading(): boolean {
-    const { async, data: { loading } } = this.props
+    const { async, data = {} } = this.props
+    const { loading } = data
 
     return async && loading
   }
 
   isAuthenticated(): boolean {
-    const { data: { error, currentUser } } = this.props
+    const { data = {} } = this.props
+    const { error, user } = data
 
-    const hasUser = !isEmpty(currentUser)
+    const hasUser = !isEmpty(user)
     const hasError = !isEmpty(error)
 
     return hasUser && !hasError

@@ -5,8 +5,10 @@ import { graphql } from 'react-apollo'
 
 import type { DefaultChildProps } from 'react-apollo'
 
+import { cookies } from 'store'
+
 // $FlowIgnore
-import CURRENT_USER_QUERY from 'data/q-current-user.graphql'
+import USER_QUERY from 'data/q-user.graphql'
 
 // $FlowIgnore
 import SET_USER_ONLINE_STATUS from 'data/m-set-user-online-status.graphql'
@@ -21,10 +23,16 @@ import type { Props as FriendsListProps } from './Component'
 export type Props = DefaultChildProps<FriendsListProps, *>;
 
 
+const userId = cookies.get('userId')
+
 @graphql(SET_USER_ONLINE_STATUS)
-@graphql(CURRENT_USER_QUERY, {
+@graphql(USER_QUERY, {
+  skip: !userId,
   options: {
     pollInterval: 2500,
+    variables: {
+      id: userId,
+    },
   },
 })
 export default class FriendsListWithData extends PureComponent {
@@ -32,23 +40,17 @@ export default class FriendsListWithData extends PureComponent {
   props: Props
 
   render() {
-    const {
-      mutate,
-      data: {
-        loading,
-        error,
-        currentUser,
-      },
-    } = this.props
+    const { mutate, data = {} } = this.props
+    const { loading, error, user } = data
 
-    if (!currentUser) {
+    if (!user) {
       return null
     }
 
-    const setOnlineStatus = (userId, status) => mutate({
+    const setOnlineStatus = (_userId, status) => mutate({
       variables: {
         input: {
-          userId,
+          userId: _userId,
           status,
         },
       },
@@ -58,7 +60,7 @@ export default class FriendsListWithData extends PureComponent {
       <FriendsList
         loading={loading}
         error={error}
-        friends={currentUser.friends}
+        friends={user.friends}
         setOnlineStatus={setOnlineStatus}
       />
     )
