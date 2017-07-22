@@ -1,7 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react'
-import { List, Image, Label } from 'semantic-ui-react'
+import { Segment, List, Image, Label, Button } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
 import { isEmpty } from 'lodash/fp'
 
@@ -23,7 +23,8 @@ export type Props = {
   loading?: boolean,
   error?: ?Error,
   friends: Array<User>,
-  setOnlineStatus: (userId: string, status: 'online' | 'offline') => *,
+  createFriend: () => *,
+  setOnlineStatus: (userId: string, status: UserOnlineStatus) => *,
 };
 
 
@@ -60,6 +61,10 @@ export default class FriendsList extends PureComponent {
       )
     }
 
+    if (!friends || isEmpty(friends)) {
+      return null
+    }
+
     return friends.map((user) => {
       const { setOnlineStatus } = this.props
       const { id, displayName, imageUrl, onlineStatus } = user
@@ -92,23 +97,24 @@ export default class FriendsList extends PureComponent {
   }
 
   render() {
-    const { friends } = this.props
-
-    if (!friends || isEmpty(friends)) {
-      return null
-    }
+    const { createFriend } = this.props
 
     const containerStyle = {
       position: 'fixed',
       bottom: 0,
-      right: 0,
+      right: 20,
     }
 
     return (
       <div style={containerStyle}>
-        <List divided relaxed verticalAlign="middle">
-          {this.renderListContent()}
-        </List>
+        <Button fluid attached="top" onClick={createFriend}>
+          Add new friend
+        </Button>
+        <Segment attached>
+          <List divided relaxed verticalAlign="middle">
+            {this.renderListContent()}
+          </List>
+        </Segment>
       </div>
     )
   }
