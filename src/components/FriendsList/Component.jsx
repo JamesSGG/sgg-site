@@ -3,6 +3,7 @@
 import React, { PureComponent } from 'react'
 import { List, Image, Label } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
+import { isEmpty } from 'lodash/fp'
 
 
 type UserOnlineStatus = 'online' | 'offline'
@@ -91,6 +92,12 @@ export default class FriendsList extends PureComponent {
   }
 
   render() {
+    const { friends } = this.props
+
+    if (!friends || isEmpty(friends)) {
+      return null
+    }
+
     const containerStyle = {
       position: 'fixed',
       bottom: 0,
