@@ -23,8 +23,8 @@ export function getApiWebSocketsUrl() {
   }
 
   if (isDev) {
-    return 'ws://localhost:5000'
+    return 'ws://localhost:8880'
   }
 
-  return 'wss://social-gaming-guild-api.herokuapp.com:5000'
+  return 'wss://social-gaming-guild-api.herokuapp.com'
 }
