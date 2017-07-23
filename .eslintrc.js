@@ -8,6 +8,9 @@ module.exports = {
   env: {
     browser: true,
   },
+  plugins: [
+    'graphql',
+  ],
   settings: {
     'import/extensions': ['.js', '.jsx'],
     'import/resolver': {
@@ -58,6 +61,10 @@ module.exports = {
         '/^render.+$/',
         'render',
       ],
+    }],
+    'graphql/template-strings': ['error', {
+      env: 'literal',
+      schemaJson: require('./schema.json'),
     }],
     'import/extensions': ['error', 'always', {
       js: 'never',

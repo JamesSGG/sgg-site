@@ -1,7 +1,7 @@
 
 subscription onUserOnlineStatusChanged($input: UserListInput) {
   userOnlineStatusChanged(input: $input) {
-    id
+    userId
     status
   }
 }
