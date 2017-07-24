@@ -18,13 +18,7 @@ export function getApiUrl() {
 }
 
 export function getApiWebSocketsUrl() {
-  if (SGG_API_WEB_SOCKETS_URL) {
-    return SGG_API_WEB_SOCKETS_URL
-  }
+  const apiUrl = getApiUrl()
 
-  if (isDev) {
-    return 'ws://localhost:8880'
-  }
-
-  return 'wss://social-gaming-guild-api.herokuapp.com'
+  return apiUrl.replace(/^http/, 'ws')
 }
