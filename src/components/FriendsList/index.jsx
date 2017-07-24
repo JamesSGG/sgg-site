@@ -6,7 +6,9 @@ import { property, map } from 'lodash/fp'
 
 import type { DefaultChildProps } from 'react-apollo'
 
-import { cookies, wsClientError } from 'store'
+import { cookies } from 'store'
+
+import { SECOND_IN_MS } from 'utils/date-time'
 
 // $FlowIgnore
 import Q_USER from 'data/q-user.graphql'
@@ -56,7 +58,7 @@ const currentUserId = cookies.get('userId')
 @graphql(Q_USER, {
   skip: !currentUserId,
   options: {
-    pollInterval: wsClientError ? 2500 : 0,
+    pollInterval: 20 * SECOND_IN_MS,
     variables: {
       id: currentUserId,
     },

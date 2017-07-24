@@ -21,24 +21,10 @@ const isDev = getIsDev()
 const apiUrl = getApiUrl()
 const apiWebSocketsUrl = getApiWebSocketsUrl()
 
-function makeSubscriptionClient() {
-  let wsClient = null
-  let wsError = null
-
-  try {
-    wsClient = new SubscriptionClient(`${apiWebSocketsUrl}/subscriptions`, {
-      reconnect: false,
-      connectionParams: {},
-    })
-  }
-  catch (error) {
-    wsError = error
-  }
-
-  return { wsClient, wsError }
-}
-
-export const { wsClient, wsClientError } = makeSubscriptionClient()
+const wsClient = new SubscriptionClient(`${apiWebSocketsUrl}/subscriptions`, {
+  reconnect: false,
+  connectionParams: {},
+})
 
 export const networkInterface = createNetworkInterface({
   uri: `${apiUrl}/graphql`,

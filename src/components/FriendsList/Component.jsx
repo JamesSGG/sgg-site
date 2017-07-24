@@ -13,6 +13,7 @@ export type User = {
   displayName: string,
   imageUrl: string,
   onlineStatus: UserOnlineStatus,
+  friends?: Array<User>,
 }
 
 type Error = {

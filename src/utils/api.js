@@ -1,7 +1,7 @@
 
 import { getIsDev } from './env'
 
-const { SGG_API_URL, SGG_API_WEB_SOCKETS_URL } = process.env
+const { SGG_API_URL } = process.env
 
 const isDev = getIsDev()
 
