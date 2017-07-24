@@ -50,6 +50,20 @@ const currentUserId = cookies.get('userId')
     variables: {
       id: currentUserId,
     },
+    update(store, { data }) {
+      const { createFriendForUser: result } = data
+
+      const query = Q_USER
+      const variables = { id: currentUserId }
+
+      const newData = store.readQuery({ query, variables })
+
+      const { user: { friends = [] } } = newData
+
+      newData.user.friends = friends.concat([result])
+
+      store.writeQuery({ query, variables, data: newData })
+    },
   },
 })
 @graphql(M_SET_USER_ONLINE_STATUS, {
