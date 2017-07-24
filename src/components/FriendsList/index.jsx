@@ -2,52 +2,141 @@
 
 import React, { PureComponent } from 'react'
 import { graphql } from 'react-apollo'
+import { property, map } from 'lodash/fp'
 
 import type { DefaultChildProps } from 'react-apollo'
 
-import { cookies } from 'store'
+import { cookies, wsClientError } from 'store'
 
 // $FlowIgnore
-import USER_QUERY from 'data/q-user.graphql'
-
+import Q_USER from 'data/q-user.graphql'
 // $FlowIgnore
-import CREATE_FRIEND_FOR_USER_MUTATION from 'data/m-create-friend-for-user.graphql'
-
+import M_CREATE_FRIEND_FOR_USER from 'data/m-create-friend-for-user.graphql'
 // $FlowIgnore
-import SET_USER_ONLINE_STATUS_MUTATION from 'data/m-set-user-online-status.graphql'
+import M_SET_USER_ONLINE_STATUS from 'data/m-set-user-online-status.graphql'
+// $FlowIgnore
+import S_USER_ONLINE_STATUS_CHANGE from 'data/s-user-online-status-changed.graphql'
 
 import FriendsList from './Component'
 
-import type { Props as FriendsListProps } from './Component'
+import type { User, Props as FriendsListProps } from './Component'
 
-export type Props = DefaultChildProps<FriendsListProps, *>;
+type SetUserOnlineStatusVars = {
+  input: {
+    userId: string,
+    status: string,
+  },
+}
+
+type OwnProps = {
+  userQueryResult: {},
+  setUserOnlineStatus: (variables: SetUserOnlineStatusVars) => *,
+  createFriendForCurrentUser: () => *,
+}
+
+export type Props =
+  & DefaultChildProps<FriendsListProps, *>
+  & OwnProps;
 
 
-const userId = cookies.get('userId')
+const currentUserId = cookies.get('userId')
 
-@graphql(CREATE_FRIEND_FOR_USER_MUTATION, {
+
+@graphql(M_CREATE_FRIEND_FOR_USER, {
   name: 'createFriendForCurrentUser',
   options: {
     variables: {
-      id: userId,
+      id: currentUserId,
     },
   },
 })
-@graphql(SET_USER_ONLINE_STATUS_MUTATION, {
+@graphql(M_SET_USER_ONLINE_STATUS, {
   name: 'setUserOnlineStatus',
 })
-@graphql(USER_QUERY, {
-  skip: !userId,
+@graphql(Q_USER, {
+  skip: !currentUserId,
   options: {
-    pollInterval: 2500,
+    pollInterval: wsClientError ? 2500 : 0,
     variables: {
-      id: userId,
+      id: currentUserId,
     },
   },
 })
 export default class FriendsListWithData extends PureComponent {
 
   props: Props
+
+  _unsubscribe: () => *
+
+  componentWillReceiveProps(nextProps: Props) {
+    const { data: nextData = {} } = nextProps
+    const { data: prevData = {} } = this.props
+
+    const { loading, error, user: nextUser } = nextData
+    const { user: prevUser } = prevData
+
+    // Bail if the query is still loading or failed.
+    if (loading || error) {
+      return
+    }
+
+    // We already have an active subscription...
+    if (this._unsubscribe) {
+      // Bail if the data hasn't changed.
+      if (nextUser === prevUser) {
+        return
+      }
+
+      // The data has changed so we need to un-subscribe before re-subscribing.
+      this._unsubscribe()
+    }
+
+    this._unsubscribe = nextData.subscribeToMore({
+      document: S_USER_ONLINE_STATUS_CHANGE,
+      variables: {
+        userIds: map(property('id'), nextUser.friends),
+      },
+      onError: console.error, // eslint-disable-line no-console
+      updateQuery(prev: { user: User }, result: *) {
+        const { subscriptionData = {} } = result
+        const { data = {} } = subscriptionData
+        const { userOnlineStatusChanged = {} } = data
+        const { userId, status } = userOnlineStatusChanged
+
+        if (!userId || !status) {
+          return prev
+        }
+
+        const { user } = prev
+        const { friends } = user
+
+        if (!friends) {
+          return prev
+        }
+
+        const newFriends = friends.map((friend) => {
+          if (friend.id === userId) {
+            return {
+              ...friend,
+              onlineStatus: status,
+            }
+          }
+
+          return friend
+        })
+
+        return {
+          ...prev,
+          user: {
+            ...prev.user,
+            friends: newFriends,
+          },
+        }
+      },
+    })
+
+    // TODO: Update the query data when a subscription event is triggered.
+  }
 
   render() {
     const {
@@ -62,10 +151,10 @@ export default class FriendsListWithData extends PureComponent {
       return null
     }
 
-    const setOnlineStatus = (_userId, status) => setUserOnlineStatus({
+    const setOnlineStatus = (userId, status) => setUserOnlineStatus({
       variables: {
         input: {
-          userId: _userId,
+          userId,
           status,
         },
       },

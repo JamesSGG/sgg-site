@@ -54,6 +54,7 @@ module.exports = {
         '/^props$/',
         '/^state$/',
         '/^constructor$/',
+        '/^_.+$/',
         '/^(get|set).+$/',
         '/^(on|handle).+$/',
         'lifecycle',

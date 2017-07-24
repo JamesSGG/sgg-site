@@ -8,7 +8,7 @@ import { isEmpty } from 'lodash/fp'
 
 type UserOnlineStatus = 'online' | 'offline'
 
-type User = {
+export type User = {
   id: string,
   displayName: string,
   imageUrl: string,
