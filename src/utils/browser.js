@@ -1,4 +1,4 @@
-// @fow
+// @flow
 
 export function isBrowser(): boolean {
   return typeof window !== 'undefined'
@@ -27,7 +27,9 @@ export function isRetina(): boolean {
     return false
   }
 
-  if (window.devicePixelRatio > 1.25) {
+  const { devicePixelRatio, matchMedia } = window
+
+  if (devicePixelRatio && devicePixelRatio > 1.25) {
     return true
   }
 
@@ -38,7 +40,7 @@ export function isRetina(): boolean {
     '(min-resolution: 1.25dppx)',
   ].join(', ')
 
-  if (window.matchMedia && window.matchMedia(mediaQuery).matches) {
+  if (matchMedia && matchMedia(mediaQuery).matches) {
     return true
   }
 

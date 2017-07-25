@@ -6,7 +6,7 @@ import { ApolloClient, createNetworkInterface } from 'react-apollo'
 import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws'
 import createHistory from 'history/createBrowserHistory'
 import Cookies from 'universal-cookie'
-import { identity } from 'lodash/fp'
+import { identity, property } from 'lodash/fp'
 
 import type { Store } from 'redux'
 
@@ -52,6 +52,7 @@ const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
 export const apolloClient = new ApolloClient({
   shouldBatch: true,
   networkInterface: networkInterfaceWithSubscriptions,
+  dataIdFromObject: property('id'),
 })
 
 export const history = createHistory()

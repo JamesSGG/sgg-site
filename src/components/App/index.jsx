@@ -3,12 +3,15 @@
 import qs from 'querystring'
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
+import { withApollo } from 'react-apollo'
 import Loadable from 'react-loadable'
 import { push } from 'react-router-redux'
 import { withRouter, Switch, Route, NavLink } from 'react-router-dom'
 import { Menu } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
 import { compose, partial, trimCharsStart } from 'lodash/fp'
+
+import type { Client } from 'react-apollo'
 
 import { cookies } from 'store'
 
@@ -22,6 +25,7 @@ import './styles.css'
 
 
 type Props = {
+  client: Client,
   location: { search: string }, // eslint-disable-line react/no-unused-prop-types
   goToLoginPage: () => Promise<*>,
 }
@@ -54,6 +58,7 @@ const mapDispatchToProps = (dispatch) => ({
 // @withRouter is needed to prevent render blocking in child components
 // e.g. without it the login redirect renders `null` instead of the login page.
 @withRouter
+@withApollo
 @connect(null, mapDispatchToProps)
 @autobind
 export default class App extends PureComponent {
@@ -63,7 +68,7 @@ export default class App extends PureComponent {
   async handleLogout(event: MouseEvent) {
     event.preventDefault()
 
-    const { goToLoginPage } = this.props
+    const { client, goToLoginPage } = this.props
 
     const logoutUrl = `${getApiUrl()}/login/clear`
 
@@ -74,6 +79,8 @@ export default class App extends PureComponent {
 
     cookies.remove('client.sid')
     cookies.remove('userId')
+
+    client.resetStore()
 
     if (goToLoginPage) {
       goToLoginPage()

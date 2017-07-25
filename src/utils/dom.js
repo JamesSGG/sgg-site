@@ -2,12 +2,6 @@
 
 import { isBrowser } from './browser'
 
-/**
- * Returns true if an HTML element is passed in; false if not.
- */
-export function isHtmlElement(element: mixed): boolean {
-  return Boolean(element && element.nodeType)
-}
 
 /**
  * Returns the root element for the current page.
