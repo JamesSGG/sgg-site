@@ -21,6 +21,8 @@ import PrivateRoute from 'components/PrivateRoute'
 import Logo from 'components/Logo'
 import FriendsList from 'components/FriendsList'
 
+import UserProfileView from 'views/UserProfile'
+
 import './styles.css'
 
 
@@ -49,10 +51,10 @@ const HomeView = Loadable({
   loading: LoadingStatus,
 })
 
-const UserProfileView = Loadable({
-  loader: () => import('views/UserProfile'),
-  loading: LoadingStatus,
-})
+// const UserProfileView = Loadable({
+//   loader: () => import('views/UserProfile'),
+//   loading: LoadingStatus,
+// })
 
 const mapDispatchToProps = (dispatch) => ({
   goToLoginPage: compose(dispatch, partial(push, ['/login'])),
