@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
-import { Grid, Item, Dropdown, Input } from 'semantic-ui-react'
+import { Grid, Item, Dropdown } from 'semantic-ui-react'
 
 import type { DefaultChildProps } from 'react-apollo'
 
@@ -37,7 +37,7 @@ export default class UserInfo extends Component {
     }
 
     const { user = {} } = userQueryResult
-    const { displayName, imageUrl } = user
+    const { displayName, imageUrl, gamerTags } = user
 
     const gamesPlayedOptions = [
       {
@@ -80,10 +80,14 @@ export default class UserInfo extends Component {
                 </Grid.Column>
                 <Grid.Column>
                   <p>Gamer Tags</p>
-                  <Input
-                    icon="tags"
-                    iconPosition="left"
-                    action="Add tag"
+
+                  <Dropdown
+                    selection
+                    multiple
+                    search
+                    allowAdditions
+                    options={gamerTags}
+                    value={gamerTags}
                   />
                 </Grid.Column>
               </Grid>
