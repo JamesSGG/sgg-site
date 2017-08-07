@@ -107,6 +107,10 @@ export default class FriendsListWithData extends Component {
       this._unsubscribe()
     }
 
+    if (!nextData.subscribeToMore) {
+      return
+    }
+
     this._unsubscribe = nextData.subscribeToMore({
       document: S_USER_ONLINE_STATUS_CHANGE,
       variables: {

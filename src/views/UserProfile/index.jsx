@@ -29,7 +29,12 @@ export default class UserProfileView extends PureComponent {
   props: Props
 
   render() {
-    const { data } = this.props
+    const { data, loading, error } = this.props
+
+    if (loading || error || !data) {
+      return null
+    }
+
     const { user = {} } = data
     const { displayName, imageUrl } = user
 
