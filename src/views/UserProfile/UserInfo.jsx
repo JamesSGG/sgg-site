@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
 import { Grid, Item, Dropdown } from 'semantic-ui-react'
+import { autobind } from 'core-decorators'
 
 import type { DefaultChildProps } from 'react-apollo'
 
@@ -25,19 +26,23 @@ const currentUserId = localStorage.getItem('userId')
     },
   }),
 })
+@autobind
 export default class UserInfo extends Component {
 
   props: Props
 
-  render() {
-    const { userQueryResult, loading, error } = this.props
+  renderGamesPlayed() {
+    const { userId } = this.props
 
-    if (loading || error || !userQueryResult) {
-      return null
+    if (userId) {
+      return (
+        <p>
+          League of Legends
+          <br />
+          DotA 2
+        </p>
+      )
     }
-
-    const { user = {} } = userQueryResult
-    const { displayName, imageUrl, gamerTags } = user
 
     const gamesPlayedOptions = [
       {
@@ -59,6 +64,54 @@ export default class UserInfo extends Component {
     ]
 
     return (
+      <Dropdown
+        selection
+        multiple
+        placeholder="Select a game"
+        options={gamesPlayedOptions}
+      />
+    )
+  }
+
+  renderGamerTags() {
+    const { userId, user = {} } = this.props
+
+    if (userId) {
+      return (
+        <p>
+          XYZexampleTag
+          <br />
+          ABCexampleTag
+        </p>
+      )
+    }
+
+    const { gamerTags } = user
+
+    return (
+      <Dropdown
+        selection
+        multiple
+        search
+        allowAdditions
+        placeholder="Add a gamer tag"
+        options={[]}
+        value={gamerTags}
+      />
+    )
+  }
+
+  render() {
+    const { userQueryResult, loading, error } = this.props
+
+    if (loading || error || !userQueryResult) {
+      return null
+    }
+
+    const { user = {} } = userQueryResult
+    const { displayName, imageUrl } = user
+
+    return (
       <Item.Group>
         <Item>
           <Item.Image size="tiny" src={imageUrl} />
@@ -71,25 +124,11 @@ export default class UserInfo extends Component {
               <Grid columns={2}>
                 <Grid.Column>
                   <p>Games Played</p>
-                  <Dropdown
-                    selection
-                    multiple
-                    placeholder="Select a game"
-                    options={gamesPlayedOptions}
-                  />
+                  {this.renderGamesPlayed()}
                 </Grid.Column>
                 <Grid.Column>
                   <p>Gamer Tags</p>
-
-                  <Dropdown
-                    selection
-                    multiple
-                    search
-                    allowAdditions
-                    placeholder="Add a gamer tag"
-                    options={[]}
-                    value={gamerTags}
-                  />
+                  {this.renderGamerTags()}
                 </Grid.Column>
               </Grid>
             </Item.Description>
