@@ -7,7 +7,7 @@ query User($id: ID!) {
   user(id: $id) {
     ...userInfo
     ...userEmails
-    ...userInfo
+    ...userProfile
 
     friends {
       ...userInfo
