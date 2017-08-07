@@ -31,6 +31,8 @@ export default class UserInfo extends Component {
   render() {
     const { data, loading, error } = this.props
 
+    console.log(data) // eslint-disable-line no-console
+
     if (loading || error || !data) {
       return null
     }
