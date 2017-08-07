@@ -86,6 +86,7 @@ export default class UserInfo extends Component {
                     multiple
                     search
                     allowAdditions
+                    placeholder="Add a gamer tag"
                     options={gamerTags}
                     value={gamerTags}
                   />
