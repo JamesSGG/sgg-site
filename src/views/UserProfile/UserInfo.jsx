@@ -19,11 +19,11 @@ const currentUserId = localStorage.getItem('userId')
 @graphql(Q_USER, {
   name: 'userQueryResult',
   skip: !currentUserId,
-  options: {
+  options: ({ userId }) => ({
     variables: {
-      id: currentUserId,
+      id: userId || currentUserId,
     },
-  },
+  }),
 })
 export default class UserInfo extends Component {
 
@@ -87,7 +87,7 @@ export default class UserInfo extends Component {
                     search
                     allowAdditions
                     placeholder="Add a gamer tag"
-                    options={gamerTags}
+                    options={[]}
                     value={gamerTags}
                   />
                 </Grid.Column>

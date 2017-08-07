@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react'
+import { Link } from 'react-router-dom'
 import FlipMove from 'react-flip-move'
 import {
   List,
@@ -64,6 +65,7 @@ export default class FriendsList extends PureComponent {
     const listProps = {
       divided: true,
       relaxed: true,
+      selection: true,
       verticalAlign: 'middle',
       style: {
         maxHeight: '45vh',
@@ -109,28 +111,33 @@ export default class FriendsList extends PureComponent {
       const { id, displayName, imageUrl, onlineStatus } = user
       const isOnline = onlineStatus === 'online'
       const indicatorColor = isOnline ? 'green' : 'grey'
-      const handleClick = () => {
+      const userProfileUrl = `/profile/${id}`
+
+      const handleIconClick = () => {
         const newStatus = isOnline ? 'offline' : 'online'
 
         setOnlineStatus(id, newStatus)
       }
 
-      const style = { cursor: 'pointer' }
-
       return (
-        <List.Item key={id} onClick={handleClick} style={style}>
+        <List.Item key={id}>
           <Label
             empty
             circular
             horizontal
             color={indicatorColor}
+            onClick={handleIconClick}
           />
           <Image
             avatar
             src={imageUrl}
           />
           <List.Content>
-            {displayName}
+            <List.Header>
+              <Link to={userProfileUrl}>
+                {displayName}
+              </Link>
+            </List.Header>
           </List.Content>
         </List.Item>
       )

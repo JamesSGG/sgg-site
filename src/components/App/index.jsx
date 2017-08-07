@@ -153,9 +153,27 @@ export default class App extends PureComponent {
 
         <Segment as="main" className="App-main" basic>
           <Switch>
-            <Route path="/login" component={LoginView} />
-            <PrivateRoute exact path="/" component={HomeView} />
-            <PrivateRoute path="/profile" component={UserProfileView} />
+            <Route
+              path="/login"
+              component={LoginView}
+            />
+
+            <PrivateRoute
+              exact
+              path="/"
+              component={HomeView}
+            />
+
+            <PrivateRoute
+              path="/profile/:userId"
+              component={UserProfileView}
+            />
+
+            <PrivateRoute
+              path="/profile"
+              component={UserProfileView}
+            />
+
             <Route component={NotFoundView} />
           </Switch>
         </Segment>
