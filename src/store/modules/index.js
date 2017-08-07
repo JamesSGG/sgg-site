@@ -4,6 +4,6 @@ type AppState = {}
 
 export const initialState: AppState = {}
 
-export default function reducer(state: ReduxState = initialState): ReduxState {
+export default function reducer(state: AppState = initialState): AppState {
   return state
 }

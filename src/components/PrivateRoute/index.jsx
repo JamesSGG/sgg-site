@@ -9,10 +9,6 @@ import { partial, isEmpty } from 'lodash/fp'
 import type { Children } from 'react'
 import type { DefaultChildProps } from 'react-apollo'
 
-import { cookies } from 'store'
-
-// import currentUserQuery from 'data/q-current-user.graphql'
-
 // $FlowIgnore
 import USER_QUERY from 'data/q-user.graphql'
 
@@ -30,7 +26,9 @@ type OwnProps = OptionalProps & RequiredProps
 type Props = DefaultChildProps<OwnProps, *>;
 
 
-const userId = cookies.get('userId')
+const { localStorage } = window
+
+const userId = localStorage.getItem('userId')
 
 @graphql(USER_QUERY, {
   skip: !userId,

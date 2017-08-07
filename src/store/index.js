@@ -5,7 +5,6 @@ import { routerReducer, routerMiddleware } from 'react-router-redux'
 import { ApolloClient, createNetworkInterface } from 'react-apollo'
 import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws'
 import createHistory from 'history/createBrowserHistory'
-import Cookies from 'universal-cookie'
 import { identity, property } from 'lodash/fp'
 
 import type { Store } from 'redux'
@@ -14,8 +13,6 @@ import { getApiUrl, getApiWebSocketsUrl } from 'utils/api'
 import { getIsDev } from 'utils/env'
 
 import appReducer, { initialState } from './modules'
-
-export const cookies = new Cookies()
 
 const isDev = getIsDev()
 const apiUrl = getApiUrl()
@@ -33,6 +30,8 @@ export const networkInterface = createNetworkInterface({
     credentials: 'include',
   },
 })
+
+console.log(`isDev: ${isDev}`) // eslint-disable-line no-console
 
 if (isDev) {
   networkInterface.use([
@@ -71,9 +70,11 @@ export const getStore = (state?: * = initialState): Store<*, *> => {
     routerMiddleware(history),
   ]
 
+  const { __REDUX_DEVTOOLS_EXTENSION__ } = window
+
   const devToolsMiddleware = (
-    typeof window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined'
-    ? window.__REDUX_DEVTOOLS_EXTENSION__()
+    isDev && __REDUX_DEVTOOLS_EXTENSION__
+    ? __REDUX_DEVTOOLS_EXTENSION__()
     : identity
   )
 

@@ -83,7 +83,6 @@
     "semantic-ui-css": "^2.2.10",
     "semantic-ui-react": "^0.70.0",
     "subscriptions-transport-ws": "^0.8.1",
-    "universal-cookie": "^2.0.8",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
