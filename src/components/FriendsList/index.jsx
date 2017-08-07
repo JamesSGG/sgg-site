@@ -120,8 +120,8 @@ export default class FriendsListWithData extends Component {
       onError: console.error, // eslint-disable-line no-console
       updateQuery(prev: { user: User }, result: *) {
         const { subscriptionData = {} } = result
-        const { userQueryResult = {} } = subscriptionData
-        const { userOnlineStatusChanged = {} } = userQueryResult
+        const { data = {} } = subscriptionData
+        const { userOnlineStatusChanged = {} } = data
         const { userId, status } = userOnlineStatusChanged
 
         if (!userId || !status) {

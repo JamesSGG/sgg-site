@@ -31,8 +31,6 @@ export const networkInterface = createNetworkInterface({
   },
 })
 
-console.log(`isDev: ${isDev}`) // eslint-disable-line no-console
-
 if (isDev) {
   networkInterface.use([
     {
