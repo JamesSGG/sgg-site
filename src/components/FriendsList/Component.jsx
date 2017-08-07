@@ -1,9 +1,18 @@
 // @flow
 
 import React, { PureComponent } from 'react'
-import { Segment, List, Image, Label, Button } from 'semantic-ui-react'
+import FlipMove from 'react-flip-move'
+import {
+  List,
+  Image,
+  Label,
+  Accordion,
+} from 'semantic-ui-react'
+
 import { autobind } from 'core-decorators'
-import { isEmpty } from 'lodash/fp'
+import { property, matchesProperty, sortBy, isEmpty } from 'lodash/fp'
+
+import FlipList from 'components/FlipList'
 
 
 type UserOnlineStatus = 'online' | 'offline'
@@ -14,6 +23,7 @@ export type User = {
   imageUrl: string,
   onlineStatus: UserOnlineStatus,
   friends?: Array<User>,
+  nonFriends?: Array<User>,
 }
 
 type Error = {
@@ -24,7 +34,7 @@ export type Props = {
   loading?: boolean,
   error?: ?Error,
   friends: Array<User>,
-  createFriend: () => *,
+  nonFriends: Array<User>,
   setOnlineStatus: (userId: string, status: UserOnlineStatus) => *,
 };
 
@@ -39,8 +49,37 @@ export default class FriendsList extends PureComponent {
 
   props: Props
 
-  renderListContent() {
-    const { loading, error, friends } = this.props
+  sortUsers = sortBy([
+    // Put offline users at the bottom (true > false when sorting)
+    matchesProperty('onlineStatus', 'offline'),
+    property('displayName'),
+  ])
+
+  renderList(users: Array<User>) {
+    const flipMoveProps = {
+      typeName: FlipList,
+      staggerDurationBy: 50,
+    }
+
+    const listProps = {
+      divided: true,
+      relaxed: true,
+      verticalAlign: 'middle',
+      style: {
+        maxHeight: '45vh',
+        overflow: 'auto',
+      },
+    }
+
+    return (
+      <FlipMove {...flipMoveProps} {...listProps}>
+        {this.renderListContent(users)}
+      </FlipMove>
+    )
+  }
+
+  renderListContent(users: Array<User>) {
+    const { loading, error, setOnlineStatus } = this.props
 
     if (loading) {
       return (
@@ -62,12 +101,11 @@ export default class FriendsList extends PureComponent {
       )
     }
 
-    if (!friends || isEmpty(friends)) {
+    if (!users || isEmpty(users)) {
       return null
     }
 
-    return friends.map((user) => {
-      const { setOnlineStatus } = this.props
+    return this.sortUsers(users).map((user) => {
       const { id, displayName, imageUrl, onlineStatus } = user
       const isOnline = onlineStatus === 'online'
       const indicatorColor = isOnline ? 'green' : 'grey'
@@ -77,8 +115,10 @@ export default class FriendsList extends PureComponent {
         setOnlineStatus(id, newStatus)
       }
 
+      const style = { cursor: 'pointer' }
+
       return (
-        <List.Item key={id} onClick={handleClick} style={{ cursor: 'pointer' }}>
+        <List.Item key={id} onClick={handleClick} style={style}>
           <Label
             empty
             circular
@@ -98,24 +138,36 @@ export default class FriendsList extends PureComponent {
   }
 
   render() {
-    const { createFriend } = this.props
+    const { friends, nonFriends } = this.props
 
     const containerStyle = {
       position: 'fixed',
       bottom: 0,
       right: 20,
+      width: 250,
     }
+
+    const panels = [
+      {
+        key: 'friends-list',
+        title: 'Friends',
+        content: this.renderList(friends),
+      },
+      {
+        key: 'non-friends-list',
+        title: 'All SGG Members',
+        content: this.renderList(nonFriends),
+      },
+    ]
 
     return (
       <div style={containerStyle}>
-        <Button fluid attached="top" onClick={createFriend}>
-          Add new friend
-        </Button>
-        <Segment attached>
-          <List divided relaxed verticalAlign="middle">
-            {this.renderListContent()}
-          </List>
-        </Segment>
+        <Accordion
+          styled
+          fluid
+          panels={panels}
+          exclusive={false}
+        />
       </div>
     )
   }

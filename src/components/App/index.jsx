@@ -7,26 +7,29 @@ import { withApollo } from 'react-apollo'
 import Loadable from 'react-loadable'
 import { push } from 'react-router-redux'
 import { withRouter, Switch, Route, NavLink } from 'react-router-dom'
-import { Menu } from 'semantic-ui-react'
+import { Segment, Menu } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
 import { compose, partial, trimCharsStart } from 'lodash/fp'
 
 import type { Client } from 'react-apollo'
-
-import { cookies } from 'store'
 
 import { getApiUrl } from 'utils/api'
 
 import AppPerformance from 'components/AppPerformance'
 import LoadingStatus from 'components/LoadingStatus'
 import PrivateRoute from 'components/PrivateRoute'
+import Logo from 'components/Logo'
+import FriendsList from 'components/FriendsList'
 
 import './styles.css'
 
 
 type Props = {
   client: Client,
-  location: { search: string }, // eslint-disable-line react/no-unused-prop-types
+  location: {
+    search: string, // eslint-disable-line react/no-unused-prop-types
+    pathname: string, // eslint-disable-line react/no-unused-prop-types
+  },
   goToLoginPage: () => Promise<*>,
 }
 
@@ -69,16 +72,17 @@ export default class App extends PureComponent {
     event.preventDefault()
 
     const { client, goToLoginPage } = this.props
+    const { fetch, localStorage } = window
 
     const logoutUrl = `${getApiUrl()}/login/clear`
 
-    await window.fetch(logoutUrl, {
+    await fetch(logoutUrl, {
       method: 'POST',
       credentials: 'include',
     })
 
-    cookies.remove('client.sid')
-    cookies.remove('userId')
+    localStorage.removeItem('sessionId')
+    localStorage.removeItem('userId')
 
     client.resetStore()
 
@@ -92,64 +96,79 @@ export default class App extends PureComponent {
     const queryString = trimCharsStart('?', location.search)
     const queryParams = qs.parse(queryString)
     const { sessionId, userId } = queryParams
+    const { localStorage } = window
 
     if (sessionId) {
-      cookies.set('client.sid', sessionId, {
-        path: '/',
-      })
+      localStorage.setItem('sessionId', sessionId)
     }
 
     if (userId) {
-      cookies.set('userId', userId, {
-        path: '/',
-      })
+      localStorage.setItem('userId', userId)
+    }
+
+    const menuItems = [
+      {
+        url: '/',
+        text: 'Home',
+      },
+      {
+        url: '/profile',
+        text: 'Profile',
+      },
+      {
+        url: '/friends',
+        text: 'Friends',
+      },
+      {
+        url: '/team',
+        text: 'Team',
+      },
+      {
+        url: '/rewards',
+        text: 'Rewards',
+      },
+    ]
+
+    const renderMenuItem = ({ url, text }) => {
+      const isActive = (url === location.pathname)
+
+      return (
+        <Menu.Item active={isActive}>
+          <NavLink to={url} active={isActive}>
+            {text}
+          </NavLink>
+        </Menu.Item>
+      )
     }
 
     return (
       <div className="App">
-        <header className="App-header">
-          <Menu floated="right">
-            <Menu.Item>
-              <NavLink to="/profile">
-                Profile
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item>
-              <NavLink to="/friends">
-                Friends
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item>
-              <NavLink to="/team">
-                Team
-              </NavLink>
-            </Menu.Item>
-            <Menu.Item>
-              <NavLink to="/rewards">
-                Rewards
-              </NavLink>
-            </Menu.Item>
+        <Segment as="header" className="App-header" basic clearing>
+          <Logo floated="left" />
+          <Menu floated="right" size="huge" pointing secondary>
+            {menuItems.map(renderMenuItem)}
             <Menu.Item>
               <a href="/logout" onClick={this.handleLogout}>
                 Sign Out
               </a>
             </Menu.Item>
           </Menu>
-        </header>
+        </Segment>
 
-        <main className="App-main">
+        <Segment as="main" className="App-main" basic>
           <Switch>
             <Route path="/login" component={LoginView} />
             <PrivateRoute exact path="/" component={HomeView} />
             <PrivateRoute path="/profile" component={UserProfileView} />
             <Route component={NotFoundView} />
           </Switch>
-        </main>
+        </Segment>
 
-        <footer className="App-footer">
+        <Segment as="footer" className="App-footer" basic>
           {/* Add content here */}
-        </footer>
+        </Segment>
 
+        <FriendsList />
         <AppPerformance />
       </div>
     )

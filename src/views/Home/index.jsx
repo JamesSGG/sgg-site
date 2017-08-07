@@ -1,8 +1,6 @@
 
 import React, { PureComponent } from 'react'
-import { Container } from 'semantic-ui-react'
-
-import FriendsList from 'components/FriendsList'
+import { Container, Header } from 'semantic-ui-react'
 
 export default class HomeView extends PureComponent {
 
@@ -10,9 +8,10 @@ export default class HomeView extends PureComponent {
     return (
       <div>
         <Container text>
-          <h1>Home View</h1>
+          <Header as="h1" textAlign="center">
+            Home View
+          </Header>
         </Container>
-        <FriendsList />
       </div>
     )
   }

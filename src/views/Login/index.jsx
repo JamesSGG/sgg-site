@@ -1,12 +1,11 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Container, Header, Image, Button, Icon } from 'semantic-ui-react'
-
-// import logo1x from 'assets/logo-secondary.png'
-import logo2x from 'assets/logo-secondary@2x.png'
+import { Container, Header, Button, Icon } from 'semantic-ui-react'
 
 import { getApiUrl } from 'utils/api'
+
+import Logo from 'components/Logo'
 
 type Props = {}
 
@@ -15,7 +14,9 @@ export default class LoginView extends Component {
   props: Props
 
   getLoginUrl(): string {
-    const returnUrl = window.encodeURIComponent(window.location.origin)
+    const { encodeURIComponent, location } = window
+
+    const returnUrl = encodeURIComponent(location.origin)
 
     return `${getApiUrl()}/login/facebook?return=${returnUrl}`
   }
@@ -25,7 +26,7 @@ export default class LoginView extends Component {
 
     return (
       <Container text textAlign="center">
-        <Image src={logo2x} centered />
+        <Logo centered />
 
         <Header>
           A Better Gaming Community

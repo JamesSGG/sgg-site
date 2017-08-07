@@ -1,12 +1,20 @@
 
 #import "./f-user-info.graphql"
 #import "./f-user-emails.graphql"
+#import "./f-user-profile.graphql"
 
 query User($id: ID!) {
   user(id: $id) {
     ...userInfo
     ...userEmails
+    ...userInfo
+
     friends {
+      ...userInfo
+      onlineStatus
+    }
+
+    nonFriends {
       ...userInfo
       onlineStatus
     }

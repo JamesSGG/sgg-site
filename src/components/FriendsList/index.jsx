@@ -6,8 +6,6 @@ import { property, map } from 'lodash/fp'
 
 import type { DefaultChildProps } from 'react-apollo'
 
-import { cookies } from 'store'
-
 import { SECOND_IN_MS } from 'utils/date-time'
 
 // $FlowIgnore
@@ -40,8 +38,9 @@ export type Props =
   & DefaultChildProps<FriendsListProps, *>
   & OwnProps;
 
+const { localStorage } = window
 
-const currentUserId = cookies.get('userId')
+const currentUserId = localStorage.getItem('userId')
 
 
 @graphql(M_CREATE_FRIEND_FOR_USER, {
@@ -124,13 +123,9 @@ export default class FriendsListWithData extends PureComponent {
         }
 
         const { user } = prev
-        const { friends } = user
+        const { friends = [], nonFriends = [] } = user
 
-        if (!friends) {
-          return prev
-        }
-
-        const newFriends = friends.map((friend) => {
+        const setNewUserStatus = (friend) => {
           if (friend.id === userId) {
             return {
               ...friend,
@@ -139,13 +134,14 @@ export default class FriendsListWithData extends PureComponent {
           }
 
           return friend
-        })
+        }
 
         return {
           ...prev,
           user: {
             ...prev.user,
-            friends: newFriends,
+            friends: friends.map(setNewUserStatus),
+            nonFriends: nonFriends.map(setNewUserStatus),
           },
         }
       },
@@ -181,6 +177,7 @@ export default class FriendsListWithData extends PureComponent {
         loading={loading}
         error={error}
         friends={user.friends}
+        nonFriends={user.nonFriends}
         setOnlineStatus={setOnlineStatus}
         createFriend={createFriendForCurrentUser}
       />
