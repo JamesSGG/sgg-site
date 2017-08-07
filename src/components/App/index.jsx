@@ -129,17 +129,13 @@ export default class App extends PureComponent {
       },
     ]
 
-    const renderMenuItem = ({ url, text }) => {
-      const isActive = (url === location.pathname)
-
-      return (
-        <Menu.Item active={isActive}>
-          <NavLink to={url} active={isActive}>
-            {text}
-          </NavLink>
-        </Menu.Item>
-      )
-    }
+    const renderMenuItem = ({ url, text }) => (
+      <Menu.Item key={url} active={url === location.pathname}>
+        <NavLink to={url}>
+          {text}
+        </NavLink>
+      </Menu.Item>
+    )
 
     return (
       <div className="App">

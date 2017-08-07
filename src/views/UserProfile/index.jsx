@@ -1,5 +1,5 @@
 
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
 import { Container, Grid, Item, Header, Dropdown, Input } from 'semantic-ui-react'
 
@@ -24,14 +24,14 @@ const currentUserId = localStorage.getItem('userId')
     },
   },
 })
-export default class UserProfileView extends PureComponent {
+export default class UserProfileView extends Component {
 
   props: Props
 
   render() {
     const { data, loading, error } = this.props
 
-    if (loading || error || !data) {
+    if (loading || error) {
       return null
     }
 
