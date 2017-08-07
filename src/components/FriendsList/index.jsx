@@ -88,8 +88,8 @@ export default class FriendsListWithData extends Component {
     const { data: nextData = {} } = nextProps
     const { data: prevData = {} } = this.props
 
-    const { loading, error, user: nextUser } = nextData
-    const { user: prevUser } = prevData
+    const { loading, error, user: nextUser = {} } = nextData
+    const { user: prevUser = {} } = prevData
 
     // Bail if the query is still loading or failed.
     if (loading || error) {

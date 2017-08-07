@@ -29,7 +29,8 @@ export default class UserProfileView extends PureComponent {
   props: Props
 
   render() {
-    const { data: { user } = {} } = this.props
+    const { data } = this.props
+    const { user = {} } = data
     const { displayName, imageUrl } = user
 
     const gamesPlayedOptions = [
