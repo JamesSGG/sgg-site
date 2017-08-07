@@ -1,4 +1,4 @@
 
-fragment userInfo on User {
+fragment userProfile on User {
   gamerTags
 }
