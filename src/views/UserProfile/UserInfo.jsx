@@ -31,7 +31,7 @@ export default class UserInfo extends Component {
   render() {
     const { data, loading, error } = this.props
 
-    if (loading || error) {
+    if (loading || error || !data) {
       return null
     }
 
