@@ -1,6 +1,6 @@
 // @flow
 
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
 import { property, map } from 'lodash/fp'
 
@@ -57,7 +57,8 @@ const currentUserId = localStorage.getItem('userId')
 
       const newData = store.readQuery({ query, variables })
 
-      const { user: { friends = [] } } = newData
+      const { user = {} } = newData
+      const { friends = [] } = user
 
       newData.user.friends = friends.concat([result])
 
@@ -77,7 +78,7 @@ const currentUserId = localStorage.getItem('userId')
     },
   },
 })
-export default class FriendsListWithData extends PureComponent {
+export default class FriendsListWithData extends Component {
 
   props: Props
 
@@ -122,7 +123,7 @@ export default class FriendsListWithData extends PureComponent {
           return prev
         }
 
-        const { user } = prev
+        const { user = {} } = prev
         const { friends = [], nonFriends = [] } = user
 
         const setNewUserStatus = (friend) => {

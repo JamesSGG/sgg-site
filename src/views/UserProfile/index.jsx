@@ -9,7 +9,7 @@ import type { DefaultChildProps } from 'react-apollo'
 import Q_USER from 'data/q-user.graphql'
 
 
-type Props = DefaultChildProps<FriendsListProps, *>;
+type Props = DefaultChildProps<*, *>;
 
 
 const { localStorage } = window
@@ -29,7 +29,7 @@ export default class UserProfileView extends PureComponent {
   props: Props
 
   render() {
-    const { data: { user } } = this.props
+    const { data: { user } = {} } = this.props
     const { displayName, imageUrl } = user
 
     const gamesPlayedOptions = [
