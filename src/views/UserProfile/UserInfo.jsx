@@ -17,6 +17,7 @@ const { localStorage } = window
 const currentUserId = localStorage.getItem('userId')
 
 @graphql(Q_USER, {
+  name: 'userQueryResult',
   skip: !currentUserId,
   options: {
     variables: {
@@ -29,15 +30,15 @@ export default class UserInfo extends Component {
   props: Props
 
   render() {
-    const { data, loading, error } = this.props
+    const { userQueryResult, loading, error } = this.props
 
-    console.log(data) // eslint-disable-line no-console
+    console.log(userQueryResult) // eslint-disable-line no-console
 
-    if (loading || error || !data) {
+    if (loading || error || !userQueryResult) {
       return null
     }
 
-    const { user = {} } = data
+    const { user = {} } = userQueryResult
     const { displayName, imageUrl } = user
 
     const gamesPlayedOptions = [

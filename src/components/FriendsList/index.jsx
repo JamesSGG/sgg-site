@@ -71,6 +71,7 @@ const currentUserId = localStorage.getItem('userId')
 })
 @graphql(Q_USER, {
   skip: !currentUserId,
+  name: 'userQueryResult',
   options: {
     pollInterval: 20 * SECOND_IN_MS,
     variables: {
@@ -85,8 +86,8 @@ export default class FriendsListWithData extends Component {
   _unsubscribe: () => *
 
   componentWillReceiveProps(nextProps: Props) {
-    const { data: nextData = {} } = nextProps
-    const { data: prevData = {} } = this.props
+    const { userQueryResult: nextData = {} } = nextProps
+    const { userQueryResult: prevData = {} } = this.props
 
     const { loading, error, user: nextUser = {} } = nextData
     const { user: prevUser = {} } = prevData
@@ -119,8 +120,8 @@ export default class FriendsListWithData extends Component {
       onError: console.error, // eslint-disable-line no-console
       updateQuery(prev: { user: User }, result: *) {
         const { subscriptionData = {} } = result
-        const { data = {} } = subscriptionData
-        const { userOnlineStatusChanged = {} } = data
+        const { userQueryResult = {} } = subscriptionData
+        const { userOnlineStatusChanged = {} } = userQueryResult
         const { userId, status } = userOnlineStatusChanged
 
         if (!userId || !status) {
@@ -157,12 +158,12 @@ export default class FriendsListWithData extends Component {
 
   render() {
     const {
-      data = {},
+      userQueryResult = {},
       setUserOnlineStatus,
       createFriendForCurrentUser,
     } = this.props
 
-    const { loading, error, user } = data
+    const { loading, error, user } = userQueryResult
 
     if (!user) {
       return null
