@@ -19,7 +19,7 @@ export default class UserProfileView extends Component {
     const { params } = match
 
     return (
-      <Container text>
+      <Container>
         <Header as="h1" textAlign="center">
           Gamer Profile
         </Header>

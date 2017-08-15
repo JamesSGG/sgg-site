@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
-import { Grid, Item, Dropdown } from 'semantic-ui-react'
+import { Grid, Item, Header, Table, Input, Dropdown } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
 
 import type { DefaultChildProps } from 'react-apollo'
@@ -36,11 +36,37 @@ export default class UserInfo extends Component {
 
     if (userId) {
       return (
-        <p>
-          League of Legends
-          <br />
-          DotA 2
-        </p>
+        <Table basic="very">
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>
+                Games Played
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                Gamer Tag
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+
+          <Table.Body>
+            <Table.Row>
+              <Table.Cell>
+                League of Legends
+              </Table.Cell>
+              <Table.Cell>
+                XYZexampleTag
+              </Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>
+                DotA 2
+              </Table.Cell>
+              <Table.Cell>
+                ABCexampleTag
+              </Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        </Table>
       )
     }
 
@@ -64,40 +90,40 @@ export default class UserInfo extends Component {
     ]
 
     return (
-      <Dropdown
-        selection
-        multiple
-        placeholder="Select a game"
-        options={gamesPlayedOptions}
-      />
-    )
-  }
+      <Table basic="very">
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell width="8">
+              Games Played
+            </Table.HeaderCell>
+            <Table.HeaderCell width="8">
+              Gamer Tag
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
 
-  renderGamerTags() {
-    const { userId, user = {} } = this.props
-
-    if (userId) {
-      return (
-        <p>
-          XYZexampleTag
-          <br />
-          ABCexampleTag
-        </p>
-      )
-    }
-
-    const { gamerTags } = user
-
-    return (
-      <Dropdown
-        selection
-        multiple
-        search
-        allowAdditions
-        placeholder="Add a gamer tag"
-        options={[]}
-        value={gamerTags}
-      />
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>
+              <Dropdown
+                fluid
+                selection
+                multiple
+                placeholder="Select game(s)"
+                options={gamesPlayedOptions}
+              />
+            </Table.Cell>
+            <Table.Cell>
+              <Input
+                fluid
+                icon="tag"
+                iconPosition="left"
+                placeholder="Enter gamer tag"
+              />
+            </Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>
     )
   }
 
@@ -114,23 +140,18 @@ export default class UserInfo extends Component {
     return (
       <Item.Group>
         <Item>
-          <Item.Image size="tiny" src={imageUrl} />
-
+          <Item.Image
+            className="ui"
+            src={imageUrl}
+            width="200"
+            height="200"
+          />
           <Item.Content>
             <Item.Header>
               {displayName}
             </Item.Header>
             <Item.Description>
-              <Grid columns={2}>
-                <Grid.Column>
-                  <p>Games Played</p>
-                  {this.renderGamesPlayed()}
-                </Grid.Column>
-                <Grid.Column>
-                  <p>Gamer Tags</p>
-                  {this.renderGamerTags()}
-                </Grid.Column>
-              </Grid>
+              {this.renderGamesPlayed()}
             </Item.Description>
           </Item.Content>
         </Item>
