@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { graphql } from 'react-apollo'
 import { autobind } from 'core-decorators'
-import { partial, isEmpty } from 'lodash/fp'
+import { partial, complement, isEmpty } from 'lodash/fp'
 
 import type { Children } from 'react'
 import type { DefaultChildProps } from 'react-apollo'
@@ -25,6 +25,8 @@ type OwnProps = OptionalProps & RequiredProps
 
 type Props = DefaultChildProps<OwnProps, *>;
 
+
+const notEmpty = complement(isEmpty)
 
 const { localStorage } = window
 
@@ -58,8 +60,8 @@ export default class PrivateRoute extends Component {
     const { data = {} } = this.props
     const { error, user } = data
 
-    const hasUser = !isEmpty(user)
-    const hasError = !isEmpty(error)
+    const hasUser = notEmpty(user)
+    const hasError = notEmpty(error)
 
     return hasUser && !hasError
   }
@@ -73,13 +75,13 @@ export default class PrivateRoute extends Component {
       )
     }
 
+    const redirectTo = {
+      pathname: '/login',
+      state: { from: location },
+    }
+
     return (
-      <Redirect
-        to={{
-          pathname: '/login',
-          state: { from: location },
-        }}
-      />
+      <Redirect to={redirectTo} />
     )
   }
 
