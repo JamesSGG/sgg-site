@@ -116,10 +116,6 @@ export default class App extends PureComponent {
         text: 'Profile',
       },
       {
-        url: '/friends',
-        text: 'Friends',
-      },
-      {
         url: '/team',
         text: 'Team',
       },
