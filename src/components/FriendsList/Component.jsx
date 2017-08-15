@@ -133,11 +133,9 @@ export default class FriendsList extends PureComponent {
             src={imageUrl}
           />
           <List.Content>
-            <List.Header>
-              <Link to={userProfileUrl}>
-                {displayName}
-              </Link>
-            </List.Header>
+            <List.Description as={Link} to={userProfileUrl}>
+              {displayName}
+            </List.Description>
           </List.Content>
         </List.Item>
       )
