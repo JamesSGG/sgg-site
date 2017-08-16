@@ -7,7 +7,7 @@ import { withApollo } from 'react-apollo'
 import Loadable from 'react-loadable'
 import { push } from 'react-router-redux'
 import { withRouter, Switch, Route, NavLink } from 'react-router-dom'
-import { Grid, Segment, Menu } from 'semantic-ui-react'
+import { Grid, Segment, Rail, Menu } from 'semantic-ui-react'
 
 import { autobind } from 'core-decorators'
 import { compose, partial, trimCharsStart } from 'lodash/fp'
@@ -110,6 +110,16 @@ export default class App extends PureComponent {
 
   props: Props
 
+  getMainColumnWidth() {
+    const { isAuthenticated } = this.props
+
+    if (isAuthenticated) {
+      return 12
+    }
+
+    return 16
+  }
+
   async handleLogout(event: MouseEvent) {
     event.preventDefault()
 
@@ -180,26 +190,29 @@ export default class App extends PureComponent {
     )
 
     return (
-      <Segment as="header" className="App-header" basic clearing>
-        <Logo floated="left" />
-        <Menu floated="right" size="huge" pointing secondary>
-          {menuItems.map(renderMenuItem)}
-          <Menu.Item>
-            <a href="/logout" onClick={this.handleLogout}>
-              Sign Out
-            </a>
-          </Menu.Item>
-        </Menu>
-      </Segment>
+      <Grid as="header" className="App-header">
+        <Grid.Row>
+          <Grid.Column width={this.getMainColumnWidth()}>
+            <Segment basic clearing>
+              <Logo floated="left" />
+              <Menu floated="right" size="huge" pointing secondary>
+                {menuItems.map(renderMenuItem)}
+                <Menu.Item>
+                  <a href="/logout" onClick={this.handleLogout}>
+                    Sign Out
+                  </a>
+                </Menu.Item>
+              </Menu>
+            </Segment>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     )
   }
 
   renderMainContentColumn() {
-    const { isAuthenticated } = this.props
-    const colWidth = isAuthenticated ? 12 : 16
-
     return (
-      <Grid.Column width={colWidth}>
+      <Grid.Column width={this.getMainColumnWidth()}>
         <Switch>
           <LoggedInRoute
             exact
@@ -257,9 +270,15 @@ export default class App extends PureComponent {
 
   renderFooter() {
     return (
-      <Segment as="footer" className="App-footer" basic>
-        {/* Add content here */}
-      </Segment>
+      <Grid as="footer">
+        <Grid.Row>
+          <Grid.Column width={this.getMainColumnWidth()}>
+            <Segment basic>
+              {/* Add content here */}
+            </Segment>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     )
   }
 

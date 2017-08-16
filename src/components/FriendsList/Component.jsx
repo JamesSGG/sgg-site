@@ -162,6 +162,8 @@ export default class FriendsList extends PureComponent {
         styled
         fluid
         panels={panels}
+        exclusive={false}
+        defaultActiveIndex={[0, 1]}
       />
     )
   }
