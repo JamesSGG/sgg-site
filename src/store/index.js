@@ -1,18 +1,21 @@
 // @flow weak
 
-import { compose, createStore, combineReducers, applyMiddleware } from 'redux'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
+import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly'
+import persistState from 'redux-localstorage'
 import { routerReducer, routerMiddleware } from 'react-router-redux'
 import { ApolloClient, createNetworkInterface } from 'react-apollo'
 import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws'
 import createHistory from 'history/createBrowserHistory'
-import { identity, property } from 'lodash/fp'
+import { property } from 'lodash/fp'
 
 import type { Store } from 'redux'
 
 import { getApiUrl, getApiWebSocketsUrl } from 'utils/api'
 import { getIsDev } from 'utils/env'
 
-import appReducer, { initialState } from './modules'
+import appReducer, { initialState as appInitialState } from './reducers'
+import type { AppState } from './reducers'
 
 const isDev = getIsDev()
 const apiUrl = getApiUrl()
@@ -62,32 +65,28 @@ export const createReducer = (nextAppReducer) => combineReducers({
 
 export const reducer = createReducer(appReducer)
 
-export const getStore = (state?: * = initialState): Store<*, *> => {
+export const initialState = {
+  app: appInitialState,
+}
+
+export const getStore = (state?: AppState = initialState): Store<*, *> => {
   const middleware = [
     apolloClient.middleware(),
     routerMiddleware(history),
   ]
 
-  const { __REDUX_DEVTOOLS_EXTENSION__ } = window
-
-  const devToolsMiddleware = (
-    isDev && __REDUX_DEVTOOLS_EXTENSION__
-    ? __REDUX_DEVTOOLS_EXTENSION__()
-    : identity
-  )
-
-  const enhancer = compose(
+  const enhancer = composeWithDevTools(
     applyMiddleware(...middleware),
-    devToolsMiddleware,
+    persistState('app'),
   )
 
   const store = createStore(reducer, state, enhancer)
 
   if (module.hot && typeof module.hot.accept === 'function') {
     // Enable Webpack hot module replacement for reducers
-    module.hot.accept('./modules', () => {
+    module.hot.accept(['./actions', './reducers', './selectors'], () => {
       // eslint-disable-next-line global-require
-      const { default: nextAppReducer } = require('./modules')
+      const { default: nextAppReducer } = require('./reducers')
       const nextReducer = createReducer(nextAppReducer)
 
       store.replaceReducer(nextReducer)

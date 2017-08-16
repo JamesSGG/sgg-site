@@ -7,31 +7,60 @@ import { withApollo } from 'react-apollo'
 import Loadable from 'react-loadable'
 import { push } from 'react-router-redux'
 import { withRouter, Switch, Route, NavLink } from 'react-router-dom'
-import { Segment, Menu } from 'semantic-ui-react'
+import { Grid, Segment, Menu } from 'semantic-ui-react'
+
 import { autobind } from 'core-decorators'
 import { compose, partial, trimCharsStart } from 'lodash/fp'
 
 import type { Client } from 'react-apollo'
 
+import { getCurrentUserId, getIsAuthenticated } from 'store/selectors'
+import actions from 'store/actions'
+
 import { getApiUrl } from 'utils/api'
 
 import AppPerformance from 'components/AppPerformance'
+
+import LoggedInRoute from 'components/Route/LoggedIn'
+import LoggedOutRoute from 'components/Route/LoggedOut'
 import LoadingStatus from 'components/LoadingStatus'
-import PrivateRoute from 'components/PrivateRoute'
+
 import Logo from 'components/Logo'
 import FriendsList from 'components/FriendsList'
 
 import './styles.css'
 
 
-type Props = {
+type ApolloProps = {
   client: Client,
+}
+
+type RouterProps = {
   location: {
     search: string, // eslint-disable-line react/no-unused-prop-types
     pathname: string, // eslint-disable-line react/no-unused-prop-types
   },
+}
+
+type StateProps = {
+  currentUserId: ?string,
+  isAuthenticated: boolean,
+}
+
+type DispatchProps = {
+  doLogin: (userId: string) => Promise<*>,
+  doLogout: () => Promise<*>,
   goToLoginPage: () => Promise<*>,
 }
+
+type OwnProps = {}
+
+type Props =
+  & ApolloProps
+  & RouterProps
+  & StateProps
+  & DispatchProps
+  & OwnProps
 
 
 const NotFoundView = Loadable({
@@ -54,15 +83,28 @@ const UserProfileView = Loadable({
   loading: LoadingStatus,
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  goToLoginPage: compose(dispatch, partial(push, ['/login'])),
+
+const mapStateToProps = (state) => ({
+  currentUserId: getCurrentUserId(state),
+  isAuthenticated: getIsAuthenticated(state),
 })
+
+const mapDispatchToProps = (dispatch) => {
+  const { currentUser } = actions
+  const { login, logout } = currentUser
+
+  return {
+    doLogin: compose(dispatch, login),
+    doLogout: compose(dispatch, logout),
+    goToLoginPage: compose(dispatch, partial(push, ['/login'])),
+  }
+}
 
 // @withRouter is needed to prevent render blocking in child components
 // e.g. without it the login redirect renders `null` instead of the login page.
 @withRouter
 @withApollo
-@connect(null, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 @autobind
 export default class App extends PureComponent {
 
@@ -71,8 +113,8 @@ export default class App extends PureComponent {
   async handleLogout(event: MouseEvent) {
     event.preventDefault()
 
-    const { client, goToLoginPage } = this.props
-    const { fetch, localStorage } = window
+    const { client, doLogout, goToLoginPage } = this.props
+    const { fetch } = window
 
     const logoutUrl = `${getApiUrl()}/login/clear`
 
@@ -81,8 +123,9 @@ export default class App extends PureComponent {
       credentials: 'include',
     })
 
-    localStorage.removeItem('sessionId')
-    localStorage.removeItem('userId')
+    if (doLogout) {
+      doLogout()
+    }
 
     client.resetStore()
 
@@ -91,19 +134,22 @@ export default class App extends PureComponent {
     }
   }
 
-  render() {
-    const { location } = this.props
+  componentWillMount() {
+    const { location, doLogin } = this.props
     const queryString = trimCharsStart('?', location.search)
     const queryParams = qs.parse(queryString)
-    const { sessionId, userId } = queryParams
-    const { localStorage } = window
+    const { userId } = queryParams
 
-    if (sessionId) {
-      localStorage.setItem('sessionId', sessionId)
+    if (doLogin && userId) {
+      doLogin(userId)
     }
+  }
 
-    if (userId) {
-      localStorage.setItem('userId', userId)
+  renderHeader() {
+    const { isAuthenticated, location } = this.props
+
+    if (!isAuthenticated) {
+      return null
     }
 
     const menuItems = [
@@ -134,51 +180,96 @@ export default class App extends PureComponent {
     )
 
     return (
-      <div className="App">
-        <Segment as="header" className="App-header" basic clearing>
-          <Logo floated="left" />
-          <Menu floated="right" size="huge" pointing secondary>
-            {menuItems.map(renderMenuItem)}
-            <Menu.Item>
-              <a href="/logout" onClick={this.handleLogout}>
-                Sign Out
-              </a>
-            </Menu.Item>
-          </Menu>
-        </Segment>
+      <Segment as="header" className="App-header" basic clearing>
+        <Logo floated="left" />
+        <Menu floated="right" size="huge" pointing secondary>
+          {menuItems.map(renderMenuItem)}
+          <Menu.Item>
+            <a href="/logout" onClick={this.handleLogout}>
+              Sign Out
+            </a>
+          </Menu.Item>
+        </Menu>
+      </Segment>
+    )
+  }
 
-        <Segment as="main" className="App-main" basic>
-          <Switch>
-            <Route
-              path="/login"
-              component={LoginView}
-            />
+  renderMainContentColumn() {
+    const { isAuthenticated } = this.props
+    const colWidth = isAuthenticated ? 12 : 16
 
-            <PrivateRoute
-              exact
-              path="/"
-              component={HomeView}
-            />
+    return (
+      <Grid.Column width={colWidth}>
+        <Switch>
+          <LoggedInRoute
+            exact
+            path="/"
+            component={HomeView}
+          />
 
-            <PrivateRoute
-              path="/profile/:userId"
-              component={UserProfileView}
-            />
+          <LoggedInRoute
+            path="/profile/:userId"
+            component={UserProfileView}
+          />
 
-            <PrivateRoute
-              path="/profile"
-              component={UserProfileView}
-            />
+          <LoggedInRoute
+            path="/profile"
+            component={UserProfileView}
+          />
 
-            <Route component={NotFoundView} />
-          </Switch>
-        </Segment>
+          <LoggedOutRoute
+            path="/login"
+            component={LoginView}
+          />
 
-        <Segment as="footer" className="App-footer" basic>
-          {/* Add content here */}
-        </Segment>
+          <Route component={NotFoundView} />
+        </Switch>
+      </Grid.Column>
+    )
+  }
 
+  renderSidebarColumn() {
+    const { isAuthenticated } = this.props
+
+    if (!isAuthenticated) {
+      return null
+    }
+
+    return (
+      <Grid.Column width={4}>
         <FriendsList />
+      </Grid.Column>
+    )
+  }
+
+  renderMain() {
+    return (
+      <Segment as="main" className="App-main" basic>
+        <Grid>
+          <Grid.Row>
+            {this.renderMainContentColumn()}
+            {this.renderSidebarColumn()}
+          </Grid.Row>
+        </Grid>
+      </Segment>
+    )
+  }
+
+  renderFooter() {
+    return (
+      <Segment as="footer" className="App-footer" basic>
+        {/* Add content here */}
+      </Segment>
+    )
+  }
+
+  render() {
+    return (
+      <div className="App">
+        {this.renderHeader()}
+        {this.renderMain()}
+        {this.renderFooter()}
+
         <AppPerformance />
       </div>
     )

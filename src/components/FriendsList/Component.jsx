@@ -68,7 +68,6 @@ export default class FriendsList extends PureComponent {
       selection: true,
       verticalAlign: 'middle',
       style: {
-        maxHeight: '45vh',
         overflow: 'auto',
       },
     }
@@ -145,13 +144,6 @@ export default class FriendsList extends PureComponent {
   render() {
     const { friends, nonFriends } = this.props
 
-    const containerStyle = {
-      position: 'fixed',
-      bottom: 0,
-      right: 20,
-      width: 250,
-    }
-
     const panels = [
       {
         key: 'friends-list',
@@ -166,14 +158,11 @@ export default class FriendsList extends PureComponent {
     ]
 
     return (
-      <div style={containerStyle}>
-        <Accordion
-          styled
-          fluid
-          panels={panels}
-          exclusive={false}
-        />
-      </div>
+      <Accordion
+        styled
+        fluid
+        panels={panels}
+      />
     )
   }
 }

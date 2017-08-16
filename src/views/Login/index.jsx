@@ -1,7 +1,6 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
 import { Container, Header, Button, Icon } from 'semantic-ui-react'
 
 import { getApiUrl } from 'utils/api'
@@ -9,10 +8,16 @@ import { getApiUrl } from 'utils/api'
 import Logo from 'components/Logo'
 
 
-type Props = {}
+type StateProps = {
+  isAuthenticated: boolean,
+}
 
+type OwnProps = {}
 
-const { localStorage } = window
+type Props =
+  & StateProps
+  & OwnProps
+
 
 export default class LoginView extends Component {
 
@@ -27,14 +32,6 @@ export default class LoginView extends Component {
   }
 
   render() {
-    const userId = localStorage.getItem('userId')
-
-    if (userId) {
-      return (
-        <Redirect to="/" />
-      )
-    }
-
     const loginUrl = this.getLoginUrl()
 
     return (

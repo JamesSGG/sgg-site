@@ -1,10 +1,13 @@
 
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { graphql } from 'react-apollo'
-import { Grid, Item, Header, Table, Input, Dropdown } from 'semantic-ui-react'
+import { Item, Table, Input, Dropdown } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
 
 import type { DefaultChildProps } from 'react-apollo'
+
+import { getCurrentUserId, getIsAuthenticated } from 'store/selectors'
 
 // $FlowIgnore
 import Q_USER from 'data/q-user.graphql'
@@ -13,14 +16,16 @@ import Q_USER from 'data/q-user.graphql'
 type Props = DefaultChildProps<*, *>;
 
 
-const { localStorage } = window
+const mapStateToProps = (state) => ({
+  currentUserId: getCurrentUserId(state),
+  isAuthenticated: getIsAuthenticated(state),
+})
 
-const currentUserId = localStorage.getItem('userId')
-
+@connect(mapStateToProps)
 @graphql(Q_USER, {
   name: 'userQueryResult',
-  skip: !currentUserId,
-  options: ({ userId }) => ({
+  skip: ({ isAuthenticated }) => !isAuthenticated,
+  options: ({ userId, currentUserId }) => ({
     variables: {
       id: userId || currentUserId,
     },

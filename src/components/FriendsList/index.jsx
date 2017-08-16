@@ -1,12 +1,13 @@
 // @flow
 
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { graphql } from 'react-apollo'
 import { property, map } from 'lodash/fp'
 
 import type { DefaultChildProps } from 'react-apollo'
 
-import { SECOND_IN_MS } from 'utils/date-time'
+import { getCurrentUserId, getIsAuthenticated } from 'store/selectors'
 
 // $FlowIgnore
 import Q_USER from 'data/q-user.graphql'
@@ -16,6 +17,8 @@ import M_CREATE_FRIEND_FOR_USER from 'data/m-create-friend-for-user.graphql'
 import M_SET_USER_ONLINE_STATUS from 'data/m-set-user-online-status.graphql'
 // $FlowIgnore
 import S_USER_ONLINE_STATUS_CHANGE from 'data/s-user-online-status-changed.graphql'
+
+import { SECOND_IN_MS } from 'utils/date-time'
 
 import FriendsList from './Component'
 
@@ -28,6 +31,11 @@ type SetUserOnlineStatusVars = {
   },
 }
 
+type StateProps = {
+  currentUserId: ?string,
+  isAuthenticated: boolean,
+}
+
 type OwnProps = {
   userQueryResult: {},
   setUserOnlineStatus: (variables: SetUserOnlineStatusVars) => *,
@@ -36,16 +44,19 @@ type OwnProps = {
 
 export type Props =
   & DefaultChildProps<FriendsListProps, *>
-  & OwnProps;
-
-const { localStorage } = window
-
-const currentUserId = localStorage.getItem('userId')
+  & StateProps
+  & OwnProps
 
 
+const mapStateToProps = (state) => ({
+  currentUserId: getCurrentUserId(state),
+  isAuthenticated: getIsAuthenticated(state),
+})
+
+@connect(mapStateToProps)
 @graphql(M_CREATE_FRIEND_FOR_USER, {
   name: 'createFriendForCurrentUser',
-  options: {
+  options: ({ currentUserId }) => ({
     variables: {
       id: currentUserId,
     },
@@ -64,20 +75,20 @@ const currentUserId = localStorage.getItem('userId')
 
       store.writeQuery({ query, variables, data: newData })
     },
-  },
+  }),
 })
 @graphql(M_SET_USER_ONLINE_STATUS, {
   name: 'setUserOnlineStatus',
 })
 @graphql(Q_USER, {
-  skip: !currentUserId,
+  skip: ({ isAuthenticated }) => !isAuthenticated,
   name: 'userQueryResult',
-  options: {
+  options: ({ currentUserId }) => ({
     pollInterval: 20 * SECOND_IN_MS,
     variables: {
       id: currentUserId,
     },
-  },
+  }),
 })
 export default class FriendsListWithData extends Component {
 
