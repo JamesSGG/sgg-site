@@ -7,7 +7,7 @@ import { withApollo } from 'react-apollo'
 import Loadable from 'react-loadable'
 import { push } from 'react-router-redux'
 import { withRouter, Switch, Route, NavLink } from 'react-router-dom'
-import { Grid, Segment, Rail, Menu } from 'semantic-ui-react'
+import { Grid, Segment, Menu } from 'semantic-ui-react'
 
 import { autobind } from 'core-decorators'
 import { compose, partial, trimCharsStart } from 'lodash/fp'
@@ -110,16 +110,6 @@ export default class App extends PureComponent {
 
   props: Props
 
-  getMainColumnWidth() {
-    const { isAuthenticated } = this.props
-
-    if (isAuthenticated) {
-      return 12
-    }
-
-    return 16
-  }
-
   async handleLogout(event: MouseEvent) {
     event.preventDefault()
 
@@ -159,7 +149,9 @@ export default class App extends PureComponent {
     const { isAuthenticated, location } = this.props
 
     if (!isAuthenticated) {
-      return null
+      return (
+        <Segment as="header" className="app-header" basic clearing />
+      )
     }
 
     const menuItems = [
@@ -190,29 +182,23 @@ export default class App extends PureComponent {
     )
 
     return (
-      <Grid as="header" className="App-header">
-        <Grid.Row>
-          <Grid.Column width={this.getMainColumnWidth()}>
-            <Segment basic clearing>
-              <Logo floated="left" />
-              <Menu floated="right" size="huge" pointing secondary>
-                {menuItems.map(renderMenuItem)}
-                <Menu.Item>
-                  <a href="/logout" onClick={this.handleLogout}>
-                    Sign Out
-                  </a>
-                </Menu.Item>
-              </Menu>
-            </Segment>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+      <Segment as="header" className="app-header" basic clearing>
+        <Logo floated="left" />
+        <Menu floated="right" size="huge" pointing secondary>
+          {menuItems.map(renderMenuItem)}
+          <Menu.Item>
+            <a href="/logout" onClick={this.handleLogout}>
+              Sign Out
+            </a>
+          </Menu.Item>
+        </Menu>
+      </Segment>
     )
   }
 
-  renderMainContentColumn() {
+  renderMain() {
     return (
-      <Grid.Column width={this.getMainColumnWidth()}>
+      <Segment as="main" className="app-main" basic>
         <Switch>
           <LoggedInRoute
             exact
@@ -237,60 +223,40 @@ export default class App extends PureComponent {
 
           <Route component={NotFoundView} />
         </Switch>
-      </Grid.Column>
-    )
-  }
-
-  renderSidebarColumn() {
-    const { isAuthenticated } = this.props
-
-    if (!isAuthenticated) {
-      return null
-    }
-
-    return (
-      <Grid.Column width={4}>
-        <FriendsList />
-      </Grid.Column>
-    )
-  }
-
-  renderMain() {
-    return (
-      <Segment as="main" className="App-main" basic>
-        <Grid>
-          <Grid.Row>
-            {this.renderMainContentColumn()}
-            {this.renderSidebarColumn()}
-          </Grid.Row>
-        </Grid>
       </Segment>
     )
   }
 
   renderFooter() {
     return (
-      <Grid as="footer">
-        <Grid.Row>
-          <Grid.Column width={this.getMainColumnWidth()}>
-            <Segment basic>
-              {/* Add content here */}
-            </Segment>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+      <Segment as="footer" basic>
+        {/* Add content here */}
+      </Segment>
     )
   }
 
   render() {
-    return (
-      <div className="App">
-        {this.renderHeader()}
-        {this.renderMain()}
-        {this.renderFooter()}
+    const { isAuthenticated } = this.props
+    const columnStyle = { height: '100vh' }
 
-        <AppPerformance />
-      </div>
+    return (
+      <Grid className="app" celled="internally">
+        <Grid.Row stretched={!isAuthenticated}>
+          <Grid.Column width={isAuthenticated ? 13 : 16} style={columnStyle}>
+            {this.renderHeader()}
+            {this.renderMain()}
+            {this.renderFooter()}
+          </Grid.Column>
+
+          {isAuthenticated && (
+            <Grid.Column width={3} style={columnStyle}>
+              <FriendsList />
+            </Grid.Column>
+          )}
+
+          <AppPerformance />
+        </Grid.Row>
+      </Grid>
     )
   }
 }

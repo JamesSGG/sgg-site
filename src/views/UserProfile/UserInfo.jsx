@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { graphql } from 'react-apollo'
-import { Item, Table, Input, Dropdown } from 'semantic-ui-react'
+import { Item, Table, Dropdown } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
 
 import type { DefaultChildProps } from 'react-apollo'
@@ -13,7 +13,14 @@ import { getCurrentUserId, getIsAuthenticated } from 'store/selectors'
 import Q_USER from 'data/q-user.graphql'
 
 
-type Props = DefaultChildProps<*, *>;
+type StateProps = {
+  currentUserId: ?string,
+  isAuthenticated: boolean,
+}
+
+type Props =
+  & StateProps
+  & DefaultChildProps<*, *>
 
 
 const mapStateToProps = (state) => ({
@@ -37,96 +44,112 @@ export default class UserInfo extends Component {
   props: Props
 
   renderGamesPlayed() {
-    const { userId } = this.props
+    const { isAuthenticated, userId, currentUserId } = this.props
+    const isCurrentUserProfile = isAuthenticated && !userId && currentUserId
 
-    if (userId) {
-      return (
-        <Table basic="very">
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>
-                Games Played
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                Gamer Tag
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
+    // const gameOptions = [
+    //   {
+    //     text: 'Overwatch',
+    //     value: 'overwatch',
+    //   },
+    //   {
+    //     text: 'DotA 2',
+    //     value: 'dota2',
+    //   },
+    //   {
+    //     text: 'League of Legends',
+    //     value: 'league-of-legends',
+    //   },
+    //   {
+    //     text: 'Rainbow 6: Siege',
+    //     value: 'rainbow-6-siege',
+    //   },
+    // ]
+    //
+    // const platformOptions = [
+    //   {
+    //     text: 'PC',
+    //     value: 'pc',
+    //   },
+    //   {
+    //     text: 'Xbox',
+    //     value: 'xbox',
+    //   },
+    //   {
+    //     text: 'PlayStation',
+    //     value: 'playstation',
+    //   },
+    // ]
 
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>
-                League of Legends
-              </Table.Cell>
-              <Table.Cell>
-                XYZexampleTag
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>
-                DotA 2
-              </Table.Cell>
-              <Table.Cell>
-                ABCexampleTag
-              </Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table>
-      )
-    }
-
-    const gamesPlayedOptions = [
+    const actionOptions = [
       {
-        text: 'Overwatch',
-        value: 'overwatch',
+        text: 'Edit',
+        value: 'edit',
       },
       {
-        text: 'DotA 2',
-        value: 'dota2',
-      },
-      {
-        text: 'League of Legends',
-        value: 'league-of-legends',
-      },
-      {
-        text: 'Rainbow 6: Siege',
-        value: 'rainbow-6-siege',
+        text: 'Delete',
+        value: 'delete',
       },
     ]
+
+    const rowItems = [
+      {
+        gameTitle: 'League of Legends',
+        gamePlatform: 'PC',
+        gamerTag: 'XYZexampleTag',
+      },
+      {
+        gameTitle: 'DotA 2',
+        gamePlatform: 'PC',
+        gamerTag: 'ABCexampleTag',
+      },
+    ]
+
+    const renderRow = ({ gameTitle, gamePlatform, gamerTag }) => (
+      <Table.Row key={gameTitle}>
+        <Table.Cell>
+          {gameTitle}
+        </Table.Cell>
+        <Table.Cell>
+          {gamePlatform}
+        </Table.Cell>
+        <Table.Cell>
+          {gamerTag}
+        </Table.Cell>
+        {isCurrentUserProfile && (
+          <Table.Cell>
+            <Dropdown
+              text=" "
+              icon="ellipsis vertical"
+              options={actionOptions}
+            />
+          </Table.Cell>
+        )}
+      </Table.Row>
+    )
 
     return (
       <Table basic="very">
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell width="8">
-              Games Played
+            <Table.HeaderCell>
+              Game
             </Table.HeaderCell>
-            <Table.HeaderCell width="8">
+            <Table.HeaderCell>
+              Platform
+            </Table.HeaderCell>
+            <Table.HeaderCell>
               Gamer Tag
             </Table.HeaderCell>
+            {isCurrentUserProfile && (
+              <Table.HeaderCell>
+                Actions
+              </Table.HeaderCell>
+            )}
           </Table.Row>
         </Table.Header>
-
         <Table.Body>
-          <Table.Row>
-            <Table.Cell>
-              <Dropdown
-                fluid
-                selection
-                multiple
-                placeholder="Select game(s)"
-                options={gamesPlayedOptions}
-              />
-            </Table.Cell>
-            <Table.Cell>
-              <Input
-                fluid
-                icon="tag"
-                iconPosition="left"
-                placeholder="Enter gamer tag"
-              />
-            </Table.Cell>
-          </Table.Row>
+          {rowItems.map(renderRow)}
         </Table.Body>
       </Table>
     )

@@ -159,7 +159,6 @@ export default class FriendsList extends PureComponent {
 
     return (
       <Accordion
-        styled
         fluid
         panels={panels}
         exclusive={false}
