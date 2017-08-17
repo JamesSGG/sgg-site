@@ -54,8 +54,7 @@ const mapStateToProps = (state) => ({
   }),
 })
 @autobind
-export default class LoggedInRoute extends Component {
-
+export default class LoggedInRoute extends Component<Props> {
   static defaultProps: OptionalProps = {
     async: true,
   }
@@ -70,12 +69,13 @@ export default class LoggedInRoute extends Component {
   }
 
   render(): Children {
-    const { isAuthenticated, ...restProps } = this.props
+    const { component, isAuthenticated, ...restProps } = this.props
     const isLoading = this.isLoading()
 
     return (
       <ConditionalRoute
         {...restProps}
+        component={component}
         isLoading={isLoading}
         showRoute={isAuthenticated}
         redirectPath="/login"

@@ -41,8 +41,7 @@ export type Props = {
 
 
 @autobind
-export default class FriendsList extends PureComponent {
-
+export default class FriendsList extends PureComponent<Props> {
   static defaultProps = {
     loading: false,
     error: null,

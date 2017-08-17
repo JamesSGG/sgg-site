@@ -1,25 +1,21 @@
+// @flow
 
 import React, { PureComponent } from 'react'
 import { Image } from 'semantic-ui-react'
 
-import logo1x from 'assets/logo-secondary.png'
-import logo2x from 'assets/logo-secondary@2x.png'
+import logo from 'assets/logo-secondary.svg'
 
 
 type Props = {}
 
 
-export default class Logo extends PureComponent {
-
+export default class Logo extends PureComponent<Props> {
   props: Props
 
   render() {
-    const srcSet = `${logo1x}, ${logo2x} 2x`
-
     return (
       <Image
-        src={logo1x}
-        srcSet={srcSet}
+        src={logo}
         width="100"
         height="83"
         {...this.props}

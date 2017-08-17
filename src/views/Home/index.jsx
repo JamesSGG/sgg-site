@@ -1,9 +1,11 @@
+// @flow
 
 import React, { PureComponent } from 'react'
 import { Container, Header } from 'semantic-ui-react'
 
-export default class HomeView extends PureComponent {
+type Props = {}
 
+export default class HomeView extends PureComponent<Props> {
   render() {
     return (
       <div>

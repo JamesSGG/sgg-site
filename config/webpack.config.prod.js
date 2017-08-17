@@ -6,7 +6,7 @@ const ManifestPlugin = require('webpack-manifest-plugin')
 const WorkboxPlugin = require('workbox-webpack-plugin')
 
 const paths = require('./paths')
-const baseConfig = require('./webpack.config.base')
+const getBaseConfig = require('./webpack.config.base')
 const { merge } = require('./webpack.utils')
 
 const buildDir = path.relative(paths.appRoot, paths.appBuild)
@@ -23,6 +23,8 @@ if (NODE_ENV !== 'production') {
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
+const baseConfig = getBaseConfig({})
+
 module.exports = merge(baseConfig, {
   // Don't attempt to continue if there are any errors.
   bail: true,

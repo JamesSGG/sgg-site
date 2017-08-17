@@ -1,8 +1,10 @@
+// @flow
 
 import React, { PureComponent } from 'react'
 
-export default class HomeView extends PureComponent {
+type Props = {}
 
+export default class HomeView extends PureComponent<Props> {
   render() {
     return (
       <div>Coming Soon!</div>

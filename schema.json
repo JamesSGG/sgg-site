@@ -18,7 +18,7 @@
           "fields": [
             {
               "name": "user",
-              "description": "Fetch a specific user by ID",
+              "description": "",
               "args": [
                 {
                   "name": "id",
@@ -45,7 +45,7 @@
             },
             {
               "name": "users",
-              "description": "Fetch all users",
+              "description": "",
               "args": [],
               "type": {
                 "kind": "LIST",
@@ -61,7 +61,7 @@
             },
             {
               "name": "currentUser",
-              "description": "Fetch the current logged-in user",
+              "description": "",
               "args": [],
               "type": {
                 "kind": "OBJECT",
@@ -90,11 +90,11 @@
         {
           "kind": "OBJECT",
           "name": "User",
-          "description": "User record",
+          "description": "",
           "fields": [
             {
               "name": "id",
-              "description": "User ID",
+              "description": "",
               "args": [],
               "type": {
                 "kind": "NON_NULL",
@@ -110,7 +110,7 @@
             },
             {
               "name": "displayName",
-              "description": "Display name",
+              "description": "",
               "args": [],
               "type": {
                 "kind": "SCALAR",
@@ -122,7 +122,7 @@
             },
             {
               "name": "imageUrl",
-              "description": "Avatar image URL",
+              "description": "",
               "args": [],
               "type": {
                 "kind": "SCALAR",
@@ -134,7 +134,7 @@
             },
             {
               "name": "emails",
-              "description": "Emails",
+              "description": "",
               "args": [],
               "type": {
                 "kind": "LIST",
@@ -150,7 +150,7 @@
             },
             {
               "name": "onlineStatus",
-              "description": "Online status",
+              "description": "",
               "args": [],
               "type": {
                 "kind": "ENUM",
@@ -161,8 +161,40 @@
               "deprecationReason": null
             },
             {
+              "name": "gamesPlayed",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "GamePlayed",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "friends",
-              "description": "Friends",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "User",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "nonFriends",
+              "description": "",
               "args": [],
               "type": {
                 "kind": "LIST",
@@ -195,11 +227,11 @@
         {
           "kind": "OBJECT",
           "name": "Email",
-          "description": "User email object",
+          "description": "",
           "fields": [
             {
               "name": "email",
-              "description": "Email address",
+              "description": "",
               "args": [],
               "type": {
                 "kind": "NON_NULL",
@@ -215,7 +247,7 @@
             },
             {
               "name": "verified",
-              "description": "Is email verified? (pulled from Facebook profile data)",
+              "description": "",
               "args": [],
               "type": {
                 "kind": "SCALAR",
@@ -266,12 +298,59 @@
         },
         {
           "kind": "OBJECT",
+          "name": "GamePlayed",
+          "description": "",
+          "fields": [
+            {
+              "name": "gameTitle",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "gamePlatform",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "gamerTag",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
           "name": "Mutation",
           "description": "",
           "fields": [
             {
               "name": "setUserOnlineStatus",
-              "description": "Sets a user's online / offline status",
+              "description": "",
               "args": [
                 {
                   "name": "input",
@@ -298,7 +377,7 @@
             },
             {
               "name": "addFriendToUser",
-              "description": "Adds a friend to a user",
+              "description": "",
               "args": [
                 {
                   "name": "input",
@@ -325,7 +404,7 @@
             },
             {
               "name": "createFriendForUser",
-              "description": "Randomly generate a new user and add to specified user's friends list",
+              "description": "",
               "args": [
                 {
                   "name": "id",
@@ -345,6 +424,33 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "User",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "addGamePlayed",
+              "description": "",
+              "args": [
+                {
+                  "name": "input",
+                  "description": "",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "GamePlayedInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "GamePlayed",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -505,13 +611,72 @@
           "possibleTypes": null
         },
         {
+          "kind": "INPUT_OBJECT",
+          "name": "GamePlayedInput",
+          "description": "",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "gameTitle",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "gamerTag",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
           "kind": "OBJECT",
           "name": "Subscription",
           "description": "",
           "fields": [
             {
               "name": "userOnlineStatusChanged",
-              "description": "Is triggered when a user's online / offline status changes",
+              "description": "",
               "args": [
                 {
                   "name": "input",

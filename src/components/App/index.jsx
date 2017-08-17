@@ -106,8 +106,7 @@ const mapDispatchToProps = (dispatch) => {
 @withApollo
 @connect(mapStateToProps, mapDispatchToProps)
 @autobind
-export default class App extends PureComponent {
-
+export default class App extends PureComponent<Props> {
   props: Props
 
   async handleLogout(event: MouseEvent) {

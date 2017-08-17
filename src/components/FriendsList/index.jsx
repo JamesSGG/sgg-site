@@ -90,11 +90,10 @@ const mapStateToProps = (state) => ({
     },
   }),
 })
-export default class FriendsListWithData extends Component {
-
+export default class FriendsListWithData extends Component<Props> {
   props: Props
 
-  _unsubscribe: () => *
+  _unsubscribe: ?() => *
 
   componentWillReceiveProps(nextProps: Props) {
     const { userQueryResult: nextData = {} } = nextProps

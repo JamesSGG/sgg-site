@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { Container, Header } from 'semantic-ui-react'
 
 import UserInfo from './UserInfo'
@@ -10,8 +10,7 @@ type Props = {
 };
 
 
-export default class UserProfileView extends Component {
-
+export default class UserProfileView extends PureComponent<Props> {
   props: Props
 
   render() {

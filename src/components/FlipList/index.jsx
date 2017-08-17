@@ -1,3 +1,4 @@
+// @flow
 
 import React, { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
@@ -13,17 +14,18 @@ type Props = {
 
 
 @autobind
-export default class FlipList extends PureComponent {
-
+export default class FlipList extends PureComponent<Props> {
   props: Props
 
-  getBoundingClientRect(): HTMLElement {
+  getBoundingClientRect(): ?ClientRect {
+    // eslint-disable-next-line react/no-find-dom-node
     const node = findDOMNode(this)
 
     if (!node) {
       return null
     }
 
+    // $FlowIgnore
     return node.getBoundingClientRect()
   }
 

@@ -63,6 +63,7 @@ module.exports = {
         'render',
       ],
     }],
+    'jsx-a11y/href-no-hash': 'off',
     'graphql/template-strings': ['error', {
       env: 'literal',
       schemaJson: require('./schema.json'),

@@ -2,7 +2,7 @@
 
 const errorOverlayMiddleware = require('react-error-overlay/middleware')
 const noopServiceWorkerMiddleware = require('react-dev-utils/noopServiceWorkerMiddleware')
-const config = require('./webpack.config.dev')
+const getWebpackConfig = require('./webpack.config.dev')
 const paths = require('./paths')
 
 const {
@@ -14,6 +14,8 @@ const {
 const protocol = HTTPS === 'true' ? 'https' : 'http'
 
 module.exports = function devServerConfig(proxy, allowedHost) {
+  const config = getWebpackConfig({})
+
   return {
     // WebpackDevServer 2.4.3 introduced a security fix that prevents remote
     // websites from potentially accessing local content through DNS rebinding:

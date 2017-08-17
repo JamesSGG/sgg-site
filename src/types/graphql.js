@@ -2,8 +2,8 @@
 //  This file was automatically generated and should not be edited.
 
 export type AddFriendInput = {|
-  +userId: string,
-  +friendId: string,
+  userId: string,
+  friendId: string,
 |};
 
 export type UserStatus =
@@ -12,24 +12,23 @@ export type UserStatus =
 
 
 export type UserStatusInput = {|
-  +userId: string,
-  +status?: ?UserStatus,
+  userId: string,
+  status?: ?UserStatus,
 |};
 
 export type UserListInput = {|
-  +userIds?: ?$ReadOnlyArray< ?string >,
+  userIds?: ?Array< ?string >,
 |};
 
 export type AddFriendToUserMutationVariables = {|
-  +input: AddFriendInput,
+  input: AddFriendInput,
 |};
 
 export type AddFriendToUserMutation = {|
-  // Adds a friend to a user
-  +addFriendToUser: ? {|
-    +__typename: string,
-    +userId: ?string,
-    +friendId: ?string,
+  addFriendToUser: ? {|
+    __typename: "AddFriendResult",
+    userId: ?string,
+    friendId: ?string,
   |},
 |};
 
@@ -38,147 +37,129 @@ export type CreateFriendForUserMutationVariables = {|
 |};
 
 export type CreateFriendForUserMutation = {|
-  // Randomly generate a new user and add to specified user's friends list
-  +createFriendForUser: ? {|
-    +__typename: string,
-    // User ID
-    +id: string,
-    // Display name
-    +displayName: ?string,
-    // Avatar image URL
-    +imageUrl: ?string,
-    // Online status
-    +onlineStatus: ?UserStatus,
+  createFriendForUser: ? {|
+    __typename: "User",
+    id: string,
+    displayName: ?string,
+    imageUrl: ?string,
+    onlineStatus: ?UserStatus,
   |},
 |};
 
 export type SetUserOnlineStatusMutationVariables = {|
-  +input: UserStatusInput,
+  input: UserStatusInput,
 |};
 
 export type SetUserOnlineStatusMutation = {|
-  // Sets a user's online / offline status
-  +setUserOnlineStatus: ? {|
-    +__typename: string,
-    +userId: string,
-    +status: ?UserStatus,
+  setUserOnlineStatus: ? {|
+    __typename: "UserStatusInfo",
+    userId: string,
+    status: ?UserStatus,
   |},
 |};
 
 export type AllUsersQuery = {|
-  // Fetch all users
-  +users: ? $ReadOnlyArray< {|
-    +__typename: string,
-    // User ID
-    +id: string,
-    // Display name
-    +displayName: ?string,
-    // Avatar image URL
-    +imageUrl: ?string,
+  users: ? Array<? {|
+    __typename: "undefined",
+    id: string,
+    displayName: ?string,
+    imageUrl: ?string,
   |} >,
 |};
 
 export type CurrentUserQuery = {|
-  // Fetch the current logged-in user
-  +currentUser: ? {|
-    +__typename: string,
-    // User ID
-    +id: string,
-    // Display name
-    +displayName: ?string,
-    // Avatar image URL
-    +imageUrl: ?string,
-    // Emails
-    +emails: ? $ReadOnlyArray< {|
-      +__typename: string,
-      // Email address
-      +email: string,
-      // Is email verified? (pulled from Facebook profile data)
-      +verified: ?boolean,
+  currentUser: ? {|
+    __typename: "User",
+    id: string,
+    displayName: ?string,
+    imageUrl: ?string,
+    emails: ? Array<? {|
+      __typename: string,
+      email: string,
+      verified: ?boolean,
     |} >,
-    // Friends
-    +friends: ? $ReadOnlyArray< {|
-      +__typename: string,
-      // User ID
-      +id: string,
-      // Display name
-      +displayName: ?string,
-      // Avatar image URL
-      +imageUrl: ?string,
-      // Online status
-      +onlineStatus: ?UserStatus,
+    friends: ? Array<? {|
+      __typename: string,
+      id: string,
+      displayName: ?string,
+      imageUrl: ?string,
+      onlineStatus: ?UserStatus,
     |} >,
   |},
 |};
 
 export type UserQueryVariables = {|
-  +id: string,
+  id: string,
 |};
 
 export type UserQuery = {|
-  // Fetch a specific user by ID
-  +user: ? {|
-    +__typename: string,
-    // User ID
-    +id: string,
-    // Display name
-    +displayName: ?string,
-    // Avatar image URL
-    +imageUrl: ?string,
-    // Emails
-    +emails: ? $ReadOnlyArray< {|
-      +__typename: string,
-      // Email address
-      +email: string,
-      // Is email verified? (pulled from Facebook profile data)
-      +verified: ?boolean,
+  user: ? {|
+    __typename: "User",
+    id: string,
+    displayName: ?string,
+    imageUrl: ?string,
+    emails: ? Array<? {|
+      __typename: string,
+      email: string,
+      verified: ?boolean,
     |} >,
-    // Friends
-    +friends: ? $ReadOnlyArray< {|
-      +__typename: string,
-      // User ID
-      +id: string,
-      // Display name
-      +displayName: ?string,
-      // Avatar image URL
-      +imageUrl: ?string,
-      // Online status
-      +onlineStatus: ?UserStatus,
+    gamesPlayed: ? Array<? {|
+      __typename: string,
+      gameTitle: ?string,
+      gamePlatform: ?string,
+      gamerTag: ?string,
+    |} >,
+    friends: ? Array<? {|
+      __typename: string,
+      id: string,
+      displayName: ?string,
+      imageUrl: ?string,
+      onlineStatus: ?UserStatus,
+    |} >,
+    nonFriends: ? Array<? {|
+      __typename: string,
+      id: string,
+      displayName: ?string,
+      imageUrl: ?string,
+      onlineStatus: ?UserStatus,
     |} >,
   |},
 |};
 
-export type OnUserOnlineStatusChangedSubscriptionVariables = {|
-  +input?: ?UserListInput,
+export type onUserOnlineStatusChangedSubscriptionVariables = {|
+  input?: ?UserListInput,
 |};
 
-export type OnUserOnlineStatusChangedSubscription = {|
-  // Is triggered when a user's online / offline status changes
-  +userOnlineStatusChanged: ? {|
-    +__typename: string,
-    +userId: string,
-    +status: ?UserStatus,
+export type onUserOnlineStatusChangedSubscription = {|
+  userOnlineStatusChanged: ? {|
+    __typename: "UserStatusInfo",
+    userId: string,
+    status: ?UserStatus,
   |},
 |};
 
-export type UserEmailsFragment = {|
-  +__typename: string,
-  // Emails
-  +emails: ? $ReadOnlyArray< {|
-    +__typename: string,
-    // Email address
-    +email: string,
-    // Is email verified? (pulled from Facebook profile data)
-    +verified: ?boolean,
+export type userInfoFragment = {|
+  __typename: string,
+  id: string,
+  displayName: ?string,
+  imageUrl: ?string,
+|};
+
+export type userEmailsFragment = {|
+  __typename: string,
+  emails: ? Array<? {|
+    __typename: string,
+    email: string,
+    verified: ?boolean,
   |} >,
 |};
 
-export type UserInfoFragment = {|
-  +__typename: string,
-  // User ID
-  +id: string,
-  // Display name
-  +displayName: ?string,
-  // Avatar image URL
-  +imageUrl: ?string,
+export type userProfileFragment = {|
+  __typename: string,
+  gamesPlayed: ? Array<? {|
+    __typename: string,
+    gameTitle: ?string,
+    gamePlatform: ?string,
+    gamerTag: ?string,
+  |} >,
 |};

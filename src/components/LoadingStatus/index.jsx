@@ -10,7 +10,7 @@ type Props = {
   error: boolean,
 }
 
-export default class LoadingStatus extends PureComponent {
+export default class LoadingStatus extends PureComponent<Props> {
   props: Props
 
   getMessage() {

@@ -26,8 +26,7 @@ type Props =
 
 @withRouter
 @autobind
-export default class ConditionalRoute extends Component {
-
+export default class ConditionalRoute extends Component<Props> {
   static defaultProps: OptionalProps = {
     async: true,
     isLoading: false,

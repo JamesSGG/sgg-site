@@ -1,9 +1,11 @@
+// @flow
 
 import React, { PureComponent } from 'react'
 import { Container, Message } from 'semantic-ui-react'
 
-export default class NotFoundView extends PureComponent {
+type Props = {}
 
+export default class NotFoundView extends PureComponent<Props> {
   render() {
     return (
       <Container text>

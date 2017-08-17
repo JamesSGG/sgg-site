@@ -42,8 +42,7 @@ const mapStateToProps = (state) => ({
 @withRouter
 @connect(mapStateToProps)
 @autobind
-export default class LoggedOutRoute extends Component {
-
+export default class LoggedOutRoute extends Component<Props> {
   static defaultProps: OptionalProps = {
     async: true,
   }
@@ -51,12 +50,13 @@ export default class LoggedOutRoute extends Component {
   props: Props
 
   render(): Children {
-    const { isAuthenticated, ...restProps } = this.props
+    const { component, isAuthenticated, ...restProps } = this.props
 
     return (
       <ConditionalRoute
         {...restProps}
         async={false}
+        component={component}
         showRoute={!isAuthenticated}
         redirectPath="/"
       />

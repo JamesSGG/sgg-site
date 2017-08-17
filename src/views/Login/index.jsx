@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { Container, Header, Button, Icon } from 'semantic-ui-react'
 
 import { getApiUrl } from 'utils/api'
@@ -19,8 +19,7 @@ type Props =
   & OwnProps
 
 
-export default class LoginView extends Component {
-
+export default class LoginView extends PureComponent<Props> {
   props: Props
 
   getLoginUrl(): string {

@@ -1,5 +1,6 @@
+// @flow
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { graphql } from 'react-apollo'
 import { Item, Table, Dropdown } from 'semantic-ui-react'
@@ -39,8 +40,7 @@ const mapStateToProps = (state) => ({
   }),
 })
 @autobind
-export default class UserInfo extends Component {
-
+export default class UserInfo extends PureComponent<Props> {
   props: Props
 
   renderGamesPlayed() {
