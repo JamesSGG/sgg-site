@@ -13,6 +13,8 @@ import { getCurrentUserId, getIsAuthenticated } from 'store/selectors'
 // $FlowIgnore
 import Q_USER from 'data/q-user.graphql'
 
+import InfoTooltip from 'components/InfoTooltip'
+
 
 type StateProps = {
   currentUserId: ?string,
@@ -140,6 +142,9 @@ export default class UserInfo extends PureComponent<Props> {
             </Table.HeaderCell>
             <Table.HeaderCell>
               Gamer Tag
+              <InfoTooltip
+                content="Xbox Live gamer tag, PSN user name, Steam ID, etc."
+              />
             </Table.HeaderCell>
             {isCurrentUserProfile && (
               <Table.HeaderCell>

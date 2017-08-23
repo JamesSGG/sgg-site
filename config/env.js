@@ -7,6 +7,10 @@ const {
   complement,
   anyPass,
   allPass,
+  map,
+  filter,
+  split,
+  join,
   startsWith,
   toUpper,
   isString,
@@ -21,9 +25,8 @@ const { NODE_ENV, NODE_PATH = '' } = process.env
 delete require.cache[require.resolve('./paths')]
 
 if (!NODE_ENV) {
-  throw new Error(
-    'The NODE_ENV environment variable is required but was not specified.'
-  )
+  const error = 'The NODE_ENV environment variable is required but was not specified.'
+  throw new Error(error)
 }
 
 // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
@@ -67,11 +70,14 @@ const isRelativePath = allPass([
   complement(path.isAbsolute),
 ])
 
-process.env.NODE_PATH = (NODE_PATH || '')
-  .split(path.delimiter)
-  .filter(isRelativePath)
-  .map(resolveRelativePath)
-  .join(path.delimiter)
+const parseNodePath = compose(
+  join(path.delimiter),
+  map(resolveRelativePath),
+  filter(isRelativePath),
+  split(path.delimiter),
+)
+
+process.env.NODE_PATH = parseNodePath(NODE_PATH)
 
 // Grab SGG_* and REACT_APP_* environment variables and prepare them to be
 // injected into the application via DefinePlugin in Webpack configuration.
@@ -80,7 +86,7 @@ const isCustomEnvVar = compose(
     startsWith('SGG_'),
     startsWith('REACT_APP_'),
   ]),
-  toUpper
+  toUpper,
 )
 
 function getClientEnvironment(publicUrl) {

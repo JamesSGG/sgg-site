@@ -37,7 +37,7 @@ export type Props = {
   friends: Array<User>,
   nonFriends: Array<User>,
   setOnlineStatus: (userId: string, status: UserOnlineStatus) => *,
-};
+}
 
 
 @autobind

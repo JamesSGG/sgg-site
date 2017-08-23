@@ -228,10 +228,10 @@ declare module 'lodash/fp' {
     size(collection: Array<any> | Object): number,
     some<T>(predicate?: Predicate<T>, array: ?Array<T>): boolean,
     some<A, T: {[id: string]: A}>(predicate?: OPredicate<A, T>, object?: ?T): boolean,
-    sortBy<T>(array: ?Array<T>, ...iteratees?: Array<Iteratee<T>>): Array<T>,
-    sortBy<T>(array: ?Array<T>, iteratees?: Array<Iteratee<T>>): Array<T>,
-    sortBy<V, T: Object>(object: T, ...iteratees?: Array<OIteratee<T>>): Array<V>,
-    sortBy<V, T: Object>(object: T, iteratees?: Array<OIteratee<T>>): Array<V>,
+    sortBy<T>(iteratees: Array<Iteratee<T>>): (array: ?Array<T>) => Array<T>,
+    sortBy<T>(iteratees: Array<Iteratee<T>>, array: ?Array<T>): Array<T>,
+    sortBy<V, T: Object>(iteratees: Array<OIteratee<T>>): (object: T) => Array<V>,
+    sortBy<V, T: Object>(iteratees: Array<OIteratee<T>>, object: T): Array<V>,
 
     // Date
     now(): number,
