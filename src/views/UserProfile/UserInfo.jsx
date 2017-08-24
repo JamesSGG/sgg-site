@@ -189,7 +189,9 @@ export default class UserInfo extends PureComponent<Props> {
             </Item.Header>
             <Item.Description>
               {this.renderGamesPlayed(gamesPlayed)}
-              <Button primary>Add new game</Button>
+              {this.isCurrentUserProfile() && (
+                <Button primary>Add new game</Button>
+              )}
             </Item.Description>
           </Item.Content>
         </Item>
