@@ -110,7 +110,7 @@ export default class UserInfo extends PureComponent<Props> {
         {this.isCurrentUserProfile() && (
           <Table.Cell>
             <Button basic size="tiny">Delete</Button>
-            <Button primary size="tiny">Edit</Button>
+            <Button basic size="tiny">Edit</Button>
           </Table.Cell>
         )}
       </Table.Row>
