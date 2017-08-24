@@ -3,10 +3,12 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { graphql } from 'react-apollo'
-import { Item, Table, Dropdown } from 'semantic-ui-react'
+import { Item, Table, Button } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
 
 import type { DefaultChildProps } from 'react-apollo'
+
+import type { UserQuery } from 'types/graphql'
 
 import { getCurrentUserId, getIsAuthenticated } from 'store/selectors'
 
@@ -16,14 +18,31 @@ import Q_USER from 'data/q-user.graphql'
 import InfoTooltip from 'components/InfoTooltip'
 
 
+/* eslint-disable react/no-unused-prop-types */
+type GamePlayed = {
+  gameTitle: ?string,
+  gamePlatform: ?string,
+  gamerTag: ?string,
+}
+/* eslint-enable react/no-unused-prop-types */
+
 type StateProps = {
   currentUserId: ?string,
   isAuthenticated: boolean,
 }
 
+type OwnProps = {
+  userId?: string,
+}
+
+type QueryProps = {
+  userQueryResult: UserQuery,
+}
+
 type Props =
+  & DefaultChildProps<QueryProps, *>
   & StateProps
-  & DefaultChildProps<*, *>
+  & OwnProps
 
 
 const mapStateToProps = (state) => ({
@@ -45,10 +64,60 @@ const mapStateToProps = (state) => ({
 export default class UserInfo extends PureComponent<Props> {
   props: Props
 
-  renderGamesPlayed() {
+  isCurrentUserProfile() {
     const { isAuthenticated, userId, currentUserId } = this.props
-    const isCurrentUserProfile = isAuthenticated && !userId && currentUserId
 
+    return isAuthenticated && !userId && currentUserId
+  }
+
+  renderHeaderRow() {
+    return (
+      <Table.Row>
+        <Table.HeaderCell>
+          Game
+        </Table.HeaderCell>
+        <Table.HeaderCell>
+          Platform
+        </Table.HeaderCell>
+        <Table.HeaderCell>
+          Gamer Tag
+          <InfoTooltip
+            wide
+            content="Xbox Live gamer tag, PSN user name, Steam ID, etc."
+          />
+        </Table.HeaderCell>
+        {this.isCurrentUserProfile() && (
+          <Table.HeaderCell>
+            Actions
+          </Table.HeaderCell>
+        )}
+      </Table.Row>
+    )
+  }
+
+  renderBodyRow({ gameTitle, gamePlatform, gamerTag }: GamePlayed) {
+    return (
+      <Table.Row key={gameTitle}>
+        <Table.Cell>
+          {gameTitle}
+        </Table.Cell>
+        <Table.Cell>
+          {gamePlatform}
+        </Table.Cell>
+        <Table.Cell>
+          {gamerTag}
+        </Table.Cell>
+        {this.isCurrentUserProfile() && (
+          <Table.Cell>
+            <Button basic size="tiny">Delete</Button>
+            <Button primary size="tiny">Edit</Button>
+          </Table.Cell>
+        )}
+      </Table.Row>
+    )
+  }
+
+  renderGamesPlayed(gamesPlayed?: Array<GamePlayed> = []) {
     // const gameOptions = [
     //   {
     //     text: 'Overwatch',
@@ -83,78 +152,13 @@ export default class UserInfo extends PureComponent<Props> {
     //   },
     // ]
 
-    const actionOptions = [
-      {
-        text: 'Edit',
-        value: 'edit',
-      },
-      {
-        text: 'Delete',
-        value: 'delete',
-      },
-    ]
-
-    const rowItems = [
-      {
-        gameTitle: 'League of Legends',
-        gamePlatform: 'PC',
-        gamerTag: 'XYZexampleTag',
-      },
-      {
-        gameTitle: 'DotA 2',
-        gamePlatform: 'PC',
-        gamerTag: 'ABCexampleTag',
-      },
-    ]
-
-    const renderRow = ({ gameTitle, gamePlatform, gamerTag }) => (
-      <Table.Row key={gameTitle}>
-        <Table.Cell>
-          {gameTitle}
-        </Table.Cell>
-        <Table.Cell>
-          {gamePlatform}
-        </Table.Cell>
-        <Table.Cell>
-          {gamerTag}
-        </Table.Cell>
-        {isCurrentUserProfile && (
-          <Table.Cell>
-            <Dropdown
-              text=" "
-              icon="ellipsis vertical"
-              options={actionOptions}
-            />
-          </Table.Cell>
-        )}
-      </Table.Row>
-    )
-
     return (
       <Table basic="very">
         <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>
-              Game
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              Platform
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              Gamer Tag
-              <InfoTooltip
-                content="Xbox Live gamer tag, PSN user name, Steam ID, etc."
-              />
-            </Table.HeaderCell>
-            {isCurrentUserProfile && (
-              <Table.HeaderCell>
-                Actions
-              </Table.HeaderCell>
-            )}
-          </Table.Row>
+          {this.renderHeaderRow()}
         </Table.Header>
         <Table.Body>
-          {rowItems.map(renderRow)}
+          {gamesPlayed.map(this.renderBodyRow)}
         </Table.Body>
       </Table>
     )
@@ -168,7 +172,7 @@ export default class UserInfo extends PureComponent<Props> {
     }
 
     const { user = {} } = userQueryResult
-    const { displayName, imageUrl } = user
+    const { displayName, imageUrl, gamesPlayed } = user
 
     return (
       <Item.Group>
@@ -184,7 +188,8 @@ export default class UserInfo extends PureComponent<Props> {
               {displayName}
             </Item.Header>
             <Item.Description>
-              {this.renderGamesPlayed()}
+              {this.renderGamesPlayed(gamesPlayed)}
+              <Button primary>Add new game</Button>
             </Item.Description>
           </Item.Content>
         </Item>

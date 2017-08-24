@@ -1,6 +1,8 @@
 
 fragment userProfile on User {
   gamesPlayed {
+    id
+    userId
     gameTitle
     gamePlatform
     gamerTag

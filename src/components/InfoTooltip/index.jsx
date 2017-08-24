@@ -9,7 +9,7 @@ type Props = {
 
 export default function InfoTooltip(props: Props) {
   const trigger = (
-    <Icon name="question" />
+    <Icon name="question circle" />
   )
 
   return (
