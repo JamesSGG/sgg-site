@@ -3,6 +3,7 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly'
 import persistState from 'redux-localstorage'
+import { reducer as formReducer } from 'redux-form'
 import { routerReducer, routerMiddleware } from 'react-router-redux'
 import { ApolloClient, createNetworkInterface } from 'react-apollo'
 import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws'
@@ -60,6 +61,7 @@ export const history = createHistory()
 export const createReducer = (nextAppReducer) => combineReducers({
   app: nextAppReducer,
   apollo: apolloClient.reducer(),
+  form: formReducer,
   routing: routerReducer,
 })
 
