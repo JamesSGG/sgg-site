@@ -56,7 +56,11 @@ const renderActionButtons = (props: Props) => {
   const maybeReset = isEditing ? reset : identity
   const handleEditClick = compose(maybeReset, toggleEditing)
   const handleDelete = () => deleteRecord(props.id)
-  const handleUpdate = () => updateRecord(props)
+  const handleUpdate = () => {
+    const { id, userId, gameTitle, gamePlatform, gamerTag } = props
+
+    return updateRecord({ id, userId, gameTitle, gamePlatform, gamerTag })
+  }
 
   return (
     <Table.Cell>
