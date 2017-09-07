@@ -1,0 +1,10 @@
+
+mutation AddGamePlayed($input: AddGamePlayedInput!) {
+  addGamePlayed(input: $input) {
+    id
+    userId
+    gameTitle
+    gamePlatform
+    gamerTag
+  }
+}

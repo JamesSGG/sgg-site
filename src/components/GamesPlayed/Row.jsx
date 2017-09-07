@@ -20,11 +20,13 @@ type StateHandlerProps = {
 }
 
 type OwnProps = {
+  id: string,
   gameTitle: ?string,
   gamePlatform: ?string,
   gamerTag: ?string,
   isEditable: boolean,
-  handleSubmit: () => Promise<*>,
+  updateRecord: (input: *) => Promise<*>,
+  deleteRecord: (input: *) => Promise<*>,
 }
 
 type Props =
@@ -42,6 +44,8 @@ const renderActionButtons = (props: Props) => {
     isEditable,
     isEditing,
     toggleEditing,
+    updateRecord,
+    deleteRecord,
     reset,
   } = props
 
@@ -50,11 +54,9 @@ const renderActionButtons = (props: Props) => {
   }
 
   const maybeReset = isEditing ? reset : identity
-
-  const handleEditClick = compose(
-    maybeReset,
-    toggleEditing,
-  )
+  const handleEditClick = compose(maybeReset, toggleEditing)
+  const handleDelete = () => deleteRecord(props.id)
+  const handleUpdate = () => updateRecord(props)
 
   return (
     <Table.Cell>
@@ -65,12 +67,24 @@ const renderActionButtons = (props: Props) => {
       >
         {isEditing ? 'Cancel' : 'Edit'}
       </Button>
-      <Button
-        basic
-        size="tiny"
-      >
-        Delete
-      </Button>
+      {isEditing && (
+        <Button
+          basic
+          size="tiny"
+          onClick={handleUpdate}
+        >
+          Update
+        </Button>
+      )}
+      {!isEditing && (
+        <Button
+          basic
+          size="tiny"
+          onClick={handleDelete}
+        >
+          Delete
+        </Button>
+      )}
     </Table.Cell>
   )
 }
@@ -78,39 +92,44 @@ const renderActionButtons = (props: Props) => {
 const renderRowIfEditing = (props: Props) => {
   const { id } = props
 
-  const gameOptions = [
-    {
-      text: 'Overwatch',
-      value: 'Overwatch',
-    },
-    {
-      text: 'DotA 2',
-      value: 'DotA 2',
-    },
-    {
-      text: 'League of Legends',
-      value: 'League of Legends',
-    },
-    {
-      text: 'Rainbow 6: Siege',
-      value: 'Rainbow 6: Siege',
-    },
+  const formatPlatform = (value) => {
+    if (value === 'pc') {
+      return 'PC'
+    }
+
+    if (value === 'xbox') {
+      return 'Xbox'
+    }
+
+    if (value === 'playstation') {
+      return 'PlayStation'
+    }
+
+    return value
+  }
+
+  const games = [
+    'Overwatch',
+    'DotA 2',
+    'League of Legends',
+    'Rainbow 6: Siege',
   ]
 
-  const platformOptions = [
-    {
-      text: 'PC',
-      value: 'pc',
-    },
-    {
-      text: 'Xbox',
-      value: 'xbox',
-    },
-    {
-      text: 'PlayStation',
-      value: 'playstation',
-    },
+  const platforms = [
+    'PC',
+    'Xbox',
+    'PlayStation',
   ]
+
+  const gameOptions = games.map((item) => ({
+    text: item,
+    value: item,
+  }))
+
+  const platformOptions = platforms.map((item) => ({
+    text: formatPlatform(item),
+    value: item,
+  }))
 
   return (
     <Table.Row key={id}>
@@ -182,4 +201,6 @@ const enhancer = compose(
   reduxForm(),
 )
 
-export default enhancer(renderRow)
+const GamePlayedRow = enhancer(renderRow)
+
+export default GamePlayedRow

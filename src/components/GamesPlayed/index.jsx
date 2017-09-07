@@ -17,14 +17,16 @@ type GamePlayed = {
 type Props = {
   gamesPlayed: Array<GamePlayed>,
   isEditable: boolean,
-  handleSubmit: () => Promise<*>,
+  updateRecord: (input: *) => Promise<*>,
+  deleteRecord: (input: *) => Promise<*>,
 }
 
-export default function GamesPlayed(props: Props) {
+export default function GamesPlayedTable(props: Props) {
   const {
     gamesPlayed,
     isEditable,
-    handleSubmit,
+    updateRecord,
+    deleteRecord,
   } = props
 
   const renderRow = (gamePlayed: GamePlayed) => (
@@ -32,7 +34,8 @@ export default function GamesPlayed(props: Props) {
       {...gamePlayed}
       key={gamePlayed.id}
       isEditable={isEditable}
-      handleSubmit={handleSubmit}
+      updateRecord={updateRecord}
+      deleteRecord={deleteRecord}
     />
   )
 

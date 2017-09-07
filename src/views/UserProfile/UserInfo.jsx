@@ -13,6 +13,12 @@ import { getCurrentUserId, getIsAuthenticated } from 'store/selectors'
 // $FlowIgnore
 import Q_USER from 'data/q-user.graphql'
 
+import M_ADD_GAME_PLAYED from 'data/m-add-game-played.graphql'
+
+import M_EDIT_GAME_PLAYED from 'data/m-edit-game-played.graphql'
+
+import M_DELETE_GAME_PLAYED from 'data/m-delete-game-played.graphql'
+
 import GamesPlayed from 'components/GamesPlayed'
 
 
@@ -37,6 +43,15 @@ const mapStateToProps = (state) => ({
 })
 
 @connect(mapStateToProps)
+@graphql(M_ADD_GAME_PLAYED, {
+  name: 'addGamePlayed',
+})
+@graphql(M_EDIT_GAME_PLAYED, {
+  name: 'editGamePlayed',
+})
+@graphql(M_DELETE_GAME_PLAYED, {
+  name: 'deleteGamePlayed',
+})
 @graphql(Q_USER, {
   skip: ({ isAuthenticated }) => !isAuthenticated,
   options: ({ userId, currentUserId }) => ({
@@ -60,6 +75,9 @@ export default class UserInfo extends PureComponent<Props> {
       loading,
       error,
       data,
+      addGamePlayed,
+      editGamePlayed,
+      deleteGamePlayed,
     } = this.props
 
     if (loading || error || !data) {
@@ -87,9 +105,14 @@ export default class UserInfo extends PureComponent<Props> {
               <GamesPlayed
                 gamesPlayed={gamesPlayed}
                 isEditable={isEditable}
-                handleSubmit={async () => false}
+                updateRecord={editGamePlayed}
+                deleteRecord={deleteGamePlayed}
               />
-              {isEditable && <Button primary>Add new game</Button>}
+              {isEditable && (
+                <Button primary onClick={addGamePlayed}>
+                  Add new game
+                </Button>
+              )}
             </Item.Description>
           </Item.Content>
         </Item>

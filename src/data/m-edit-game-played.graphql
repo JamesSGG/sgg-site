@@ -1,0 +1,10 @@
+
+mutation EditGamePlayed($input: EditGamePlayedInput!) {
+  editGamePlayed(input: $input) {
+    id
+    userId
+    gameTitle
+    gamePlatform
+    gamerTag
+  }
+}
