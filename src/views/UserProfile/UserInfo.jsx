@@ -88,6 +88,18 @@ export default class UserInfo extends PureComponent<Props> {
     const { displayName, imageUrl, gamesPlayed } = user
     const isEditable = this.isCurrentUserProfile()
 
+    const updateRecord = (input) => editGamePlayed({
+      variables: {
+        input,
+      },
+    })
+
+    const deleteRecord = (id) => deleteGamePlayed({
+      variables: {
+        id,
+      },
+    })
+
     return (
       <Item.Group>
         <Item>
@@ -105,8 +117,8 @@ export default class UserInfo extends PureComponent<Props> {
               <GamesPlayed
                 gamesPlayed={gamesPlayed}
                 isEditable={isEditable}
-                updateRecord={editGamePlayed}
-                deleteRecord={deleteGamePlayed}
+                updateRecord={updateRecord}
+                deleteRecord={deleteRecord}
               />
               {isEditable && (
                 <Button primary onClick={addGamePlayed}>
