@@ -11,12 +11,12 @@ query User($id: ID!) {
 
     friends {
       ...userInfo
-      onlineStatus
+      lastSeenAt
     }
 
     nonFriends {
       ...userInfo
-      onlineStatus
+      lastSeenAt
     }
   }
 }

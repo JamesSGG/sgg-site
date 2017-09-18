@@ -1,0 +1,7 @@
+
+mutation BumpUserLastSeenAt($id: ID!) {
+  bumpUserLastSeenAt(id: $id) {
+    userId
+    lastSeenAt
+  }
+}

@@ -1,7 +1,0 @@
-
-subscription onUserOnlineStatusChanged($input: UserListInput) {
-  userOnlineStatusChanged(input: $input) {
-    userId
-    status
-  }
-}

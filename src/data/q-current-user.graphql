@@ -8,7 +8,7 @@ query CurrentUser {
     ...userEmails
     friends {
       ...userInfo
-      onlineStatus
+      lastSeenAt
     }
   }
 }

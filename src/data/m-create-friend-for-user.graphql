@@ -4,6 +4,6 @@
 mutation CreateFriendForUser($id: ID!) {
   createFriendForUser(id: $id) {
     ...userInfo
-    onlineStatus
+    lastSeenAt
   }
 }

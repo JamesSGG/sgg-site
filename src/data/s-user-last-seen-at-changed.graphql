@@ -1,0 +1,7 @@
+
+subscription UserLastSeenAtChanged {
+  userLastSeenAtChanged {
+    userId
+    lastSeenAt
+  }
+}

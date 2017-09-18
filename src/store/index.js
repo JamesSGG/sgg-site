@@ -6,7 +6,8 @@ import persistState from 'redux-localstorage'
 import { reducer as formReducer } from 'redux-form'
 import { routerReducer, routerMiddleware } from 'react-router-redux'
 import { ApolloClient, createNetworkInterface } from 'react-apollo'
-import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws'
+import { SubscriptionClient } from 'subscriptions-transport-ws'
+import { addGraphQLSubscriptions } from 'add-graphql-subscriptions'
 import createHistory from 'history/createBrowserHistory'
 import { property } from 'lodash/fp'
 
@@ -22,9 +23,24 @@ const isDev = getIsDev()
 const apiUrl = getApiUrl()
 const apiWebSocketsUrl = getApiWebSocketsUrl()
 
+const getLoggedInUserId = () => {
+  const localStorageData = window.localStorage.getItem('redux')
+
+  try {
+    const { app } = JSON.parse(localStorageData)
+
+    return app.currentUserId
+  }
+  catch (_) {
+    return ''
+  }
+}
+
 const wsClient = new SubscriptionClient(`${apiWebSocketsUrl}/subscriptions`, {
   reconnect: false,
-  connectionParams: {},
+  connectionParams: {
+    userId: getLoggedInUserId(),
+  },
 })
 
 export const networkInterface = createNetworkInterface({

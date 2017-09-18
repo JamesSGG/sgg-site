@@ -3,7 +3,7 @@
 import qs from 'querystring'
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { withApollo } from 'react-apollo'
+import { withApollo, graphql } from 'react-apollo'
 import Loadable from 'react-loadable'
 import { push } from 'react-router-redux'
 import { withRouter, Switch, Route, NavLink } from 'react-router-dom'
@@ -12,10 +12,12 @@ import { Grid, Segment, Menu } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
 import { compose, partial, trimCharsStart } from 'lodash/fp'
 
-import type { Client } from 'react-apollo'
+import type { Client, DefaultChildProps } from 'react-apollo'
 
 import { getCurrentUserId, getIsAuthenticated } from 'store/selectors'
 import actions from 'store/actions'
+
+import M_BUMP_USER_LAST_SEEN_AT from 'data/m-bump-user-last-seen-at.graphql'
 
 import { getApiUrl } from 'utils/api'
 
@@ -53,9 +55,12 @@ type DispatchProps = {
   goToLoginPage: () => Promise<*>,
 }
 
-type OwnProps = {}
+type OwnProps = {
+  bumpCurrentUserLastSeenAt: () => *,
+}
 
 type Props =
+  & DefaultChildProps<*, *>
   & ApolloProps
   & RouterProps
   & StateProps
@@ -105,9 +110,36 @@ const mapDispatchToProps = (dispatch) => {
 @withRouter
 @withApollo
 @connect(mapStateToProps, mapDispatchToProps)
+@graphql(M_BUMP_USER_LAST_SEEN_AT, {
+  props: ({ ownProps, mutate }) => ({
+    bumpCurrentUserLastSeenAt: () => mutate({
+      variables: {
+        id: ownProps.currentUserId,
+      },
+    }),
+  }),
+})
 @autobind
 export default class App extends PureComponent<Props> {
   props: Props
+
+  componentWillMount() {
+    const {
+      location,
+      doLogin,
+      bumpCurrentUserLastSeenAt,
+    } = this.props
+
+    const queryString = trimCharsStart('?', location.search)
+    const queryParams = qs.parse(queryString)
+    const { userId } = queryParams
+
+    if (doLogin && userId) {
+      doLogin(userId)
+    }
+
+    bumpCurrentUserLastSeenAt()
+  }
 
   async handleLogout(event: MouseEvent) {
     event.preventDefault()
@@ -130,17 +162,6 @@ export default class App extends PureComponent<Props> {
 
     if (goToLoginPage) {
       goToLoginPage()
-    }
-  }
-
-  componentWillMount() {
-    const { location, doLogin } = this.props
-    const queryString = trimCharsStart('?', location.search)
-    const queryParams = qs.parse(queryString)
-    const { userId } = queryParams
-
-    if (doLogin && userId) {
-      doLogin(userId)
     }
   }
 

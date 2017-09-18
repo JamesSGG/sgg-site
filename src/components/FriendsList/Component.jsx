@@ -10,19 +10,25 @@ import {
   Accordion,
 } from 'semantic-ui-react'
 
+import moment from 'moment'
 import { autobind } from 'core-decorators'
-import { property, matchesProperty, sortBy, isEmpty } from 'lodash/fp'
+import { property, sortBy, isEmpty } from 'lodash/fp'
 
 import FlipList from 'components/FlipList'
 
+const isUserOnline = ({ lastSeenAt }) => {
+  const lastSeenTimeMin = moment().subtract(30, 'seconds')
+  const isOnline = moment(lastSeenAt).isSameOrAfter(lastSeenTimeMin)
 
-type UserOnlineStatus = 'online' | 'offline'
+  return isOnline
+}
+
 
 export type User = {
   id: string,
   displayName: string,
   imageUrl: string,
-  onlineStatus: UserOnlineStatus,
+  lastSeenAt: string,
   friends?: Array<User>,
   nonFriends?: Array<User>,
 }
@@ -36,7 +42,6 @@ export type Props = {
   error?: ?Error,
   friends: Array<User>,
   nonFriends: Array<User>,
-  setOnlineStatus: (userId: string, status: UserOnlineStatus) => *,
 }
 
 
@@ -50,8 +55,8 @@ export default class FriendsList extends PureComponent<Props> {
   props: Props
 
   sortUsers = sortBy([
-    // Put offline users at the bottom (true > false when sorting)
-    matchesProperty('onlineStatus', 'offline'),
+    // Sort online users first
+    (user) => (isUserOnline(user) ? 0 : 1),
     property('displayName'),
   ])
 
@@ -79,7 +84,7 @@ export default class FriendsList extends PureComponent<Props> {
   }
 
   renderListContent(users: Array<User>) {
-    const { loading, error, setOnlineStatus } = this.props
+    const { loading, error } = this.props
 
     if (loading) {
       return (
@@ -106,16 +111,10 @@ export default class FriendsList extends PureComponent<Props> {
     }
 
     return this.sortUsers(users).map((user) => {
-      const { id, displayName, imageUrl, onlineStatus } = user
-      const isOnline = onlineStatus === 'online'
-      const indicatorColor = isOnline ? 'green' : 'grey'
+      const { id, displayName, imageUrl } = user
+
+      const indicatorColor = isUserOnline(user) ? 'green' : 'grey'
       const userProfileUrl = `/profile/${id}`
-
-      const handleIconClick = () => {
-        const newStatus = isOnline ? 'offline' : 'online'
-
-        setOnlineStatus(id, newStatus)
-      }
 
       return (
         <List.Item key={id}>
@@ -124,7 +123,6 @@ export default class FriendsList extends PureComponent<Props> {
             circular
             horizontal
             color={indicatorColor}
-            onClick={handleIconClick}
           />
           <Image
             avatar

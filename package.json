@@ -5,7 +5,7 @@
   "engines": {
     "node": "^8.4.0",
     "npm": "^5.3.0",
-    "yarn": "^0.27.5"
+    "yarn": "^1.0.0"
   },
   "scripts": {
     "start": "node scripts/start",
@@ -58,6 +58,7 @@
     ]
   },
   "dependencies": {
+    "add-graphql-subscriptions": "^1.0.1",
     "chalk": "^2.1.0",
     "classnames": "^2.2.5",
     "common-tags": "^1.4.0",
@@ -66,6 +67,7 @@
     "fs-extra": "^4.0.1",
     "history": "^4.6.3",
     "lodash": "^4.17.4",
+    "moment": "^2.18.1",
     "object-assign": "^4.1.1",
     "promise": "^8.0.1",
     "react": "^15.6.1",
