@@ -8,15 +8,7 @@ import { getApiUrl } from 'utils/api'
 import Logo from 'components/Logo'
 
 
-type StateProps = {
-  isAuthenticated: boolean,
-}
-
-type OwnProps = {}
-
-type Props =
-  & StateProps
-  & OwnProps
+type Props = {}
 
 
 export default class LoginView extends PureComponent<Props> {

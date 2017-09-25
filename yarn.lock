@@ -8437,26 +8437,26 @@ wordwrap@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-1.0.0.tgz#27584810891456a4171c8d0226441ade90cbcaeb"
 
-workbox-build@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/workbox-build/-/workbox-build-2.0.1.tgz#4f77dd073dbc77a2b877fdf56e1b27341c0338ca"
+workbox-build@^2.0.2-rc1:
+  version "2.0.2-rc1"
+  resolved "https://registry.yarnpkg.com/workbox-build/-/workbox-build-2.0.2-rc1.tgz#e40c378bf222bd61f22708035308a96865886194"
   dependencies:
     chalk "^1.1.3"
     fs-extra "^3.0.1"
     glob "^7.1.1"
     lodash.template "^4.4.0"
     mkdirp "^0.5.1"
-    workbox-sw "^2.0.1"
+    workbox-sw "^2.0.2-rc1"
 
-workbox-sw@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/workbox-sw/-/workbox-sw-2.0.1.tgz#504c12d76c610d698f0b7329d3c39525ac542161"
+workbox-sw@^2.0.2-rc1:
+  version "2.0.2-rc1"
+  resolved "https://registry.yarnpkg.com/workbox-sw/-/workbox-sw-2.0.2-rc1.tgz#dcb47409c68832c0159273bf9e1bc27cb07f656a"
 
-workbox-webpack-plugin@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/workbox-webpack-plugin/-/workbox-webpack-plugin-2.0.1.tgz#9eb550c14da19b8e05ac5f9c30a3e7ff711b1d1d"
+workbox-webpack-plugin@^2.0.2-rc1:
+  version "2.0.2-rc1"
+  resolved "https://registry.yarnpkg.com/workbox-webpack-plugin/-/workbox-webpack-plugin-2.0.2-rc1.tgz#6bd8e55ed637ad0ccefc07fd53793d6fe1056cc9"
   dependencies:
-    workbox-build "^2.0.1"
+    workbox-build "^2.0.2-rc1"
 
 worker-farm@^1.3.1:
   version "1.3.1"

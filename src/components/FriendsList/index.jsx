@@ -9,7 +9,9 @@ import type { DefaultChildProps } from 'react-apollo'
 
 import { getCurrentUserId, getIsAuthenticated } from 'store/selectors'
 
+// $FlowIgnore
 import Q_USER from 'data/q-user.graphql'
+// $FlowIgnore
 import M_CREATE_FRIEND_FOR_USER from 'data/m-create-friend-for-user.graphql'
 
 import { SECOND_IN_MS } from 'utils/date-time'

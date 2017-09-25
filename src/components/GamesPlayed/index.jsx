@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { Table } from 'semantic-ui-react'
+import { complement, allPass, isArray, isEmpty } from 'lodash/fp'
 
 import InfoTooltip from 'components/InfoTooltip'
 
@@ -28,6 +29,11 @@ export default function GamesPlayedTable(props: Props) {
     updateRecord,
     deleteRecord,
   } = props
+
+  const isNonEmptyArray = allPass([
+    isArray,
+    complement(isEmpty),
+  ])
 
   const renderRow = (gamePlayed: GamePlayed) => (
     <GamesPlayedRow
@@ -64,7 +70,7 @@ export default function GamesPlayedTable(props: Props) {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {gamesPlayed.map(renderRow)}
+        {isNonEmptyArray(gamesPlayed) && gamesPlayed.map(renderRow)}
       </Table.Body>
     </Table>
   )

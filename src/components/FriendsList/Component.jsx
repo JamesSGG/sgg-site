@@ -107,7 +107,13 @@ export default class FriendsList extends PureComponent<Props> {
     }
 
     if (!users || isEmpty(users)) {
-      return null
+      return (
+        <List.Item key="no-users">
+          <List.Content>
+            No users in this list
+          </List.Content>
+        </List.Item>
+      )
     }
 
     return this.sortUsers(users).map((user) => {
@@ -143,14 +149,24 @@ export default class FriendsList extends PureComponent<Props> {
 
     const panels = [
       {
-        key: 'friends-list',
-        title: 'Friends',
-        content: this.renderList(friends),
+        title: {
+          key: 'friends-list-title',
+          content: 'Friends',
+        },
+        content: {
+          key: 'friends-list-content',
+          content: this.renderList(friends),
+        },
       },
       {
-        key: 'non-friends-list',
-        title: 'All SGG Members',
-        content: this.renderList(nonFriends),
+        title: {
+          key: 'non-friends-list-title',
+          content: 'All SGG Members',
+        },
+        content: {
+          key: 'non-friends-list-content',
+          content: this.renderList(nonFriends),
+        },
       },
     ]
 

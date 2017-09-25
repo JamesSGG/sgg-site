@@ -4,13 +4,14 @@ import React, { PureComponent } from 'react'
 import { findDOMNode } from 'react-dom'
 import { List } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
+import { omit } from 'lodash/fp'
 
-import type { Children } from 'react'
+import type { Node } from 'react'
 
 
 type Props = {
-  children: Children,
-};
+  children: Node,
+}
 
 
 @autobind
@@ -21,19 +22,19 @@ export default class FlipList extends PureComponent<Props> {
     // eslint-disable-next-line react/no-find-dom-node
     const node = findDOMNode(this)
 
-    if (!node) {
-      return null
+    if (node && node instanceof Element) {
+      return node.getBoundingClientRect()
     }
 
-    // $FlowIgnore
-    return node.getBoundingClientRect()
+    return null
   }
 
   render() {
     const { children, ...props } = this.props
+    const restProps = omit(['active'], props)
 
     return (
-      <List {...props}>
+      <List {...restProps}>
         {children}
       </List>
     )
