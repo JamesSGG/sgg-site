@@ -59,6 +59,7 @@
   },
   "dependencies": {
     "add-graphql-subscriptions": "^1.0.1",
+    "apollo-client": "^1.9.3",
     "chalk": "^2.1.0",
     "classnames": "^2.2.5",
     "common-tags": "^1.4.0",

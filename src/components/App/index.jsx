@@ -12,7 +12,8 @@ import { Grid, Segment, Menu } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
 import { compose, partial, trimCharsStart } from 'lodash/fp'
 
-import type { ApolloClient, DefaultChildProps } from 'react-apollo'
+import type { DefaultChildProps } from 'react-apollo'
+import type { ApolloClient } from 'apollo-client'
 
 import { getCurrentUserId, getIsAuthenticated } from 'store/selectors'
 import actions from 'store/actions'
