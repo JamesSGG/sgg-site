@@ -31,7 +31,7 @@ const getLoggedInUserId = () => {
 
     return app.currentUserId
   }
-  catch (_) {
+  catch (_unused) {
     return ''
   }
 }

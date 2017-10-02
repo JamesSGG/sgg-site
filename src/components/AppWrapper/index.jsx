@@ -4,15 +4,15 @@ import React from 'react'
 import { ApolloProvider } from 'react-apollo'
 import { ConnectedRouter } from 'react-router-redux'
 
-import type { Children } from 'react'
+import type { Node } from 'react'
 
 import store, { apolloClient, history } from 'store'
 
 type Props = {
-  children: Children,
+  children: Node,
 }
 
-export default function AppWrapper(props: Props): Children {
+export default function AppWrapper(props: Props): Node {
   const { children } = props
 
   return (

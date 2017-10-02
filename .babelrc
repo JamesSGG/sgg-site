@@ -3,7 +3,9 @@
     "react-app",
   ],
   "plugins": [
+    "syntax-optional-catch-binding",
     "transform-decorators-legacy",
+    "transform-optional-catch-binding",
     ["lodash", {
       "id": [
         "lodash",

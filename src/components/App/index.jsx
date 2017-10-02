@@ -12,16 +12,15 @@ import { Grid, Segment, Menu } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
 import { compose, partial, trimCharsStart } from 'lodash/fp'
 
-import type { Client, DefaultChildProps } from 'react-apollo'
+import type { ApolloClient, DefaultChildProps } from 'react-apollo'
 
 import { getCurrentUserId, getIsAuthenticated } from 'store/selectors'
 import actions from 'store/actions'
 
+// $FlowIgnore
 import M_BUMP_USER_LAST_SEEN_AT from 'data/m-bump-user-last-seen-at.graphql'
 
 import { getApiUrl } from 'utils/api'
-
-import AppPerformance from 'components/AppPerformance'
 
 import LoggedInRoute from 'components/Route/LoggedIn'
 import LoggedOutRoute from 'components/Route/LoggedOut'
@@ -34,7 +33,7 @@ import './styles.css'
 
 
 type ApolloProps = {
-  client: Client,
+  client: ApolloClient,
 }
 
 type RouterProps = {
@@ -273,8 +272,6 @@ export default class App extends PureComponent<Props> {
               <FriendsList />
             </Grid.Column>
           )}
-
-          <AppPerformance />
         </Grid.Row>
       </Grid>
     )

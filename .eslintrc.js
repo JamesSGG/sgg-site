@@ -43,7 +43,7 @@ module.exports = {
       objects: 'always-multiline',
       imports: 'always-multiline',
       exports: 'always-multiline',
-      functions: 'always-multiline',
+      functions: 'only-multiline',
     }],
     'no-underscore-dangle': 'off',
     'class-methods-use-this': 'off',
