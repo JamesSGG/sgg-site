@@ -1,7 +1,7 @@
 // @flow
 
 import { Component } from 'react'
-import { autobind } from 'core-decorators'
+import { autobind, decorate } from 'core-decorators'
 import { noop, throttle } from 'lodash/fp'
 
 import type { Node } from 'react'
@@ -68,24 +68,23 @@ export default class MonitorUserActivity extends Component<Props, ComponentState
     this.setState({ isActive })
   }
 
+  @decorate(throttle(500))
+  @autobind
   handleEvent() {
     const { timeout } = this.props
 
-    const handleChange = throttle(500, () => {
-      const { isActive } = this.state
+    const { isActive } = this.state
 
-      if (!isActive) {
-        this.handleChange(true)
-      }
+    if (!isActive) {
+      this.handleChange(true)
+      return
+    }
 
-      clearTimeout(this._timeout)
+    clearTimeout(this._timeout)
 
-      this._timeout = setTimeout(() => {
-        this.handleChange(false)
-      }, timeout)
-    })
-
-    handleChange()
+    this._timeout = setTimeout(() => {
+      this.handleChange(false)
+    }, timeout)
   }
 
   render() {

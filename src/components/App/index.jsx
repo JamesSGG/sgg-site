@@ -31,8 +31,6 @@ import Logo from 'components/Logo'
 import FriendsList from 'components/FriendsList'
 import MonitorUserActivity from 'components/MonitorUserActivity'
 
-import './styles.css'
-
 
 type ApolloProps = {
   client: ApolloClient,
@@ -171,7 +169,7 @@ export default class App extends PureComponent<Props> {
 
     if (!isAuthenticated) {
       return (
-        <Segment as="header" className="app-header" basic clearing />
+        <Segment as="header" basic clearing />
       )
     }
 
@@ -203,7 +201,7 @@ export default class App extends PureComponent<Props> {
     )
 
     return (
-      <Segment as="header" className="app-header" basic clearing>
+      <Segment as="header" basic clearing>
         <Logo floated="left" />
         <Menu floated="right" size="huge" pointing secondary>
           {menuItems.map(renderMenuItem)}

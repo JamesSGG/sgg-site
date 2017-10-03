@@ -6,6 +6,7 @@ query CurrentUser {
   currentUser {
     ...userInfo
     ...userEmails
+
     friends {
       ...userInfo
       lastSeenAt

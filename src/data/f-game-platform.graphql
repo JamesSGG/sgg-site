@@ -1,0 +1,5 @@
+
+fragment gamePlatform on GamePlatform {
+  id
+  platformName
+}

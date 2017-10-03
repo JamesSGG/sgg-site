@@ -1,7 +1,8 @@
 
+#import "./f-game.graphql"
+
 query AllGames {
   games {
-    id
-    gameTitle
+    ...game
   }
 }

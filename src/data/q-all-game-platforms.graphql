@@ -1,7 +1,8 @@
 
+#import "./f-game-platform.graphql"
+
 query AllGamePlatforms {
   gamePlatforms {
-    id
-    platformName
+    ...gamePlatform
   }
 }

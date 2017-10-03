@@ -1,11 +1,9 @@
 /* eslint-disable global-require */
 
 const path = require('path')
-// const glob = require('glob')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-// const PurifyCssPlugin = require('purifycss-webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
@@ -32,8 +30,7 @@ const env = getClientEnvironment(publicUrl)
 
 const fileSlug = isDev ? '[name]' : '[name].[chunkhash:8]'
 const chunkFileSlug = isDev ? '[name].chunk' : '[name].[chunkhash:8].chunk'
-const cssModulePrefix = `local__${isDev ? '[path][name]__' : ''}`
-const cssModuleName = `${cssModulePrefix}[local]--[hash:base64:5]`
+const cssModuleName = 'local-[hash:base64:5]'
 
 // This is the base configuration.
 module.exports = {
@@ -222,23 +219,25 @@ module.exports = {
       // "style" loader turns CSS into JS modules that inject <style> tags.
       // In production, we use a plugin to extract that CSS to a file, but
       // in development "style" loader enables hot editing of CSS.
-      // {
-      //   test: /\.css$/,
-      //   use: [
-      //     'style-loader',
-      //     {
-      //       loader: 'css-loader',
-      //       options: {
-      //         importLoaders: 1,
-      //       },
-      //     },
-      //     {
-      //       loader: 'postcss-loader',
-      //     },
-      //   ],
-      // },
       {
         test: /\.css$/,
+        include: paths.appNodeModules,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+          },
+        ],
+      },
+      {
+        test: /\.css$/,
+        include: paths.appSrc,
         loader: ExtractTextPlugin.extract({
           disable: isProd,
           fallback: 'style-loader',
@@ -249,7 +248,7 @@ module.exports = {
                 importLoaders: 1,
                 minimize: true,
                 sourceMap: true,
-                // modules: true,
+                modules: true,
                 localIdentName: cssModuleName,
               },
             },
@@ -307,11 +306,6 @@ module.exports = {
         return filePath.replace('css/js', 'css')
       },
     }),
-
-    // Remove unused CSS.
-    // new PurifyCssPlugin({
-    //   paths: glob.sync(`${paths.appSrc}/**/*.jsx`, { nodir: true }),
-    // }),
 
     new webpack.optimize.CommonsChunkPlugin({
       name: 'common',

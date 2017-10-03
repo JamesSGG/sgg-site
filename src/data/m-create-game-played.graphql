@@ -2,8 +2,8 @@
 #import "./f-game.graphql"
 #import "./f-game-platform.graphql"
 
-fragment userProfile on User {
-  gamesPlayed {
+mutation CreateGamePlayed($input: CreateGamePlayedInput!) {
+  createGamePlayed(input: $input) {
     id
     userId
     gamerTag

@@ -1,0 +1,15 @@
+
+#import "./f-game.graphql"
+#import "./f-game-platform.graphql"
+
+fragment gamePlayed on GamePlayed {
+  id
+  userId
+  gamerTag
+  game {
+    ...game
+  }
+  gamePlatform {
+    ...gamePlatform
+  }
+}

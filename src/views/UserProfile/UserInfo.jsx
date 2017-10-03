@@ -12,19 +12,14 @@ import { getCurrentUserId, getIsAuthenticated } from 'store/selectors'
 
 // $FlowIgnore
 import Q_USER from 'data/q-user.graphql'
-
 // $FlowIgnore
 import Q_ALL_GAMES from 'data/q-all-games.graphql'
-
 // $FlowIgnore
 import Q_ALL_GAME_PLATFORMS from 'data/q-all-game-platforms.graphql'
-
 // $FlowIgnore
-import M_ADD_GAME_PLAYED from 'data/m-add-game-played.graphql'
-
+import M_CREATE_GAME_PLAYED from 'data/m-create-game-played.graphql'
 // $FlowIgnore
-import M_EDIT_GAME_PLAYED from 'data/m-edit-game-played.graphql'
-
+import M_UPDATE_GAME_PLAYED from 'data/m-update-game-played.graphql'
 // $FlowIgnore
 import M_DELETE_GAME_PLAYED from 'data/m-delete-game-played.graphql'
 
@@ -52,11 +47,11 @@ const mapStateToProps = (state) => ({
 })
 
 @connect(mapStateToProps)
-@graphql(M_ADD_GAME_PLAYED, {
-  name: 'addGamePlayed',
+@graphql(M_CREATE_GAME_PLAYED, {
+  name: 'createGamePlayed',
 })
-@graphql(M_EDIT_GAME_PLAYED, {
-  name: 'editGamePlayed',
+@graphql(M_UPDATE_GAME_PLAYED, {
+  name: 'updateGamePlayed',
 })
 @graphql(M_DELETE_GAME_PLAYED, {
   name: 'deleteGamePlayed',
@@ -106,8 +101,8 @@ export default class UserInfo extends PureComponent<Props> {
       userResult,
       allGamesResult,
       allGamePlatformsResult,
-      addGamePlayed,
-      editGamePlayed,
+      createGamePlayed,
+      updateGamePlayed,
       deleteGamePlayed,
     } = this.props
 
@@ -121,7 +116,7 @@ export default class UserInfo extends PureComponent<Props> {
     const { displayName, imageUrl, gamesPlayed } = user
     const isEditable = this.isCurrentUserProfile()
 
-    const updateRecord = (input) => editGamePlayed({
+    const updateRecord = (input) => updateGamePlayed({
       variables: {
         input,
       },
@@ -156,7 +151,7 @@ export default class UserInfo extends PureComponent<Props> {
                 deleteRecord={deleteRecord}
               />
               {isEditable && (
-                <Button primary onClick={addGamePlayed}>
+                <Button primary onClick={createGamePlayed}>
                   Add new game
                 </Button>
               )}

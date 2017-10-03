@@ -14,6 +14,8 @@ import type { Game, GamePlatform, GamePlayed } from 'types/graphql-custom'
 import InputText from 'components/InputText'
 import InputSelect from 'components/InputSelect'
 
+import './styles.css'
+
 type StateProps = {
   isEditing: boolean,
 }
@@ -91,7 +93,7 @@ const renderActionButtons = (props: Props) => {
   }
 
   return (
-    <Table.Cell>
+    <Table.Cell styleName="action-buttons-cell">
       <Button
         basic
         size="tiny"
@@ -164,7 +166,7 @@ const renderRowIfViewing = (props: Props) => {
 
   return (
     <Table.Row key={id}>
-      <Table.Cell>
+      <Table.Cell >
         {game.gameTitle}
       </Table.Cell>
       <Table.Cell>
@@ -198,6 +200,8 @@ const mapStateToProps = (state: *, ownProps: Props) => {
 }
 
 const enhancer = compose(
+  connect(mapStateToProps),
+
   withProps(({ id, gamerTag, game = {}, gamePlatform = {} }: Props) => ({
     form: id,
     initialValues: {
@@ -206,12 +210,13 @@ const enhancer = compose(
       platformId: gamePlatform.id,
     },
   })),
+
   withStateHandlers(defaultState, {
     toggleEditing: ({ isEditing }) => () => ({
       isEditing: !isEditing,
     }),
   }),
-  connect(mapStateToProps),
+
   reduxForm(),
 )
 

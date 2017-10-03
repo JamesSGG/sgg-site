@@ -4,8 +4,11 @@
   ],
   "plugins": [
     "syntax-optional-catch-binding",
-    "transform-decorators-legacy",
     "transform-optional-catch-binding",
+    "transform-decorators-legacy",
+    ["react-css-modules", {
+      "generateScopedName": "local-[hash:base64:5]"
+    }],
     ["lodash", {
       "id": [
         "lodash",
