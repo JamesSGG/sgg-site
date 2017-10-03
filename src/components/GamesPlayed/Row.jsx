@@ -1,12 +1,15 @@
 // @flow
 
 import React from 'react'
+import { connect } from 'react-redux'
 import { withStateHandlers, withProps } from 'recompose'
-import { reduxForm, Field } from 'redux-form'
+import { reduxForm, formValueSelector, Field } from 'redux-form'
 import { Table, Button } from 'semantic-ui-react'
-import { compose, identity } from 'lodash/fp'
+import { compose } from 'lodash/fp'
 
 import type { FormProps } from 'redux-form'
+
+import type { Game, GamePlatform, GamePlayed } from 'types/graphql-custom'
 
 import InputText from 'components/InputText'
 import InputSelect from 'components/InputSelect'
@@ -20,11 +23,10 @@ type StateHandlerProps = {
 }
 
 type OwnProps = {
-  id: string,
-  gameTitle: ?string,
-  gamePlatform: ?string,
-  gamerTag: ?string,
+  ...GamePlayed,
   isEditable: boolean,
+  allGames: Array<Game>,
+  allGamePlatforms: Array<GamePlatform>,
   updateRecord: (input: *) => Promise<*>,
   deleteRecord: (input: *) => Promise<*>,
 }
@@ -53,13 +55,39 @@ const renderActionButtons = (props: Props) => {
     return null
   }
 
-  const maybeReset = isEditing ? reset : identity
-  const handleEditClick = compose(maybeReset, toggleEditing)
   const handleDelete = () => deleteRecord(props.id)
   const handleUpdate = () => {
-    const { id, userId, gameTitle, gamePlatform, gamerTag } = props
+    const { id, userId, currentFormValues } = props
+    const { gameId, platformId, gamerTag } = currentFormValues
 
-    return updateRecord({ id, userId, gameTitle, gamePlatform, gamerTag })
+    return updateRecord({
+      id,
+      userId,
+      gameId,
+      platformId,
+      gamerTag,
+    })
+  }
+
+  if (isEditing) {
+    return (
+      <Table.Cell>
+        <Button
+          basic
+          size="tiny"
+          onClick={compose(reset, toggleEditing)}
+        >
+          Cancel
+        </Button>
+        <Button
+          basic
+          size="tiny"
+          onClick={compose(toggleEditing, handleUpdate)}
+        >
+          Update
+        </Button>
+      </Table.Cell>
+    )
   }
 
   return (
@@ -67,86 +95,50 @@ const renderActionButtons = (props: Props) => {
       <Button
         basic
         size="tiny"
-        onClick={handleEditClick}
+        onClick={toggleEditing}
       >
-        {isEditing ? 'Cancel' : 'Edit'}
+        Edit
       </Button>
-      {isEditing && (
-        <Button
-          basic
-          size="tiny"
-          onClick={handleUpdate}
-        >
-          Update
-        </Button>
-      )}
-      {!isEditing && (
-        <Button
-          basic
-          size="tiny"
-          onClick={handleDelete}
-        >
-          Delete
-        </Button>
-      )}
+      <Button
+        basic
+        size="tiny"
+        onClick={handleDelete}
+      >
+        Delete
+      </Button>
     </Table.Cell>
   )
 }
 
 const renderRowIfEditing = (props: Props) => {
-  const { id } = props
+  const {
+    id,
+    allGames,
+    allGamePlatforms,
+  } = props
 
-  const formatPlatform = (value) => {
-    if (value === 'pc') {
-      return 'PC'
-    }
-
-    if (value === 'xbox') {
-      return 'Xbox'
-    }
-
-    if (value === 'playstation') {
-      return 'PlayStation'
-    }
-
-    return value
-  }
-
-  const games = [
-    'Overwatch',
-    'DotA 2',
-    'League of Legends',
-    'Rainbow 6: Siege',
-  ]
-
-  const platforms = [
-    'PC',
-    'Xbox',
-    'PlayStation',
-  ]
-
-  const gameOptions = games.map((item) => ({
-    text: item,
-    value: item,
+  const gameOptions = allGames.map((item) => ({
+    text: item.gameTitle,
+    value: item.id,
   }))
 
-  const platformOptions = platforms.map((item) => ({
-    text: formatPlatform(item),
-    value: item,
+  const platformOptions = allGamePlatforms.map((item) => ({
+    text: item.platformName,
+    value: item.id,
   }))
 
   return (
     <Table.Row key={id}>
       <Table.Cell>
         <Field
-          name="gameTitle"
+          name="gameId"
           component={InputSelect}
           options={gameOptions}
         />
       </Table.Cell>
       <Table.Cell>
         <Field
-          name="gamePlatform"
+          name="platformId"
           component={InputSelect}
           options={platformOptions}
         />
@@ -165,18 +157,18 @@ const renderRowIfEditing = (props: Props) => {
 const renderRowIfViewing = (props: Props) => {
   const {
     id,
-    gameTitle,
-    gamePlatform,
+    game = {},
+    gamePlatform = {},
     gamerTag,
   } = props
 
   return (
     <Table.Row key={id}>
       <Table.Cell>
-        {gameTitle}
+        {game.gameTitle}
       </Table.Cell>
       <Table.Cell>
-        {gamePlatform}
+        {gamePlatform.platformName}
       </Table.Cell>
       <Table.Cell>
         {gamerTag}
@@ -192,16 +184,34 @@ const renderRow = (props: Props) => (
     : renderRowIfViewing(props)
 )
 
+const mapStateToProps = (state: *, ownProps: Props) => {
+  const formSelector = formValueSelector(ownProps.id)
+
+  return {
+    currentFormValues: formSelector(
+      state,
+      'gameId',
+      'platformId',
+      'gamerTag',
+    ),
+  }
+}
+
 const enhancer = compose(
-  withProps((props: Props) => ({
-    form: props.gameTitle,
-    initialValues: props,
+  withProps(({ id, gamerTag, game = {}, gamePlatform = {} }: Props) => ({
+    form: id,
+    initialValues: {
+      gamerTag,
+      gameId: game.id,
+      platformId: gamePlatform.id,
+    },
   })),
   withStateHandlers(defaultState, {
     toggleEditing: ({ isEditing }) => () => ({
       isEditing: !isEditing,
     }),
   }),
+  connect(mapStateToProps),
   reduxForm(),
 )
 

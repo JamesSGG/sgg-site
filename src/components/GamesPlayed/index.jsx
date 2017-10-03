@@ -4,18 +4,15 @@ import React from 'react'
 import { Table } from 'semantic-ui-react'
 import { complement, allPass, isArray, isEmpty } from 'lodash/fp'
 
+import type { Game, GamePlatform, GamePlayed } from 'types/graphql-custom'
+
 import InfoTooltip from 'components/InfoTooltip'
 
 import GamesPlayedRow from './Row'
 
-type GamePlayed = {
-  id: string,
-  gameTitle: ?string,
-  gamePlatform: ?string,
-  gamerTag: ?string,
-}
-
 type Props = {
+  allGames: Array<Game>,
+  allGamePlatforms: Array<GamePlatform>,
   gamesPlayed: Array<GamePlayed>,
   isEditable: boolean,
   updateRecord: (input: *) => Promise<*>,
@@ -24,6 +21,8 @@ type Props = {
 
 export default function GamesPlayedTable(props: Props) {
   const {
+    allGames,
+    allGamePlatforms,
     gamesPlayed,
     isEditable,
     updateRecord,
@@ -39,6 +38,8 @@ export default function GamesPlayedTable(props: Props) {
     <GamesPlayedRow
       {...gamePlayed}
       key={gamePlayed.id}
+      allGames={allGames}
+      allGamePlatforms={allGamePlatforms}
       isEditable={isEditable}
       updateRecord={updateRecord}
       deleteRecord={deleteRecord}

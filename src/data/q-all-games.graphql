@@ -1,0 +1,7 @@
+
+query AllGames {
+  games {
+    id
+    gameTitle
+  }
+}

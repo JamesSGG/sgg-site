@@ -17,8 +17,88 @@
           "description": "",
           "fields": [
             {
+              "name": "users",
+              "description": "Fetch all users",
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "User",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "logins",
+              "description": "Fetch all user login records",
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "UserLogin",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "games",
+              "description": "Fetch all games",
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Game",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "gamePlatforms",
+              "description": "Fetch all game platforms",
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "GamePlatform",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "gamesPlayed",
+              "description": "Fetch all games played",
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "GamePlayed",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "user",
-              "description": "",
+              "description": "Fetch a specific user by ID",
               "args": [
                 {
                   "name": "id",
@@ -44,8 +124,139 @@
               "deprecationReason": null
             },
             {
-              "name": "users",
-              "description": "",
+              "name": "currentUser",
+              "description": "Fetch the current logged-in user",
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "User",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "User",
+          "description": "User record",
+          "fields": [
+            {
+              "name": "id",
+              "description": "User ID",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "createdAt",
+              "description": "Timestamp of when the user was created",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatedAt",
+              "description": "Timestamp of when the user was last updated",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "lastSeenAt",
+              "description": "Timestamp of when the user was last active on the site",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "displayName",
+              "description": "Display name",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "imageUrl",
+              "description": "Avatar image URL",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "emails",
+              "description": "Emails",
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Email",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "gamesPlayed",
+              "description": "Games played",
+              "args": [],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "GamePlayed",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "friends",
+              "description": "Friends",
               "args": [],
               "type": {
                 "kind": "LIST",
@@ -60,43 +271,15 @@
               "deprecationReason": null
             },
             {
-              "name": "currentUser",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "User",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "logins",
-              "description": "",
+              "name": "nonFriends",
+              "description": "All other users besides friends",
               "args": [],
               "type": {
                 "kind": "LIST",
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "UserLogin",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "gamesPlayed",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "GamePlayed",
+                  "name": "User",
                   "ofType": null
                 }
               },
@@ -116,157 +299,6 @@
           "fields": null,
           "inputFields": null,
           "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "User",
-          "description": "",
-          "fields": [
-            {
-              "name": "id",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ID",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "createdAt",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "updatedAt",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "lastSeenAt",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "displayName",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "imageUrl",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "emails",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Email",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "gamesPlayed",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "GamePlayed",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "friends",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "User",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "nonFriends",
-              "description": "",
-              "args": [],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "User",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null
         },
@@ -293,11 +325,11 @@
         {
           "kind": "OBJECT",
           "name": "Email",
-          "description": "",
+          "description": "User email object",
           "fields": [
             {
               "name": "email",
-              "description": "",
+              "description": "Email address",
               "args": [],
               "type": {
                 "kind": "NON_NULL",
@@ -313,7 +345,7 @@
             },
             {
               "name": "verified",
-              "description": "",
+              "description": "Is email verified? (pulled from Facebook profile data)",
               "args": [],
               "type": {
                 "kind": "SCALAR",
@@ -342,11 +374,11 @@
         {
           "kind": "OBJECT",
           "name": "GamePlayed",
-          "description": "",
+          "description": "A game that has been played by a user",
           "fields": [
             {
               "name": "id",
-              "description": "",
+              "description": "Record ID",
               "args": [],
               "type": {
                 "kind": "NON_NULL",
@@ -362,7 +394,7 @@
             },
             {
               "name": "createdAt",
-              "description": "",
+              "description": "Timestamp of when the record was created",
               "args": [],
               "type": {
                 "kind": "SCALAR",
@@ -374,7 +406,7 @@
             },
             {
               "name": "updatedAt",
-              "description": "",
+              "description": "Timestamp of when the record was last updated",
               "args": [],
               "type": {
                 "kind": "SCALAR",
@@ -386,7 +418,70 @@
             },
             {
               "name": "userId",
-              "description": "",
+              "description": "The ID of the user that created the record",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "game",
+              "description": "The game record",
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Game",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "gamePlatform",
+              "description": "The game platform",
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "GamePlatform",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "gamerTag",
+              "description": "The user's Steam username, Xbox gamer tag, PSN name, etc. for this game",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Game",
+          "description": "A game record",
+          "fields": [
+            {
+              "name": "id",
+              "description": "Record ID",
               "args": [],
               "type": {
                 "kind": "NON_NULL",
@@ -402,7 +497,7 @@
             },
             {
               "name": "gameTitle",
-              "description": "",
+              "description": "The game title",
               "args": [],
               "type": {
                 "kind": "SCALAR",
@@ -411,22 +506,37 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "GamePlatform",
+          "description": "A game platform record",
+          "fields": [
             {
-              "name": "gamePlatform",
-              "description": "",
+              "name": "id",
+              "description": "Record ID",
               "args": [],
               "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "gamerTag",
-              "description": "",
+              "name": "platformName",
+              "description": "The platform name",
               "args": [],
               "type": {
                 "kind": "SCALAR",
@@ -550,7 +660,7 @@
           "fields": [
             {
               "name": "bumpUserLastSeenAt",
-              "description": "",
+              "description": "Sets the \"last_seen_at\" timestamp to \"now\" for the specified user, which is\nthen used to determine whether the user is \"online\" or \"offline\".",
               "args": [
                 {
                   "name": "id",
@@ -577,7 +687,7 @@
             },
             {
               "name": "addFriendToUser",
-              "description": "",
+              "description": "Adds a friend to a user",
               "args": [
                 {
                   "name": "input",
@@ -604,7 +714,7 @@
             },
             {
               "name": "createFriendForUser",
-              "description": "",
+              "description": "Randomly generate a new user and add to specified user's friends list",
               "args": [
                 {
                   "name": "id",
@@ -630,8 +740,62 @@
               "deprecationReason": null
             },
             {
+              "name": "addGame",
+              "description": "Adds a new game record",
+              "args": [
+                {
+                  "name": "input",
+                  "description": "",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "AddGameInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Game",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "addGamePlatform",
+              "description": "Adds a new game platform",
+              "args": [
+                {
+                  "name": "input",
+                  "description": "",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "AddGamePlatformInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "GamePlatform",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "addGamePlayed",
-              "description": "",
+              "description": "Adds a game that a user has played",
               "args": [
                 {
                   "name": "input",
@@ -658,7 +822,7 @@
             },
             {
               "name": "editGamePlayed",
-              "description": "",
+              "description": "Edits an existing game that a user has played",
               "args": [
                 {
                   "name": "input",
@@ -685,7 +849,7 @@
             },
             {
               "name": "deleteGamePlayed",
-              "description": "",
+              "description": "Deletes an existing game that a user has played",
               "args": [
                 {
                   "name": "id",
@@ -831,6 +995,48 @@
         },
         {
           "kind": "INPUT_OBJECT",
+          "name": "AddGameInput",
+          "description": "",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "gameTitle",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "AddGamePlatformInput",
+          "description": "",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "platformName",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
           "name": "AddGamePlayedInput",
           "description": "",
           "fields": null,
@@ -850,30 +1056,26 @@
               "defaultValue": null
             },
             {
-              "name": "gameTitle",
+              "name": "game",
               "description": "",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
+                  "kind": "INPUT_OBJECT",
+                  "name": "AddGameInput",
                   "ofType": null
                 }
               },
               "defaultValue": null
             },
             {
-              "name": "gamePlatform",
+              "name": "plaform",
               "description": "",
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
+                "kind": "INPUT_OBJECT",
+                "name": "AddGamePlatformInput",
+                "ofType": null
               },
               "defaultValue": null
             },
@@ -923,21 +1125,21 @@
               "defaultValue": null
             },
             {
-              "name": "gameTitle",
+              "name": "game",
               "description": "",
               "type": {
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "INPUT_OBJECT",
+                "name": "EditGameInput",
                 "ofType": null
               },
               "defaultValue": null
             },
             {
-              "name": "gamePlatform",
+              "name": "plaform",
               "description": "",
               "type": {
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "INPUT_OBJECT",
+                "name": "EditGamePlatformInput",
                 "ofType": null
               },
               "defaultValue": null
@@ -958,13 +1160,83 @@
           "possibleTypes": null
         },
         {
+          "kind": "INPUT_OBJECT",
+          "name": "EditGameInput",
+          "description": "",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "gameTitle",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "EditGamePlatformInput",
+          "description": "",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "platformName",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
           "kind": "OBJECT",
           "name": "Subscription",
           "description": "",
           "fields": [
             {
               "name": "userLastSeenAtChanged",
-              "description": "",
+              "description": "Is triggered when a user's \"last_seen_at\" timestamp is updated",
               "args": [],
               "type": {
                 "kind": "OBJECT",
@@ -1832,6 +2104,36 @@
           "kind": "SCALAR",
           "name": "Time",
           "description": "A time string at UTC, such as 10:15:30Z, compliant with the `full-time` format outlined in section 5.6 of the RFC 3339profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "SCALAR",
+          "name": "Url",
+          "description": "A valid absolute (starting with either a valid protocol or a leading www) or relative (with a leading slash) URL string",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "SCALAR",
+          "name": "AbsoluteUrl",
+          "description": "A valid absolute URL string starting with either a valid protocol or a leading www",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "SCALAR",
+          "name": "RelativeUrl",
+          "description": "A valid relative URL string with a leading slash (/)",
           "fields": null,
           "inputFields": null,
           "interfaces": null,

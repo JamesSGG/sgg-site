@@ -123,7 +123,7 @@ export default class FriendsList extends PureComponent<Props> {
       const userProfileUrl = `/profile/${id}`
 
       return (
-        <List.Item key={id}>
+        <List.Item key={id} as={Link} to={userProfileUrl}>
           <Label
             empty
             circular
@@ -135,7 +135,7 @@ export default class FriendsList extends PureComponent<Props> {
             src={imageUrl}
           />
           <List.Content>
-            <List.Description as={Link} to={userProfileUrl}>
+            <List.Description>
               {displayName}
             </List.Description>
           </List.Content>
