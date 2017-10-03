@@ -29,6 +29,7 @@ import LoadingStatus from 'components/LoadingStatus'
 
 import Logo from 'components/Logo'
 import FriendsList from 'components/FriendsList'
+import MonitorUserActivity from 'components/MonitorUserActivity'
 
 import './styles.css'
 
@@ -248,8 +249,17 @@ export default class App extends PureComponent<Props> {
   }
 
   renderFooter() {
+    const { bumpCurrentUserLastSeenAt } = this.props
+
+    const handleActivityChange = ({ isActive }) => {
+      if (isActive) {
+        bumpCurrentUserLastSeenAt()
+      }
+    }
+
     return (
       <Segment as="footer" basic>
+        <MonitorUserActivity onChange={handleActivityChange} />
         {/* Add content here */}
       </Segment>
     )

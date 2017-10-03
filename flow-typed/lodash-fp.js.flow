@@ -22,11 +22,6 @@ declare module 'lodash/fp' {
     trailing?: boolean,
   };
 
-  declare type ThrottleOptions = {
-    leading?: boolean,
-    trailing?: boolean,
-  };
-
   declare type NestedArray<T> = Array<Array<T>>;
 
   declare type matchesIterateeShorthand = Object;
@@ -261,7 +256,7 @@ declare module 'lodash/fp' {
     rearg(func: Function, indexes: Array<number>): Function,
     rest(func: Function, start?: number): Function,
     spread(func: Function): Function,
-    throttle(func: Function, wait?: number, options?: ThrottleOptions): Function,
+    throttle(wait: number, func: Function): Function,
     unary(func: Function): Function,
     wrap(value: any, wrapper: Function): Function,
 
