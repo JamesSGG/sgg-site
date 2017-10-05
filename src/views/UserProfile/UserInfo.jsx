@@ -3,7 +3,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { graphql } from 'react-apollo'
-import { Item, Button } from 'semantic-ui-react'
+import { Item } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
 
 import type { DefaultChildProps } from 'react-apollo'
@@ -116,6 +116,12 @@ export default class UserInfo extends PureComponent<Props> {
     const { displayName, imageUrl, gamesPlayed } = user
     const isEditable = this.isCurrentUserProfile()
 
+    const createRecord = (input) => createGamePlayed({
+      variables: {
+        input,
+      },
+    })
+
     const updateRecord = (input) => updateGamePlayed({
       variables: {
         input,
@@ -147,14 +153,10 @@ export default class UserInfo extends PureComponent<Props> {
                 allGames={games}
                 allGamePlatforms={gamePlatforms}
                 isEditable={isEditable}
+                createRecord={createRecord}
                 updateRecord={updateRecord}
                 deleteRecord={deleteRecord}
               />
-              {isEditable && (
-                <Button primary onClick={createGamePlayed}>
-                  Add new game
-                </Button>
-              )}
             </Item.Description>
           </Item.Content>
         </Item>
