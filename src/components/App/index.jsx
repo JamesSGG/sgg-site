@@ -110,6 +110,7 @@ const mapDispatchToProps = (dispatch) => {
 @withApollo
 @connect(mapStateToProps, mapDispatchToProps)
 @graphql(M_BUMP_USER_LAST_SEEN_AT, {
+  skip: ({ isAuthenticated }) => !isAuthenticated,
   props: ({ ownProps, mutate }) => ({
     bumpCurrentUserLastSeenAt: () => mutate({
       variables: {
