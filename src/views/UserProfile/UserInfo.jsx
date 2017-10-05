@@ -174,24 +174,6 @@ export default class UserInfo extends PureComponent<Props> {
     const allGamePlatformsSorted = this.sortGamePlatforms(gamePlatforms)
     const playedGamesSorted = this.sortPlayedGames(gamesPlayed)
 
-    const createRecord = (input) => createPlayedGame({
-      variables: {
-        input,
-      },
-    })
-
-    const updateRecord = (input) => updatePlayedGame({
-      variables: {
-        input,
-      },
-    })
-
-    const deleteRecord = (id) => deletePlayedGame({
-      variables: {
-        id,
-      },
-    })
-
     return (
       <Item.Group>
         <Item>
@@ -211,9 +193,9 @@ export default class UserInfo extends PureComponent<Props> {
                 allGamePlatforms={allGamePlatformsSorted}
                 playedGames={playedGamesSorted}
                 isEditable={isEditable}
-                createRecord={createRecord}
-                updateRecord={updateRecord}
-                deleteRecord={deleteRecord}
+                createRecord={createPlayedGame}
+                updateRecord={updatePlayedGame}
+                deleteRecord={deletePlayedGame}
               />
             </Item.Description>
           </Item.Content>
