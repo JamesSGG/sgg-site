@@ -89,7 +89,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "GamePlayed",
+                  "name": "PlayedGame",
                   "ofType": null
                 }
               },
@@ -247,7 +247,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "GamePlayed",
+                  "name": "PlayedGame",
                   "ofType": null
                 }
               },
@@ -373,7 +373,7 @@
         },
         {
           "kind": "OBJECT",
-          "name": "GamePlayed",
+          "name": "PlayedGame",
           "description": "A game that has been played by a user",
           "fields": [
             {
@@ -713,8 +713,8 @@
               "deprecationReason": null
             },
             {
-              "name": "createFriendForUser",
-              "description": "Randomly generate a new user and add to specified user's friends list",
+              "name": "deleteUser",
+              "description": "Deletes an existing user",
               "args": [
                 {
                   "name": "id",
@@ -732,16 +732,16 @@
                 }
               ],
               "type": {
-                "kind": "OBJECT",
-                "name": "User",
+                "kind": "SCALAR",
+                "name": "ID",
                 "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "addGame",
-              "description": "Adds a new game record",
+              "name": "createGame",
+              "description": "Creates a new game",
               "args": [
                 {
                   "name": "input",
@@ -751,7 +751,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "AddGameInput",
+                      "name": "CreateGameInput",
                       "ofType": null
                     }
                   },
@@ -767,8 +767,8 @@
               "deprecationReason": null
             },
             {
-              "name": "addGamePlatform",
-              "description": "Adds a new game platform",
+              "name": "updateGame",
+              "description": "Updates an existing game",
               "args": [
                 {
                   "name": "input",
@@ -778,7 +778,61 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "AddGamePlatformInput",
+                      "name": "UpdateGameInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Game",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "deleteGame",
+              "description": "Deletes an existing game",
+              "args": [
+                {
+                  "name": "id",
+                  "description": "",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "ID",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "createGamePlatform",
+              "description": "Creates a new game platform",
+              "args": [
+                {
+                  "name": "input",
+                  "description": "",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "CreateGamePlatformInput",
                       "ofType": null
                     }
                   },
@@ -794,8 +848,8 @@
               "deprecationReason": null
             },
             {
-              "name": "addGamePlayed",
-              "description": "Adds a game that a user has played",
+              "name": "updateGamePlatform",
+              "description": "Updates an existing game platform",
               "args": [
                 {
                   "name": "input",
@@ -805,7 +859,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "AddGamePlayedInput",
+                      "name": "UpdateGamePlatformInput",
                       "ofType": null
                     }
                   },
@@ -814,15 +868,42 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "GamePlayed",
+                "name": "GamePlatform",
                 "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "editGamePlayed",
-              "description": "Edits an existing game that a user has played",
+              "name": "deleteGamePlatform",
+              "description": "Deletes an existing game platform",
+              "args": [
+                {
+                  "name": "id",
+                  "description": "",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "ID",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "createPlayedGame",
+              "description": "Creates a game that a user has played",
               "args": [
                 {
                   "name": "input",
@@ -832,7 +913,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "EditGamePlayedInput",
+                      "name": "CreatePlayedGameInput",
                       "ofType": null
                     }
                   },
@@ -841,14 +922,41 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "GamePlayed",
+                "name": "PlayedGame",
                 "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "deleteGamePlayed",
+              "name": "updatePlayedGame",
+              "description": "Updates an existing game that a user has played",
+              "args": [
+                {
+                  "name": "input",
+                  "description": "",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "UpdatePlayedGameInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "PlayedGame",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "deletePlayedGame",
               "description": "Deletes an existing game that a user has played",
               "args": [
                 {
@@ -995,7 +1103,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "AddGameInput",
+          "name": "CreateGameInput",
           "description": "",
           "fields": null,
           "inputFields": [
@@ -1016,7 +1124,42 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "AddGamePlatformInput",
+          "name": "UpdateGameInput",
+          "description": "",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "gameTitle",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "CreateGamePlatformInput",
           "description": "",
           "fields": null,
           "inputFields": [
@@ -1037,7 +1180,42 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "AddGamePlayedInput",
+          "name": "UpdateGamePlatformInput",
+          "description": "",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "platformName",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "CreatePlayedGameInput",
           "description": "",
           "fields": null,
           "inputFields": [
@@ -1056,25 +1234,25 @@
               "defaultValue": null
             },
             {
-              "name": "game",
+              "name": "gameId",
               "description": "",
               "type": {
                 "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "AddGameInput",
+                  "kind": "SCALAR",
+                  "name": "ID",
                   "ofType": null
                 }
               },
               "defaultValue": null
             },
             {
-              "name": "plaform",
+              "name": "platformId",
               "description": "",
               "type": {
-                "kind": "INPUT_OBJECT",
-                "name": "AddGamePlatformInput",
+                "kind": "SCALAR",
+                "name": "ID",
                 "ofType": null
               },
               "defaultValue": null
@@ -1096,7 +1274,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "EditGamePlayedInput",
+          "name": "UpdatePlayedGameInput",
           "description": "",
           "fields": null,
           "inputFields": [
@@ -1125,21 +1303,21 @@
               "defaultValue": null
             },
             {
-              "name": "game",
+              "name": "gameId",
               "description": "",
               "type": {
-                "kind": "INPUT_OBJECT",
-                "name": "EditGameInput",
+                "kind": "SCALAR",
+                "name": "ID",
                 "ofType": null
               },
               "defaultValue": null
             },
             {
-              "name": "plaform",
+              "name": "platformId",
               "description": "",
               "type": {
-                "kind": "INPUT_OBJECT",
-                "name": "EditGamePlatformInput",
+                "kind": "SCALAR",
+                "name": "ID",
                 "ofType": null
               },
               "defaultValue": null
@@ -1160,82 +1338,12 @@
           "possibleTypes": null
         },
         {
-          "kind": "INPUT_OBJECT",
-          "name": "EditGameInput",
-          "description": "",
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "id",
-              "description": "",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ID",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "gameTitle",
-              "description": "",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "EditGamePlatformInput",
-          "description": "",
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "id",
-              "description": "",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ID",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "platformName",
-              "description": "",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
           "kind": "OBJECT",
           "name": "Subscription",
           "description": "",
           "fields": [
             {
-              "name": "userLastSeenAtChanged",
+              "name": "userLastSeenAtUpdated",
               "description": "Is triggered when a user's \"last_seen_at\" timestamp is updated",
               "args": [],
               "type": {

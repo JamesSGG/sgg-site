@@ -1,9 +1,0 @@
-
-#import "./f-user-info.graphql"
-
-mutation CreateFriendForUser($id: ID!) {
-  createFriendForUser(id: $id) {
-    ...userInfo
-    lastSeenAt
-  }
-}

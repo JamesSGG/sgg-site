@@ -2,30 +2,53 @@
 
 import React from 'react'
 import { Table, Button } from 'semantic-ui-react'
+import { withStateHandlers } from 'recompose'
 import { complement, allPass, isArray, isEmpty } from 'lodash/fp'
 
-import type { Game, GamePlatform, GamePlayed } from 'types/graphql-custom'
+import type {
+  Game,
+  GamePlatform,
+  PlayedGame,
+} from 'types/graphql-custom'
 
 import InfoTooltip from 'components/InfoTooltip'
 
 import GamesPlayedRow from './Row'
 
-type Props = {
+export type Props = {
   allGames: Array<Game>,
   allGamePlatforms: Array<GamePlatform>,
-  gamesPlayed: Array<GamePlayed>,
+  playedGames: Array<PlayedGame>,
   isEditable: boolean,
+  isShowingAddNew: boolean,
+  toggleAddNew: () => void,
   createRecord: (input: *) => Promise<*>,
   updateRecord: (input: *) => Promise<*>,
   deleteRecord: (input: *) => Promise<*>,
 }
 
-export default function GamesPlayedTable(props: Props) {
+export type ComponentState = {
+  isShowingAddNew: boolean,
+}
+
+export const defaultState: ComponentState = {
+  isShowingAddNew: false,
+}
+
+export const enhancer = withStateHandlers(defaultState, {
+  toggleAddNew: (state: ComponentState) => () => ({
+    isShowingAddNew: !state.isShowingAddNew,
+  }),
+})
+
+export function component(props: Props) {
   const {
     allGames,
     allGamePlatforms,
-    gamesPlayed,
+    playedGames,
     isEditable,
+    isShowingAddNew,
+    toggleAddNew,
     createRecord,
     updateRecord,
     deleteRecord,
@@ -36,15 +59,21 @@ export default function GamesPlayedTable(props: Props) {
     complement(isEmpty),
   ])
 
-  const renderRow = (gamePlayed: GamePlayed) => (
+  const sharedRowProps = {
+    allGames,
+    allGamePlatforms,
+    isEditable,
+    createRecord,
+    updateRecord,
+    deleteRecord,
+  }
+
+  const renderRow = (playedGame: PlayedGame) => (
     <GamesPlayedRow
-      {...gamePlayed}
-      key={gamePlayed.id}
-      allGames={allGames}
-      allGamePlatforms={allGamePlatforms}
-      isEditable={isEditable}
-      updateRecord={updateRecord}
-      deleteRecord={deleteRecord}
+      {...playedGame}
+      {...sharedRowProps}
+      key={playedGame.id}
+      formName={playedGame.id}
     />
   )
 
@@ -74,14 +103,26 @@ export default function GamesPlayedTable(props: Props) {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {isNonEmptyArray(gamesPlayed) && gamesPlayed.map(renderRow)}
+          {isNonEmptyArray(playedGames) && playedGames.map(renderRow)}
+          {isShowingAddNew && (
+            <GamesPlayedRow
+              {...sharedRowProps}
+              key="new-game-played-row"
+              formName="new-game-played-form"
+              isNewRecord
+            />
+          )}
         </Table.Body>
       </Table>
       {isEditable && (
-        <Button primary onClick={createRecord}>
+        <Button primary onClick={toggleAddNew}>
           Add new game
         </Button>
       )}
     </div>
   )
 }
+
+const GamesPlayedTable = enhancer(component)
+
+export default GamesPlayedTable

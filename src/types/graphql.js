@@ -6,37 +6,19 @@ export type AddFriendInput = {|
   friendId: string,
 |};
 
-export type AddGamePlayedInput = {|
+export type CreatePlayedGameInput = {|
   userId: string,
-  game: AddGameInput,
-  plaform?: ?AddGamePlatformInput,
+  gameId: string,
+  platformId?: ?string,
   gamerTag?: ?string,
 |};
 
-export type AddGameInput = {|
-  gameTitle?: ?string,
-|};
-
-export type AddGamePlatformInput = {|
-  platformName?: ?string,
-|};
-
-export type EditGamePlayedInput = {|
+export type UpdatePlayedGameInput = {|
   id: string,
   userId?: ?string,
-  game?: ?EditGameInput,
-  plaform?: ?EditGamePlatformInput,
+  gameId?: ?string,
+  platformId?: ?string,
   gamerTag?: ?string,
-|};
-
-export type EditGameInput = {|
-  id: string,
-  gameTitle?: ?string,
-|};
-
-export type EditGamePlatformInput = {|
-  id: string,
-  platformName?: ?string,
 |};
 
 export type AddFriendToUserMutationVariables = {|
@@ -49,35 +31,6 @@ export type AddFriendToUserMutation = {|
     __typename: "AddFriendResult",
     userId: ?string,
     friendId: ?string,
-  |},
-|};
-
-export type AddGamePlayedMutationVariables = {|
-  input: AddGamePlayedInput,
-|};
-
-export type AddGamePlayedMutation = {|
-  // Adds a game that a user has played
-  addGamePlayed: ? {|
-    __typename: "GamePlayed",
-    // Record ID
-    id: string,
-    // The ID of the user that created the record
-    userId: string,
-    // The game record
-    game: ? {|
-      __typename: string,
-      // The game title
-      gameTitle: ?string,
-    |},
-    // The game platform
-    gamePlatform: ? {|
-      __typename: string,
-      // The platform name
-      platformName: ?string,
-    |},
-    // The user's Steam username, Xbox gamer tag, PSN name, etc. for this game
-    gamerTag: ?string,
   |},
 |};
 
@@ -95,60 +48,78 @@ export type BumpUserLastSeenAtMutation = {|
   |},
 |};
 
-export type CreateFriendForUserMutationVariables = {|
-  id: string,
+export type CreatePlayedGameMutationVariables = {|
+  input: CreatePlayedGameInput,
 |};
 
-export type CreateFriendForUserMutation = {|
-  // Randomly generate a new user and add to specified user's friends list
-  createFriendForUser: ? {|
-    __typename: "User",
-    // User ID
-    id: string,
-    // Display name
-    displayName: ?string,
-    // Avatar image URL
-    imageUrl: ?string,
-    // Timestamp of when the user was last active on the site
-    lastSeenAt: ?any,
-  |},
-|};
-
-export type DeleteGamePlayedMutationVariables = {|
-  id: string,
-|};
-
-export type DeleteGamePlayedMutation = {|
-  // Deletes an existing game that a user has played
-  deleteGamePlayed: ?string,
-|};
-
-export type EditGamePlayedMutationVariables = {|
-  input: EditGamePlayedInput,
-|};
-
-export type EditGamePlayedMutation = {|
-  // Edits an existing game that a user has played
-  editGamePlayed: ? {|
-    __typename: "GamePlayed",
+export type CreatePlayedGameMutation = {|
+  // Creates a game that a user has played
+  createPlayedGame: ? {|
+    __typename: "PlayedGame",
     // Record ID
     id: string,
     // The ID of the user that created the record
     userId: string,
+    // The user's Steam username, Xbox gamer tag, PSN name, etc. for this game
+    gamerTag: ?string,
     // The game record
     game: ? {|
       __typename: string,
+      // Record ID
+      id: string,
       // The game title
       gameTitle: ?string,
     |},
     // The game platform
     gamePlatform: ? {|
       __typename: string,
+      // Record ID
+      id: string,
       // The platform name
       platformName: ?string,
     |},
+  |},
+|};
+
+export type DeletePlayedGameMutationVariables = {|
+  id: string,
+|};
+
+export type DeletePlayedGameMutation = {|
+  // Deletes an existing game that a user has played
+  deletePlayedGame: ?string,
+|};
+
+export type UpdatePlayedGameMutationVariables = {|
+  input: UpdatePlayedGameInput,
+|};
+
+export type UpdatePlayedGameMutation = {|
+  // Updates an existing game that a user has played
+  updatePlayedGame: ? {|
+    __typename: "PlayedGame",
+    // Record ID
+    id: string,
+    // The ID of the user that created the record
+    userId: string,
     // The user's Steam username, Xbox gamer tag, PSN name, etc. for this game
     gamerTag: ?string,
+    // The game record
+    game: ? {|
+      __typename: string,
+      // Record ID
+      id: string,
+      // The game title
+      gameTitle: ?string,
+    |},
+    // The game platform
+    gamePlatform: ? {|
+      __typename: string,
+      // Record ID
+      id: string,
+      // The platform name
+      platformName: ?string,
+    |},
   |},
 |};
 
@@ -249,20 +220,24 @@ export type UserQuery = {|
       id: string,
       // The ID of the user that created the record
       userId: string,
+      // The user's Steam username, Xbox gamer tag, PSN name, etc. for this game
+      gamerTag: ?string,
       // The game record
       game: ? {|
         __typename: string,
+        // Record ID
+        id: string,
         // The game title
         gameTitle: ?string,
       |},
       // The game platform
       gamePlatform: ? {|
         __typename: string,
+        // Record ID
+        id: string,
         // The platform name
         platformName: ?string,
       |},
-      // The user's Steam username, Xbox gamer tag, PSN name, etc. for this game
-      gamerTag: ?string,
     |} >,
     // Friends
     friends: ? Array<? {|
@@ -291,13 +266,55 @@ export type UserQuery = {|
   |},
 |};
 
-export type UserLastSeenAtChangedSubscription = {|
+export type userLastSeenAtUpdatedSubscription = {|
   // Is triggered when a user's "last_seen_at" timestamp is updated
-  userLastSeenAtChanged: ? {|
+  userLastSeenAtUpdated: ? {|
     __typename: "UserLastSeenAtResult",
     userId: string,
     lastSeenAt: ?any,
   |},
+|};
+
+export type gamePlatformFragment = {|
+  __typename: string,
+  // Record ID
+  id: string,
+  // The platform name
+  platformName: ?string,
+|};
+
+export type playedGameFragment = {|
+  __typename: string,
+  // Record ID
+  id: string,
+  // The ID of the user that created the record
+  userId: string,
+  // The user's Steam username, Xbox gamer tag, PSN name, etc. for this game
+  gamerTag: ?string,
+  // The game record
+  game: ? {|
+    __typename: string,
+    // Record ID
+    id: string,
+    // The game title
+    gameTitle: ?string,
+  |},
+  // The game platform
+  gamePlatform: ? {|
+    __typename: string,
+    // Record ID
+    id: string,
+    // The platform name
+    platformName: ?string,
+  |},
+|};
+
+export type gameFragment = {|
+  __typename: string,
+  // Record ID
+  id: string,
+  // The game title
+  gameTitle: ?string,
 |};
 
 export type userEmailsFragment = {|
@@ -331,19 +348,23 @@ export type userProfileFragment = {|
     id: string,
     // The ID of the user that created the record
     userId: string,
+    // The user's Steam username, Xbox gamer tag, PSN name, etc. for this game
+    gamerTag: ?string,
     // The game record
     game: ? {|
       __typename: string,
+      // Record ID
+      id: string,
       // The game title
       gameTitle: ?string,
     |},
     // The game platform
     gamePlatform: ? {|
       __typename: string,
+      // Record ID
+      id: string,
       // The platform name
       platformName: ?string,
     |},
-    // The user's Steam username, Xbox gamer tag, PSN name, etc. for this game
-    gamerTag: ?string,
   |} >,
 |};

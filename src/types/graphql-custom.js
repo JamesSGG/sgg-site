@@ -28,7 +28,7 @@ export type GamePlatform = {
 }
 
 // A game that has been played by a user
-export type GamePlayed = {
+export type PlayedGame = {
   // Record ID
   id: ID,
 

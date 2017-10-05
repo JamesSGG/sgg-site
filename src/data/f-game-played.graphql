@@ -2,7 +2,7 @@
 #import "./f-game.graphql"
 #import "./f-game-platform.graphql"
 
-fragment gamePlayed on GamePlayed {
+fragment playedGame on PlayedGame {
   id
   userId
   gamerTag

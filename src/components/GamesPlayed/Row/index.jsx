@@ -9,7 +9,14 @@ import { compose } from 'lodash/fp'
 
 import type { FormProps } from 'redux-form'
 
-import type { Game, GamePlatform, GamePlayed } from 'types/graphql-custom'
+import type {
+  ID,
+  Game,
+  GamePlatform,
+  PlayedGame,
+} from 'types/graphql-custom'
+
+import { getCurrentUserId } from 'store/selectors'
 
 import InputText from 'components/InputText'
 import InputSelect from 'components/InputSelect'
@@ -25,10 +32,14 @@ type StateHandlerProps = {
 }
 
 type OwnProps = {
-  ...GamePlayed,
+  ...PlayedGame,
+  currentUserId: ?ID,
   isEditable: boolean,
+  isNewRecord: boolean,
+  formName: string,
   allGames: Array<Game>,
   allGamePlatforms: Array<GamePlatform>,
+  createRecord: (input: *) => Promise<*>,
   updateRecord: (input: *) => Promise<*>,
   deleteRecord: (input: *) => Promise<*>,
 }
@@ -39,15 +50,13 @@ type Props =
   & StateHandlerProps
   & OwnProps
 
-const defaultState = {
-  isEditing: false,
-}
-
 const renderActionButtons = (props: Props) => {
   const {
     isEditable,
     isEditing,
+    isNewRecord,
     toggleEditing,
+    createRecord,
     updateRecord,
     deleteRecord,
     reset,
@@ -57,7 +66,24 @@ const renderActionButtons = (props: Props) => {
     return null
   }
 
-  const handleDelete = () => deleteRecord(props.id)
+  const handleDelete = () => {
+    const { id } = props
+
+    return deleteRecord(id)
+  }
+
+  const handleCreate = () => {
+    const { currentUserId, currentFormValues } = props
+    const { gameId, platformId, gamerTag } = currentFormValues
+
+    return createRecord({
+      userId: currentUserId,
+      gameId,
+      platformId,
+      gamerTag,
+    })
+  }
+
   const handleUpdate = () => {
     const { id, userId, currentFormValues } = props
     const { gameId, platformId, gamerTag } = currentFormValues
@@ -71,9 +97,23 @@ const renderActionButtons = (props: Props) => {
     })
   }
 
+  if (isNewRecord) {
+    return (
+      <Table.Cell styleName="action-buttons-cell">
+        <Button
+          basic
+          size="tiny"
+          onClick={compose(handleCreate, toggleEditing)}
+        >
+          Create
+        </Button>
+      </Table.Cell>
+    )
+  }
+
   if (isEditing) {
     return (
-      <Table.Cell>
+      <Table.Cell styleName="action-buttons-cell">
         <Button
           basic
           size="tiny"
@@ -84,7 +124,7 @@ const renderActionButtons = (props: Props) => {
         <Button
           basic
           size="tiny"
-          onClick={compose(toggleEditing, handleUpdate)}
+          onClick={compose(handleUpdate, toggleEditing)}
         >
           Update
         </Button>
@@ -187,9 +227,10 @@ const renderRow = (props: Props) => (
 )
 
 const mapStateToProps = (state: *, ownProps: Props) => {
-  const formSelector = formValueSelector(ownProps.id)
+  const formSelector = formValueSelector(ownProps.formName)
 
   return {
+    currentUserId: getCurrentUserId(state),
     currentFormValues: formSelector(
       state,
       'gameId',
@@ -202,8 +243,8 @@ const mapStateToProps = (state: *, ownProps: Props) => {
 const enhancer = compose(
   connect(mapStateToProps),
 
-  withProps(({ id, gamerTag, game = {}, gamePlatform = {} }: Props) => ({
-    form: id,
+  withProps(({ formName, gamerTag, game = {}, gamePlatform = {} }: Props) => ({
+    form: formName,
     initialValues: {
       gamerTag,
       gameId: game.id,
@@ -211,15 +252,20 @@ const enhancer = compose(
     },
   })),
 
-  withStateHandlers(defaultState, {
-    toggleEditing: ({ isEditing }) => () => ({
-      isEditing: !isEditing,
+  withStateHandlers(
+    ({ isEditing = false, isNewRecord = false }) => ({
+      isEditing: isEditing || isNewRecord,
     }),
-  }),
+    {
+      toggleEditing: ({ isEditing }) => () => ({
+        isEditing: !isEditing,
+      }),
+    },
+  ),
 
   reduxForm(),
 )
 
-const GamePlayedRow = enhancer(renderRow)
+const PlayedGameRow = enhancer(renderRow)
 
-export default GamePlayedRow
+export default PlayedGameRow

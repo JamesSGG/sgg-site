@@ -1,4 +1,4 @@
 
-mutation DeleteGamePlayed($id: ID!) {
-  deleteGamePlayed(id: $id)
+mutation DeletePlayedGame($id: ID!) {
+  deletePlayedGame(id: $id)
 }
