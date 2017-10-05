@@ -7,7 +7,15 @@ import { Item } from 'semantic-ui-react'
 import { autobind } from 'core-decorators'
 import { property, sortBy } from 'lodash/fp'
 
-import type { DefaultChildProps } from 'react-apollo'
+import type { ChildProps } from 'react-apollo'
+
+import type {
+  UserQuery,
+  AllGamesQuery,
+  AllGamePlatformsQuery,
+  CreatePlayedGameInput,
+  UpdatePlayedGameInput,
+} from 'types/graphql'
 
 import type { ID } from 'types/graphql-custom'
 
@@ -38,8 +46,18 @@ type OwnProps = {
   userId?: string,
 }
 
+type ApolloProps = {
+  userResult: UserQuery,
+  allGamesResult: AllGamesQuery,
+  allGamePlatformsResult: AllGamePlatformsQuery,
+  createPlayedGame: (input: CreatePlayedGameInput) => Promise<*>,
+  updatePlayedGame: (input: UpdatePlayedGameInput) => Promise<*>,
+  deletePlayedGame: (id: ID) => Promise<*>,
+}
+
 type Props =
-  & DefaultChildProps<*, *>
+  & ChildProps<*, *>
+  & ApolloProps
   & StateProps
   & OwnProps
 
@@ -51,13 +69,31 @@ const mapStateToProps = (state) => ({
 
 @connect(mapStateToProps)
 @graphql(M_CREATE_GAME_PLAYED, {
-  name: 'createPlayedGame',
+  props: ({ mutate }) => ({
+    createPlayedGame: (input: CreatePlayedGameInput) => mutate({
+      variables: {
+        input,
+      },
+    }),
+  }),
 })
 @graphql(M_UPDATE_GAME_PLAYED, {
-  name: 'updatePlayedGame',
+  props: ({ mutate }) => ({
+    updatePlayedGame: (input: UpdatePlayedGameInput) => mutate({
+      variables: {
+        input,
+      },
+    }),
+  }),
 })
 @graphql(M_DELETE_GAME_PLAYED, {
-  name: 'deletePlayedGame',
+  props: ({ mutate }) => ({
+    deletePlayedGame: (id: ID) => mutate({
+      variables: {
+        id,
+      },
+    }),
+  }),
 })
 @graphql(Q_USER, {
   name: 'userResult',
@@ -97,6 +133,14 @@ export default class UserInfo extends PureComponent<Props> {
     return !userId && Boolean(currentUserId)
   }
 
+  sortGames = sortBy([
+    property('gameTitle'),
+  ])
+
+  sortGamePlatforms = sortBy([
+    property('platformName'),
+  ])
+
   sortPlayedGames = sortBy([
     property(['game', 'gameTitle']),
     property(['gamePlatform', 'platformName']),
@@ -126,6 +170,8 @@ export default class UserInfo extends PureComponent<Props> {
 
     const isEditable = this.isCurrentUserProfile()
 
+    const allGamesSorted = this.sortGames(games)
+    const allGamePlatformsSorted = this.sortGamePlatforms(gamePlatforms)
     const playedGamesSorted = this.sortPlayedGames(gamesPlayed)
 
     const createRecord = (input) => createPlayedGame({
@@ -161,8 +207,8 @@ export default class UserInfo extends PureComponent<Props> {
             </Item.Header>
             <Item.Description>
               <GamesPlayed
-                allGames={games}
-                allGamePlatforms={gamePlatforms}
+                allGames={allGamesSorted}
+                allGamePlatforms={allGamePlatformsSorted}
                 playedGames={playedGamesSorted}
                 isEditable={isEditable}
                 createRecord={createRecord}
