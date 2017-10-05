@@ -1,4 +1,8 @@
 
-.action-buttons-cell {
+.row--editable :global(td) {
   width: 25%;
+}
+
+.row :global(td) {
+  width: 33%;
 }

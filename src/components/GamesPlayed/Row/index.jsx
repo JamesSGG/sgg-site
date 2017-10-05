@@ -123,7 +123,7 @@ const renderActionButtons = (props: Props) => {
 
   if (isNewRecord) {
     return (
-      <Table.Cell styleName="action-buttons-cell">
+      <Table.Cell>
         <Button
           basic
           size="tiny"
@@ -138,7 +138,7 @@ const renderActionButtons = (props: Props) => {
 
   if (isEditing) {
     return (
-      <Table.Cell styleName="action-buttons-cell">
+      <Table.Cell>
         <Button
           basic
           size="tiny"
@@ -160,7 +160,7 @@ const renderActionButtons = (props: Props) => {
   }
 
   return (
-    <Table.Cell styleName="action-buttons-cell">
+    <Table.Cell>
       <Button
         basic
         size="tiny"
@@ -186,6 +186,7 @@ const renderRowIfEditing = (props: Props) => {
     id,
     allGames,
     allGamePlatforms,
+    isEditable,
     isProcessing,
   } = props
 
@@ -199,8 +200,10 @@ const renderRowIfEditing = (props: Props) => {
     value: item.id,
   }))
 
+  const rowStyle = isEditable ? 'row--editable' : 'row'
+
   return (
-    <Table.Row key={id} disabled={isProcessing}>
+    <Table.Row key={id} disabled={isProcessing} styleName={rowStyle}>
       <Table.Cell>
         <Field
           name="gameId"
@@ -235,11 +238,14 @@ const renderRowIfViewing = (props: Props) => {
     game = {},
     gamePlatform = {},
     gamerTag,
+    isEditable,
     isProcessing,
   } = props
 
+  const rowStyle = isEditable ? 'row--editable' : 'row'
+
   return (
-    <Table.Row key={id} disabled={isProcessing}>
+    <Table.Row key={id} disabled={isProcessing} styleName={rowStyle}>
       <Table.Cell >
         {game.gameTitle}
       </Table.Cell>
