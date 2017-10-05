@@ -186,6 +186,7 @@ const renderRowIfEditing = (props: Props) => {
     id,
     allGames,
     allGamePlatforms,
+    isProcessing,
   } = props
 
   const gameOptions = allGames.map((item) => ({
@@ -199,12 +200,13 @@ const renderRowIfEditing = (props: Props) => {
   }))
 
   return (
-    <Table.Row key={id}>
+    <Table.Row key={id} disabled={isProcessing}>
       <Table.Cell>
         <Field
           name="gameId"
           component={InputSelect}
           options={gameOptions}
+          disabled={isProcessing}
         />
       </Table.Cell>
       <Table.Cell>
@@ -212,12 +214,14 @@ const renderRowIfEditing = (props: Props) => {
           name="platformId"
           component={InputSelect}
           options={platformOptions}
+          disabled={isProcessing}
         />
       </Table.Cell>
       <Table.Cell>
         <Field
           name="gamerTag"
           component={InputText}
+          disabled={isProcessing}
         />
       </Table.Cell>
       {renderActionButtons(props)}
