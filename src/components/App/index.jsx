@@ -110,7 +110,6 @@ const mapDispatchToProps = (dispatch) => {
 @withApollo
 @connect(mapStateToProps, mapDispatchToProps)
 @graphql(M_BUMP_USER_LAST_SEEN_AT, {
-  skip: ({ isAuthenticated }) => !isAuthenticated,
   props: ({ ownProps, mutate }) => ({
     bumpCurrentUserLastSeenAt: () => mutate({
       variables: {
@@ -127,6 +126,7 @@ export default class App extends PureComponent<Props> {
     const {
       location,
       doLogin,
+      isAuthenticated,
       bumpCurrentUserLastSeenAt,
     } = this.props
 
@@ -138,7 +138,9 @@ export default class App extends PureComponent<Props> {
       doLogin(userId)
     }
 
-    bumpCurrentUserLastSeenAt()
+    if (isAuthenticated) {
+      bumpCurrentUserLastSeenAt()
+    }
   }
 
   async handleLogout(event: MouseEvent) {
@@ -248,7 +250,10 @@ export default class App extends PureComponent<Props> {
   }
 
   renderFooter() {
-    const { bumpCurrentUserLastSeenAt } = this.props
+    const {
+      isAuthenticated,
+      bumpCurrentUserLastSeenAt,
+    } = this.props
 
     const handleActivityChange = ({ isActive }) => {
       if (isActive) {
@@ -258,8 +263,9 @@ export default class App extends PureComponent<Props> {
 
     return (
       <Segment as="footer" basic>
-        <MonitorUserActivity onChange={handleActivityChange} />
-        {/* Add content here */}
+        {isAuthenticated && (
+          <MonitorUserActivity onChange={handleActivityChange} />
+        )}
       </Segment>
     )
   }
