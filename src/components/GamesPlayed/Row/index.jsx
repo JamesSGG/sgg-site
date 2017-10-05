@@ -94,6 +94,8 @@ const renderActionButtons = (props: Props) => {
     })
 
     setProcessingStatus(false)
+    toggleEditing()
+    handleAfterCreate()
   }
 
   const handleUpdate = async () => {
@@ -111,6 +113,12 @@ const renderActionButtons = (props: Props) => {
     })
 
     setProcessingStatus(false)
+    toggleEditing()
+  }
+
+  const handleCancel = () => {
+    reset()
+    toggleEditing()
   }
 
   if (isNewRecord) {
@@ -120,7 +128,7 @@ const renderActionButtons = (props: Props) => {
           basic
           size="tiny"
           disabled={isProcessing}
-          onClick={compose(handleAfterCreate, toggleEditing, handleCreate)}
+          onClick={handleCreate}
         >
           Create
         </Button>
@@ -135,7 +143,7 @@ const renderActionButtons = (props: Props) => {
           basic
           size="tiny"
           disabled={isProcessing}
-          onClick={compose(reset, toggleEditing)}
+          onClick={handleCancel}
         >
           Cancel
         </Button>
@@ -143,7 +151,7 @@ const renderActionButtons = (props: Props) => {
           basic
           size="tiny"
           disabled={isProcessing}
-          onClick={compose(toggleEditing, handleUpdate)}
+          onClick={handleUpdate}
         >
           Update
         </Button>

@@ -41,7 +41,7 @@ const mapStateToProps = (state) => ({
   name: 'userQueryResult',
   skip: ({ isAuthenticated }) => !isAuthenticated,
   options: ({ currentUserId }) => ({
-    pollInterval: 5 * SECOND_IN_MS,
+    pollInterval: 1 * SECOND_IN_MS,
     variables: {
       id: currentUserId,
     },
