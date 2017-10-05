@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { withStateHandlers, withProps } from 'recompose'
 import { reduxForm, formValueSelector, Field } from 'redux-form'
 import { Table, Button } from 'semantic-ui-react'
-import { compose } from 'lodash/fp'
+import { compose, noop } from 'lodash/fp'
 
 import type { FormProps } from 'redux-form'
 
@@ -24,10 +24,12 @@ import InputSelect from 'components/InputSelect'
 import './styles.css'
 
 type StateProps = {
+  isProcessing: boolean,
   isEditing: boolean,
 }
 
 type StateHandlerProps = {
+  setProcessingStatus: () => StateProps,
   toggleEditing: () => StateProps,
 }
 
@@ -42,6 +44,7 @@ type OwnProps = {
   createRecord: (input: *) => Promise<*>,
   updateRecord: (input: *) => Promise<*>,
   deleteRecord: (input: *) => Promise<*>,
+  handleAfterCreate: () => *,
 }
 
 type Props =
@@ -55,10 +58,13 @@ const renderActionButtons = (props: Props) => {
     isEditable,
     isEditing,
     isNewRecord,
+    isProcessing,
     toggleEditing,
+    setProcessingStatus,
     createRecord,
     updateRecord,
     deleteRecord,
+    handleAfterCreate = noop,
     reset,
   } = props
 
@@ -66,35 +72,45 @@ const renderActionButtons = (props: Props) => {
     return null
   }
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     const { id } = props
 
-    return deleteRecord(id)
+    setProcessingStatus(true)
+
+    await deleteRecord(id)
   }
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     const { currentUserId, currentFormValues } = props
     const { gameId, platformId, gamerTag } = currentFormValues
 
-    return createRecord({
+    setProcessingStatus(true)
+
+    await createRecord({
       userId: currentUserId,
       gameId,
       platformId,
       gamerTag,
     })
+
+    setProcessingStatus(false)
   }
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     const { id, userId, currentFormValues } = props
     const { gameId, platformId, gamerTag } = currentFormValues
 
-    return updateRecord({
+    setProcessingStatus(true)
+
+    await updateRecord({
       id,
       userId,
       gameId,
       platformId,
       gamerTag,
     })
+
+    setProcessingStatus(false)
   }
 
   if (isNewRecord) {
@@ -103,7 +119,8 @@ const renderActionButtons = (props: Props) => {
         <Button
           basic
           size="tiny"
-          onClick={compose(handleCreate, toggleEditing)}
+          disabled={isProcessing}
+          onClick={compose(handleAfterCreate, toggleEditing, handleCreate)}
         >
           Create
         </Button>
@@ -117,6 +134,7 @@ const renderActionButtons = (props: Props) => {
         <Button
           basic
           size="tiny"
+          disabled={isProcessing}
           onClick={compose(reset, toggleEditing)}
         >
           Cancel
@@ -124,7 +142,8 @@ const renderActionButtons = (props: Props) => {
         <Button
           basic
           size="tiny"
-          onClick={compose(handleUpdate, toggleEditing)}
+          disabled={isProcessing}
+          onClick={compose(toggleEditing, handleUpdate)}
         >
           Update
         </Button>
@@ -137,6 +156,7 @@ const renderActionButtons = (props: Props) => {
       <Button
         basic
         size="tiny"
+        disabled={isProcessing}
         onClick={toggleEditing}
       >
         Edit
@@ -144,6 +164,7 @@ const renderActionButtons = (props: Props) => {
       <Button
         basic
         size="tiny"
+        disabled={isProcessing}
         onClick={handleDelete}
       >
         Delete
@@ -202,10 +223,11 @@ const renderRowIfViewing = (props: Props) => {
     game = {},
     gamePlatform = {},
     gamerTag,
+    isProcessing,
   } = props
 
   return (
-    <Table.Row key={id}>
+    <Table.Row key={id} disabled={isProcessing}>
       <Table.Cell >
         {game.gameTitle}
       </Table.Cell>
@@ -253,10 +275,18 @@ const enhancer = compose(
   })),
 
   withStateHandlers(
-    ({ isEditing = false, isNewRecord = false }) => ({
+    ({
+      isProcessing = false,
+      isEditing = false,
+      isNewRecord = false,
+    }) => ({
+      isProcessing,
       isEditing: isEditing || isNewRecord,
     }),
     {
+      setProcessingStatus: () => (isProcessing) => ({
+        isProcessing,
+      }),
       toggleEditing: ({ isEditing }) => () => ({
         isEditing: !isEditing,
       }),

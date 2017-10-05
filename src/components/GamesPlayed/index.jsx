@@ -107,16 +107,17 @@ export function component(props: Props) {
           {isShowingAddNew && (
             <GamesPlayedRow
               {...sharedRowProps}
+              isNewRecord
               key="new-game-played-row"
               formName="new-game-played-form"
-              isNewRecord
+              handleAfterCreate={toggleAddNew}
             />
           )}
         </Table.Body>
       </Table>
       {isEditable && (
         <Button primary onClick={toggleAddNew}>
-          Add new game
+          {isShowingAddNew ? 'Cancel' : 'Add new game'}
         </Button>
       )}
     </div>
